@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Camera Capture</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Camera Capture 📷</h1>
+
+    <div class="camera">
+      <video id="video" autoplay playsinline muted></video>
+      <canvas id="canvas" hidden></canvas>
+      <img id="photo" alt="Captured photo" hidden>
+    </div>
+
+    <div class="controls">
+      <label for="cameraSelect">Camera:</label>
+      <select id="cameraSelect"></select>
+
+      <button id="captureBtn">Capture</button>
+      <button id="retakeBtn" hidden>Retake</button>
+      <a id="downloadBtn" download="photo.png" hidden>Download</a>
+    </div>
+
+    <div id="message" class="message" aria-live="polite"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

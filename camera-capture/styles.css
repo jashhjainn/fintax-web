@@ -1,0 +1,36 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(180deg,#f7f9fc,#eef4ff);
+  color: #0f172a;
+}
+.container {
+  width: 100%;
+  max-width: 720px;
+  padding: 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(12, 38, 70, 0.08);
+}
+h1 { margin: 0 0 16px 0; font-size: 1.25rem; }
+.camera { position: relative; background: #000; border-radius: 8px; overflow: hidden; }
+video { width: 100%; height: auto; display: block; background: #000; }
+img#photo { width: 100%; display: block; }
+.controls { margin-top: 12px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.controls label { font-size: 0.9rem; }
+.controls select, .controls button, .controls a {
+  padding: 8px 12px; border-radius: 8px; border: 1px solid #e6edf8; background: #fff; cursor: pointer;
+}
+.controls button { background: #0f62fe; color: #fff; border: none; }
+.controls a { text-decoration: none; color: #0f62fe; border: 1px solid transparent; background: #eaf2ff; }
+.controls button[hidden], .controls a[hidden] { display: none; }
+.message { margin-top: 8px; color: #c02626; font-size: 0.95rem; }
+@media (max-width: 480px) {
+  .controls { gap: 6px; }
+  .controller { width: 100%; }
+}
