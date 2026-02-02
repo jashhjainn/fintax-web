@@ -2,32 +2,69 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Camera Capture</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>FINTAX • Dashboard</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Camera Capture 📷</h1>
+  <div id="siteHeader" data-include="partials/header.html"></div>
 
-    <div class="camera">
-      <video id="video" autoplay playsinline muted></video>
-      <canvas id="canvas" hidden></canvas>
-      <img id="photo" alt="Captured photo" hidden>
-    </div>
+  <main class="main" id="main" role="main">
+    <section class="card">
+      <h1 class="title">Dashboard</h1>
+      <p class="subtitle">Overview of your finances and GST distribution.</p>
 
-    <div class="controls">
-      <label for="cameraSelect">Camera:</label>
-      <select id="cameraSelect"></select>
+      <div class="stats">
+        <div class="stat-card stat-card--sales">
+          <div class="stat-label">Total Sales</div>
+          <div class="stat-value">₹ 5,30,000</div>
+        </div>
+        <div class="stat-card stat-card--purchases">
+          <div class="stat-label">Total Purchases</div>
+          <div class="stat-value">₹ 2,80,000</div>
+        </div>
+        <div class="stat-card stat-card--gst">
+          <div class="stat-label">GST Payable</div>
+          <div class="stat-value">₹ 45,600</div>
+        </div>
+      </div>
 
-      <button id="captureBtn">Capture</button>
-      <button id="retakeBtn" hidden>Retake</button>
-      <a id="downloadBtn" download="photo.png" hidden>Download</a>
-    </div>
+      <div class="charts">
+        <div class="chart card">
+          <h3 class="chart-title">Sales vs Purchases</h3>
+          <div class="chart-bars" aria-hidden="true">
+            <div class="bar blue" style="height:70px"></div>
+            <div class="bar green" style="height:50px"></div>
+            <div class="bar blue" style="height:60px"></div>
+            <div class="bar green" style="height:45px"></div>
+            <div class="bar blue" style="height:80px"></div>
+            <div class="bar green" style="height:65px"></div>
+          </div>
+        </div>
+        <div class="chart card">
+          <h3 class="chart-title">GST Distribution</h3>
+          <div class="chart-pie" aria-hidden="true"></div>
+          <ul class="legend">
+            <li><span class="dot red"></span>35%</li>
+            <li><span class="dot yellow"></span>25%</li>
+            <li><span class="dot teal"></span>20%</li>
+            <li><span class="dot blue"></span>20%</li>
+          </ul>
+        </div>
+      </div>
 
-    <div id="message" class="message" aria-live="polite"></div>
-  </div>
+      <div class="home-actions">
+        <a class="btn primary" href="upload.html"><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i> Upload Invoice</a>
+        <a class="btn beige" href="#"><i class="fa-solid fa-clipboard-list" aria-hidden="true"></i> View Ledgers</a>
+        <a class="btn cta" href="#"><i class="fa-solid fa-chart-column" aria-hidden="true"></i> Generate Reports</a>
+      </div>
+    </section>
+  </main>
 
-  <script src="script.js"></script>
+  <div id="siteNav" data-include="partials/nav.html"></div>
+  <div id="siteFooter" data-include="partials/footer.html"></div>
+
+  <script src="script.js" defer></script>
 </body>
 </html>

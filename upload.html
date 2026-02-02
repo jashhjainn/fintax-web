@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>FINTAX • Upload Invoice</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div id="siteHeader" data-include="partials/header.html"></div>
+
+  <main class="main" id="main" role="main">
+    <section class="card upload-simple" id="uploadSimple">
+      <h1 class="title">Upload Invoice</h1>
+      <p class="subtitle">Choose one of the options below.</p>
+
+      <div class="actions-simple">
+        <button type="button" id="openCameraBtn" class="btn primary btn-large" aria-controls="cameraModal" aria-expanded="false"><i class="fa-solid fa-camera" aria-hidden="true"></i> Camera</button>
+        <button type="button" id="chooseFileBtn" class="btn secondary btn-large"><i class="fa-solid fa-file-arrow-up" aria-hidden="true"></i> Upload Document</button>
+        <input id="fileInput" type="file" accept="image/*" capture="environment" hidden aria-label="Invoice image input">
+      </div>
+
+      <div id="filePreview" class="card" aria-hidden="true" hidden>
+        <div class="preview-min">
+          <img id="previewThumb" alt="Selected image preview" hidden>
+          <div class="preview-meta">
+            <div class="subtitle" id="previewName"></div>
+            <div class="preview-actions">
+              <button type="button" id="uploadBtn" class="btn primary"><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i> Upload</button>
+              <button type="button" id="cancelPreview" class="btn"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- camera modal (keeps DOM tidy and avoids clutter) -->
+    <div id="cameraModal" class="modal" aria-hidden="true" role="dialog" aria-label="Camera dialog">
+      <div class="modal-content">
+        <section id="cameraCard" class="camera-card card" aria-hidden="true">
+          <div class="camera-header" role="banner">
+            <div class="camera-header-controls">
+              <select id="cameraSelect" class="camera-select" aria-label="Choose camera"></select>
+              <div id="camMsg" class="camera-msg" aria-hidden="true"></div>
+              <button type="button" id="closeCameraBtn" class="btn btn-close" aria-label="Close camera"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+            </div>
+          </div>
+
+          <div class="camera-stage" id="cameraStage">
+            <video id="video" autoplay playsinline muted></video>
+            <canvas id="canvas" hidden></canvas>
+            <img id="photo" alt="Captured photo" hidden>
+          </div>
+
+          <div class="camera-bottom">
+            <div id="camThumb" class="cam-thumb" aria-hidden="true"><img id="camThumbImg" alt="Captured thumbnail"></div>
+            <div class="camera-controls" aria-hidden="false">
+              <div class="camera-buttons">
+                <button type="button" id="retakeBtn" class="btn" hidden><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Retake</button>
+                <a id="downloadBtn" class="btn" download="photo.png" hidden><i class="fa-solid fa-download" aria-hidden="true"></i> Download</a>
+              </div>
+              <div class="camera-shutter" role="button" aria-label="Shutter" tabindex="0"><span class="inner"></span></div>
+            </div>
+          </div>
+
+          <div id="message" class="message" aria-live="polite"></div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <div id="siteNav" data-include="partials/nav.html"></div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
+
+
+
+
+
+

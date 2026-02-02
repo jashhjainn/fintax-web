@@ -1,36 +1,293 @@
-* { box-sizing: border-box; }
-body {
-  margin: 0;
+/* MAUVE palette: two primary designer colors (mauve tones) + neutral backgrounds */
+:root{
+  /* two designer colors (primary, accent) */
+  --color-primary: #bfa5d9; /* light mauve */
+  --color-accent: #7c4aa6;  /* deeper mauve */
+  --color-cta: var(--color-accent);
+
+  --bg: #fbf7ff;            /* very light */
+  --panel: #f5eefc;         /* subtle beige-mauve panel */
+  --text: #2b2430;          /* readable dark text */
+  --muted: #6f5f73;         /* muted mauve */
+  --danger: var(--color-accent);
+  --radius: 12px;
+
+  --transition-fast: 220ms ease;
+}
+
+/* dark mode variants */
+@media (prefers-color-scheme: dark){
+  :root{
+    --color-primary: #d8c7f6;
+    --color-accent: #9b6be6;
+    --color-cta: var(--color-accent);
+    --bg: #1b1520;
+    --panel: #2a202e;
+    --text: #efeaf6;
+    --muted: #bdaed3;
+  }
+}
+
+:root[data-theme='light']{
+  --color-primary:#bfa5d9; --color-accent:#7c4aa6; --bg:#fbf7ff; --panel:#f5eefc; --text:#2b2430; --muted:#6f5f73;
+}
+:root[data-theme='dark']{
+  --color-primary:#d8c7f6; --color-accent:#9b6be6; --bg:#1b1520; --panel:#2a202e; --text:#efeaf6; --muted:#bdaed3;
+}
+
+/* Smooth transitions on themeable properties */
+body, .app-header, .card, .bottom-nav { transition: background-color var(--transition-fast), color var(--transition-fast); }
+
+/* Header toggle animation */
+.header-actions button{transition: transform var(--transition-fast), background-color var(--transition-fast), color var(--transition-fast);}
+.header-actions button i{transition: transform 420ms cubic-bezier(.2,.9,.2,1);display:inline-block}
+.header-actions button.toggled i{transform: rotate(360deg) scale(1.02)}
+
+/* ensure muted meets contrast on body backgrounds */
+.muted-contrast{color:var(--muted)!important}
+
+/* bottom nav focus refinement */
+.nav-item:focus{outline:3px solid rgba(255,255,255,0.08);outline-offset:2px}
+
+/* Skip link: show only when focused */
+.skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+.skip-link:focus, .skip-link:active{left:12px;top:12px;width:auto;height:auto;padding:8px 12px;border-radius:6px;background:var(--panel);color:var(--text);z-index:220}
+
+/* Footer small tweak */
+.site-footer{padding:12px 16px;margin-top:8px;text-align:center;background:transparent}
+.site-footer .linkish{text-decoration:none;color:var(--color-accent)} 
+ 
+
+*{box-sizing: border-box}
+html,body{height:100%}
+body{
+  margin:0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background: linear-gradient(180deg,#f7f9fc,#eef4ff);
-  color: #0f172a;
+  background: var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -webkit-font-smoothing:antialiased;
 }
-.container {
-  width: 100%;
-  max-width: 720px;
-  padding: 24px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 6px 24px rgba(12, 38, 70, 0.08);
+
+/* Consistent app shell */
+.main{padding:20px;max-width:980px;margin:18px auto;padding-bottom:110px} /* room for bottom nav */
+.card{background:var(--panel);border-radius:var(--radius);padding:20px;margin-bottom:18px;box-shadow:0 6px 20px rgba(2,6,23,0.04)}
+.title{margin:0;font-size:1.25rem}
+.subtitle{margin:6px 0 12px;color:var(--muted)}
+
+.app-header{
+  display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.04);
 }
-h1 { margin: 0 0 16px 0; font-size: 1.25rem; }
-.camera { position: relative; background: #000; border-radius: 8px; overflow: hidden; }
-video { width: 100%; height: auto; display: block; background: #000; }
-img#photo { width: 100%; display: block; }
-.controls { margin-top: 12px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-.controls label { font-size: 0.9rem; }
-.controls select, .controls button, .controls a {
-  padding: 8px 12px; border-radius: 8px; border: 1px solid #e6edf8; background: #fff; cursor: pointer;
+.brand{font-weight:800;font-size:1.6rem;letter-spacing:1px}
+.header-actions button{background:transparent;border:none;font-size:1.1rem;padding:8px;border-radius:8px;cursor:pointer}
+.header-actions button:focus{outline:3px solid rgba(0,119,204,0.2)}
+
+.main{padding:16px;max-width:780px;margin:0 auto;padding-bottom:92px}
+.card{background:var(--panel);border-radius:var(--radius);padding:16px;margin-bottom:16px;box-shadow:0 6px 30px rgba(2,6,23,0.08)}
+.title{margin:0;font-size:1.25rem}
+.subtitle{margin:6px 0 12px;color:var(--muted)}
+/* SCREEN / NAV handling */
+.screen[aria-hidden="true"]{display:none}
+.screen[aria-hidden="false"]{display:block}
+
+/* DASHBOARD: stats */
+.stats{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:700px){.stats{grid-template-columns:repeat(3,1fr)}}
+.stat-card{border-radius:12px;padding:16px;color:#fff;min-height:84px;display:flex;flex-direction:column;justify-content:center}
+.stat-label{opacity:0.9;font-weight:600}
+.stat-value{font-size:1.45rem;font-weight:800;margin-top:6px}
+.stat-card--sales{background:var(--color-accent)}
+.stat-card--purchases{background:var(--color-primary)}
+/* GST card uses neutral beige (panel) to stay within the 3-color palette */
+.stat-card--gst{background:var(--panel); color:var(--text)}
+
+.charts{display:grid;gap:12px;margin-top:12px}
+@media(min-width:900px){.charts{grid-template-columns:1fr 1fr}}
+.chart-title{font-weight:700;margin:0 0 8px}
+.chart-bars{display:flex;gap:10px;align-items:end;height:100px}
+.chart-bars .bar{width:18px;background:var(--color-primary);border-radius:8px}
+.chart-bars .bar.green{background:var(--color-accent)}
+.chart-pie{width:120px;height:120px;border-radius:50%;background:var(--color-primary);margin:12px auto}
+.legend{display:flex;gap:12px;list-style:none;padding:0;margin:8px 0;color:var(--muted);justify-content:center}
+.legend .dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px}
+.legend .dot.red{background:var(--color-accent)}
+.legend .dot.yellow{background:var(--panel)}
+.legend .dot.teal{background:var(--color-primary)}
+.legend .dot.blue{background:var(--color-primary)}
+
+/* CTA button (use RED accent as one of the 3 designer colors) */
+.btn.cta{background:var(--color-accent);color:#fff;border-color:rgba(0,0,0,0.04)}
+.btn.beige{background:var(--panel);color:var(--text);border:1px solid rgba(0,0,0,0.06)}
+.btn.secondary{background:transparent;color:var(--text);border:1px solid rgba(0,0,0,0.06)}
+
+.home-actions{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+@media(min-width:600px){.home-actions{flex-direction:row}}
+
+.actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 16px;border-radius:12px;border:1px solid transparent;font-weight:700;font-size:1rem;cursor:pointer;text-decoration:none}
+.btn, .btn > i{vertical-align:middle}
+a.btn{display:inline-flex;text-decoration:none}
+.primary{background:var(--color-primary);color:white;border-color:rgba(0,0,0,0.04)}
+.secondary{background:transparent;color:var(--text);border:1px solid rgba(0,0,0,0.06)}
+.btn:focus{outline:3px solid rgba(0,0,0,0.08);outline-offset:2px}
+
+/* Utility classes for profit/loss */
+.profit{color:var(--color-primary)!important}
+.loss{color:var(--color-accent)!important}
+
+.camera-card{display:none;flex-direction:column;gap:12px}
+.camera-card[aria-hidden="false"]{display:flex}
+.camera-header{display:flex;justify-content:space-between;align-items:center}
+.camera-stage{background:#000;border-radius:10px;overflow:hidden;min-height:220px;display:flex;align-items:center;justify-content:center}
+video{width:100%;height:auto;display:block;background:#000}
+img#photo,img#previewImage{max-width:100%;display:block;border-radius:8px}
+.camera-controls{display:flex;flex-direction:column;gap:8px}
+.camera-select-wrap select{padding:8px;border-radius:8px}
+.camera-buttons{display:flex;gap:8px}
+.camera-buttons .btn{flex:1}
+
+.message{color:var(--danger);font-size:0.95rem}
+.visually-hidden{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap}
+
+.preview{display:none;align-items:center;justify-content:center}
+.preview[aria-hidden="false"]{display:flex}
+.preview-actions{display:flex;gap:8px;margin-top:8px}
+
+.bottom-nav{position:fixed;left:0;right:0;bottom:0;display:flex;gap:10px;background:var(--panel);padding:10px 12px;border-top:1px solid rgba(255,255,255,0.02);justify-content:space-around}
+.nav-item{background:transparent;border:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px;border-radius:8px;text-decoration:none}
+.nav-item, .nav-item span{text-decoration:none}
+.nav-item.active{color:var(--color-primary);font-weight:700}
+.nav-item:focus{outline:3px solid rgba(0,119,204,0.14)}
+
+/* Larger tap areas for mobile */
+@media (max-width:600px){
+  .btn{padding:14px 18px;font-size:1.05rem}
+  .camera-stage{min-height:320px}
 }
-.controls button { background: #0f62fe; color: #fff; border: none; }
-.controls a { text-decoration: none; color: #0f62fe; border: 1px solid transparent; background: #eaf2ff; }
-.controls button[hidden], .controls a[hidden] { display: none; }
-.message { margin-top: 8px; color: #c02626; font-size: 0.95rem; }
-@media (max-width: 480px) {
-  .controls { gap: 6px; }
-  .controller { width: 100%; }
+
+/* small desktops */
+@media (min-width:900px){
+  .main{padding:24px}
+  .card{padding:24px}
 }
+
+/* Upload simple layout */
+.upload-simple .title{margin-bottom:6px}
+.actions-simple{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+.btn-large{padding:18px 20px;border-radius:12px;font-size:1.05rem;display:flex;align-items:center;justify-content:center;gap:10px}
+.preview-min{margin-top:14px;padding:12px;display:flex;align-items:center;gap:12px}
+.preview-min img{width:84px;height:84px;object-fit:cover;border-radius:8px}
+.preview-meta .subtitle{margin:0;font-weight:700}
+.preview-actions{display:flex;gap:8px;margin-top:8px}
+.progress-overlay{position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;z-index:90}
+.progress-inner{width:320px;padding:18px;border-radius:12px;background:var(--panel);display:flex;flex-direction:column;gap:12px;align-items:center}
+.progress-text{font-weight:700;color:var(--text)}
+.no-scroll{overflow:hidden}
+
+/* modal for camera — centered, constrained dialog */
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:110}
+.modal[aria-hidden="false"]{display:flex;background:rgba(8,6,10,0.55)}
+.modal .modal-content{width:min(1100px,96%);max-height:90vh;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;position:relative;background:var(--panel);box-shadow:0 28px 80px rgba(10,8,20,0.6);padding:12px}
+.camera-card{width:100%;height:100%;display:flex;flex-direction:column;position:relative;min-height:480px}
+
+/* camera top bar (close + controls) */
+.camera-header{position:absolute;top:14px;left:18px;right:18px;display:flex;align-items:center;justify-content:flex-end;z-index:140;pointer-events:auto;gap:12px;padding:8px 10px;background:linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.02));border-radius:10px}
+.camera-header .camera-select{margin-right:6px}
+.camera-header .camera-msg{margin-right:6px}
+.camera-header .btn-close{background:rgba(255,255,255,0.06);border:1px solid rgba(0,0,0,0.06);padding:10px 12px;border-radius:10px;color:var(--text);box-shadow:0 6px 18px rgba(0,0,0,0.12)}
+.camera-header .btn-close:focus{outline:3px solid rgba(124,74,166,0.12);outline-offset:2px}
+
+/* leave title out of the header to reduce clutter */
+
+/* camera stage occupies the full area but with a soft overlay for controls */
+/* Constrained stage and centered messages */
+.camera-stage{flex:1;display:flex;align-items:center;justify-content:center;position:relative;background:linear-gradient(180deg,#000, #020202);overflow:hidden;min-height:380px;max-height:calc(90vh - 160px);margin-top:20px;border-radius:10px}
+.camera-stage::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.08) 20%, rgba(0,0,0,0.12));pointer-events:none;z-index:110}
+video{width:100%;height:100%;object-fit:cover;display:block}
+
+/* centered camera message when no device is available */
+.camera-msg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.6);color:#fff;padding:10px 14px;border-radius:10px;z-index:125;display:none;max-width:80%;text-align:center}
+.camera-msg[aria-hidden="false"]{display:block}
+
+.camera-header-controls{display:flex;gap:8px;align-items:center}
+.camera-select{appearance:none;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(0,0,0,0.35);color:#fff;font-size:0.95rem}
+.camera-select[hidden], .camera-select[aria-hidden="true"]{display:none}
+
+/* camera bottom bar: thumbnail + non-overlapping controls */
+.camera-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px;border-top:1px solid rgba(0,0,0,0.04);background:transparent}
+.cam-thumb{flex:0 0 76px;width:76px;height:76px;border-radius:10px;overflow:hidden;border:2px solid rgba(255,255,255,0.06);box-shadow:0 10px 26px rgba(0,0,0,0.12);background:#000;opacity:0.96}
+.cam-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+
+.camera-controls{flex:1;display:flex;align-items:center;justify-content:center;gap:18px;padding:0 10px}
+.camera-buttons{display:flex;gap:12px;align-items:center}
+.camera-buttons .btn{min-width:44px;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,0.98);box-shadow:0 6px 18px rgba(0,0,0,0.12);color:var(--text)}
+.camera-shutter{width:88px;height:88px;border-radius:50%;background:#fff;border:8px solid rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:center;box-shadow:0 16px 36px rgba(0,0,0,0.26)}
+.camera-shutter .inner{width:48px;height:48px;border-radius:50%;background:var(--color-primary)}
+
+/* mobile: stack controls below the video for thumbs reach */
+@media(max-width:520px){
+  .camera-bottom{flex-direction:column;align-items:center;gap:12px;padding:14px}
+  .cam-thumb{width:72px;height:72px}
+  .camera-controls{width:100%;justify-content:space-between}
+}
+
+/* ensure controls visible on dark backgrounds */
+
+/* ensure controls visible on dark backgrounds */
+body.camera-open .camera-header h2, body.camera-open .camera-header button{color:var(--text)}
+body.camera-open .camera-shutter .inner{background:var(--color-accent)}
+/* hide header & nav while camera is open */
+body.camera-open #siteHeader, body.camera-open #siteNav{display:none!important}
+
+/* smaller devices */
+@media(min-width:700px){ .actions-simple{flex-direction:row} .btn-large{font-size:1.1rem;padding:18px 26px} .preview-min img{width:108px;height:108px} }
+
+/* Modern card-focused profile styles */
+
+.profile-hero{background:linear-gradient(135deg, hsla(280, 60%, 70%, 0.12), transparent 60%);padding:28px;border-radius:12px;margin:12px 0;position:relative;overflow:visible}
+:root[data-theme='dark'] .profile-hero{background:linear-gradient(135deg, rgba(124,74,166,0.08), transparent 60%)}
+.hero-inner{display:flex;align-items:center;gap:18px;max-width:1100px;margin:0 auto}
+.avatar-hero{width:96px;height:96px;border-radius:50%;background:linear-gradient(180deg, #fff, rgba(255,255,255,0.85));display:flex;align-items:center;justify-content:center;font-size:1.8rem;border:6px solid #fff;box-shadow:0 8px 20px rgba(20,12,40,0.06);transform:translateY(6px)}
+:root[data-theme='dark'] .avatar-hero{border-color:var(--panel);background:linear-gradient(180deg, rgba(255,255,255,0.03), transparent)}
+.hero-meta{flex:1}
+.profile-name{font-size:1.6rem;margin:0;font-weight:900}
+.profile-sub{color:var(--muted);margin-top:6px}
+.hero-actions{display:flex;gap:10px}
+.btn.outline{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:10px 14px;border-radius:10px}
+.btn.primary{background:linear-gradient(90deg,var(--color-primary), #9b6bbd);color:white;padding:11px 16px;border-radius:12px;box-shadow:0 8px 18px rgba(124,74,166,0.12)}
+
+.profile-content{max-width:1100px;margin:18px auto;display:flex;flex-direction:column;gap:18px}
+.card-grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:760px){ .card-grid{grid-template-columns:1.4fr 1fr 1fr} }
+.stat-card{background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.95));border-radius:12px;padding:18px;box-shadow:0 6px 18px rgba(20,12,40,0.04);border:1px solid rgba(0,0,0,0.04);min-height:96px}
+:root[data-theme='dark'] .stat-card{background:var(--panel);border-color:rgba(255,255,255,0.03)}
+.stat-card.big{grid-column:span 1}
+.stat-label{font-weight:700;color:var(--muted);font-size:0.95rem}
+.stat-value{font-size:1.3rem;font-weight:900;margin-top:8px;color:var(--text)}
+
+.cards-row{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:900px){ .cards-row{grid-template-columns:1fr 430px} }
+.card.recent{padding:16px}
+.card.invoices{padding:16px}
+.invoices th, .invoices td{padding:12px;text-align:left;border-bottom:1px solid rgba(0,0,0,0.04)}
+
+/* subtle hover & focus */
+.stat-card:focus-within, .stat-card:hover{transform:translateY(-4px);transition:transform .18s ease}
+
+/* responsive hero */
+@media(max-width:760px){
+  .hero-inner{flex-direction:column;align-items:flex-start}
+  .avatar-hero{transform:none}
+  .btn.primary{width:100%}
+  .hero-actions{width:100%;display:flex}
+}
+
+/* small screens */
+@media(max-width:480px){
+  .profile-name{font-size:1.25rem}
+  .stat-value{font-size:1.05rem}
+}
+
+
+/* utility */
+.hidden{display:none}
