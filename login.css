@@ -1,0 +1,82 @@
+/* Login-only styles (kept simple and vertical) */
+/* Palette from profile page */
+:root{
+  --auth-bg: #f6f0fb;
+  --auth-card: #ffffff;
+  --auth-accent: #9b6bd8;
+  --auth-accent-strong: #8a5fce;
+  --auth-text: #2b2430;
+  --auth-muted: #6f5f73;
+  --auth-border: rgba(0,0,0,0.08);
+}
+
+.auth-shell{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:
+    radial-gradient(720px 520px at 18% -8%, rgba(155,107,216,0.18), transparent 62%),
+    radial-gradient(520px 360px at 85% 8%, rgba(155,107,216,0.14), transparent 58%),
+    var(--auth-bg);
+}
+
+.auth-card{
+  width:min(360px, 92vw);
+  background:var(--auth-card);
+  border-radius:16px;
+  padding:22px 20px 18px;
+  box-shadow:0 12px 30px rgba(155,107,216,0.18);
+  border:1px solid var(--auth-border);
+}
+
+.auth-title{
+  margin:0 0 12px;
+  text-align:center;
+  font-size:1.35rem;
+  font-weight:800;
+  color:var(--auth-text);
+}
+
+.auth-form{display:flex;flex-direction:column;gap:10px}
+.auth-label{font-size:0.85rem;color:var(--auth-muted);font-weight:700}
+.auth-input{
+  width:100%;
+  padding:10px 12px;
+  border-radius:8px;
+  border:1px solid var(--auth-border);
+  font-size:0.95rem;
+  background:#fff;
+  color:var(--auth-text);
+}
+
+.auth-password{display:flex;flex-direction:column;gap:8px}
+.auth-eye{
+  align-self:flex-end;
+  background:transparent;
+  border:none;
+  color:var(--auth-accent);
+  font-weight:700;
+  cursor:pointer;
+  padding:4px 0;
+}
+
+.auth-btn{
+  margin-top:4px;
+  background:linear-gradient(180deg, var(--auth-accent), var(--auth-accent-strong));
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  padding:10px 12px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.auth-alt{
+  margin:10px 0 8px;
+  text-align:center;
+  font-size:0.85rem;
+  color:var(--auth-muted);
+}
+.auth-link{color:var(--auth-accent);text-decoration:none;font-weight:700}

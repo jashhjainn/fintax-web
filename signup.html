@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FINTAX | Sign Up</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="signup.css" />
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <main id="main" class="auth-shell">
+    <section class="auth-card" aria-labelledby="signup-title">
+      <h1 id="signup-title" class="auth-title">Sign up</h1>
+
+      <form class="auth-form" action="#" method="post">
+        <label class="auth-label" for="signupName">Name</label>
+        <input class="auth-input" id="signupName" name="name" type="text" autocomplete="name" required />
+
+        <label class="auth-label" for="signupEmail">Email</label>
+        <input class="auth-input" id="signupEmail" name="email" type="email" autocomplete="email" required />
+
+        <label class="auth-label" for="signupPassword">Password</label>
+        <div class="auth-password">
+          <input class="auth-input" id="signupPassword" name="password" type="password" autocomplete="new-password" required />
+          <button class="auth-eye" type="button" aria-label="Show password" title="Show password" aria-pressed="false">
+            <i class="fa-solid fa-eye" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <label class="auth-label" for="signupConfirmPassword">Confirm Password</label>
+        <input class="auth-input" id="signupConfirmPassword" name="confirm_password" type="password" autocomplete="new-password" required />
+
+        <button class="auth-btn" type="submit">Sign Up</button>
+      </form>
+
+      <p class="auth-alt">Already have an account? <a class="auth-link" href="login.html">Log in</a></p>
+
+      <div class="auth-or">
+        <span></span>
+        <p>or</p>
+        <span></span>
+      </div>
+
+      <button class="auth-google" type="button">
+        <span class="g-badge">G</span>
+        Sign up with Google
+      </button>
+    </section>
+  </main>
+</body>
+</html>

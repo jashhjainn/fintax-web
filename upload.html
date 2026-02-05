@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
   <div id="siteHeader" data-include="partials/header.html"></div>
 
@@ -28,6 +29,8 @@
             <div class="subtitle" id="previewName"></div>
             <div class="preview-actions">
               <button type="button" id="uploadBtn" class="btn primary"><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i> Upload</button>
+              <button type="button" id="previewRetake" class="btn"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Retake</button>
+              <a id="previewDownload" class="btn" download="invoice.png" hidden><i class="fa-solid fa-download" aria-hidden="true"></i> Download</a>
               <button type="button" id="cancelPreview" class="btn"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Cancel</button>
             </div>
           </div>
@@ -56,10 +59,6 @@
           <div class="camera-bottom">
             <div id="camThumb" class="cam-thumb" aria-hidden="true"><img id="camThumbImg" alt="Captured thumbnail"></div>
             <div class="camera-controls" aria-hidden="false">
-              <div class="camera-buttons">
-                <button type="button" id="retakeBtn" class="btn" hidden><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Retake</button>
-                <a id="downloadBtn" class="btn" download="photo.png" hidden><i class="fa-solid fa-download" aria-hidden="true"></i> Download</a>
-              </div>
               <div class="camera-shutter" role="button" aria-label="Shutter" tabindex="0"><span class="inner"></span></div>
             </div>
           </div>

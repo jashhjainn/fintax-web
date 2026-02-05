@@ -199,11 +199,20 @@ img#photo,img#previewImage{max-width:100%;display:block;border-radius:8px}
 
 /* leave title out of the header to reduce clutter */
 
+
 /* camera stage occupies the full area but with a soft overlay for controls */
 /* Constrained stage and centered messages */
-.camera-stage{flex:1;display:flex;align-items:center;justify-content:center;position:relative;background:linear-gradient(180deg,#000, #020202);overflow:hidden;min-height:380px;max-height:calc(90vh - 160px);margin-top:20px;border-radius:10px}
+.camera-stage{flex:1;display:flex;align-items:center;justify-content:center;position:relative;background:linear-gradient(180deg,#000, #020202);overflow:hidden;min-height:380px;max-height:calc(90vh - 160px);margin-top:20px;border-radius:10px;width:100%}
 .camera-stage::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.08) 20%, rgba(0,0,0,0.12));pointer-events:none;z-index:110}
 video{width:100%;height:100%;object-fit:cover;display:block}
+.camera-stage video,
+.camera-stage img#photo{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
 
 /* centered camera message when no device is available */
 .camera-msg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.6);color:#fff;padding:10px 14px;border-radius:10px;z-index:125;display:none;max-width:80%;text-align:center}
@@ -291,3 +300,40 @@ body.camera-open #siteHeader, body.camera-open #siteNav{display:none!important}
 
 /* utility */
 .hidden{display:none}
+
+.btn.outline{
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.06);
+  padding: 10px 14px;
+  border-radius: 10px;
+}
+/* When YOU toggle dark mode */
+:root[data-theme='dark'] .btn.outline {
+  color: #fff;
+  border-color: rgba(255,255,255,0.25);
+  background: transparent;
+}
+
+/* When SYSTEM is in dark mode */
+@media (prefers-color-scheme: dark) {
+  .btn.outline {
+    color: #fff;
+    border-color: rgba(255,255,255,0.25);
+    background: transparent;
+  }
+}
+
+/* Export button – adaptive color */
+.btn.outline {
+  color: #111; /* dark text for light mode */
+  border-color: rgba(0,0,0,0.25);
+  background: transparent;
+}
+
+/* Dark mode override */
+:root[data-theme='dark'] .btn.outline {
+  color: #fff; /* white text in dark mode */
+  border-color: rgba(255,255,255,0.35);
+}
+
+

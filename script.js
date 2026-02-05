@@ -10,11 +10,55 @@ async function loadIncludes(){
       if(!res.ok) throw new Error('Failed to load ' + url);
       const html = await res.text();
       el.innerHTML = html;
-    }catch(err){ console.warn('include error', err); }
+    }catch(err){ 
+      console.warn('include error', err); 
+      const id = el.getAttribute('id') || '';
+      if(id === 'siteNav'){
+        el.innerHTML = '<nav class="bottom-nav" role="navigation" aria-label="Primary"><a class="nav-item" href="index.html"><i class="fa-solid fa-house" aria-hidden="true"></i><span>Home</span></a><a class="nav-item" href="upload.html"><i class="fa-solid fa-file-arrow-up" aria-hidden="true"></i><span>Upload</span></a><a class="nav-item" href="profile.html"><i class="fa-solid fa-user" aria-hidden="true"></i><span>Profile</span></a></nav>';
+      } else if(id === 'siteHeader'){
+        el.innerHTML = '<header class="app-header" role="banner"><div class="brand"><a href="index.html" class="brand-link">FINTAX</a></div><div class="header-actions"><button type="button" id="themeToggle" aria-pressed="false" aria-label="Toggle theme" title="Toggle theme"><i class="fa-solid fa-moon" aria-hidden="true"></i></button></div><div id="globalStatus" class="visually-hidden" aria-live="polite" aria-atomic="true"></div></header>';
+      }
+    }
   }));
 }
 
 let currentStream = null;
+let capturedFile = null; // Holds the file object from a camera capture
+
+// --- API base resolution (robust local dev) ---
+const DEFAULT_API_BASES = [
+  'http://127.0.0.1:8000',
+  'http://localhost:8000',
+  (location && location.hostname) ? `http://${location.hostname}:8000` : null
+].filter(Boolean);
+
+let cachedApiBase = null;
+
+function withTimeout(promise, ms){
+  const ctrl = new AbortController();
+  const timer = setTimeout(()=> ctrl.abort(), ms);
+  return promise(ctrl).finally(()=> clearTimeout(timer));
+}
+
+async function resolveApiBase(){
+  if(cachedApiBase) return cachedApiBase;
+  const override = (window.API_BASE || (function(){ try{ return localStorage.getItem('apiBase'); }catch(e){ return null; } })());
+  const bases = override ? [override, ...DEFAULT_API_BASES.filter(b=>b!==override)] : DEFAULT_API_BASES;
+
+  for(const base of bases){
+    try{
+      const ok = await withTimeout(
+        (ctrl)=> fetch(`${base}/`, { method:'GET', cache:'no-store', signal: ctrl.signal }),
+        1500
+      );
+      if(ok && ok.ok){
+        cachedApiBase = base;
+        return base;
+      }
+    }catch(e){}
+  }
+  throw new Error('Backend not reachable at port 8000. Start the server and retry.');
+}
 
 function announce(text){
   const messageEl = document.getElementById('message');
@@ -152,6 +196,7 @@ async function pageInit(){
   const previewThumb = document.getElementById('previewThumb');
   const previewName = document.getElementById('previewName');
   const previewDownload = document.getElementById('previewDownload');
+  const previewRetake = document.getElementById('previewRetake');
 
   const uploadSimple = document.getElementById('uploadSimple');
   let removeFocusTrap = null;
@@ -218,26 +263,39 @@ async function pageInit(){
   }
 
   // After capturing, close camera and show preview in the main layout
-  // use the shutter control (single capture control) to perform capture
+  // use the shutter control (single capture control) to perform capture  
   const shutter = document.querySelector('.camera-shutter');
-  async function performCapture(){
+async function performCapture(){
     const data = captureToCanvas(videoEl,canvasEl); if(!data) return;
     stopStream();
+
+    // Convert dataURL to File object
+    try {
+      const blob = await (await fetch(data)).blob();
+      capturedFile = new File([blob], `invoice-${Date.now()}.png`, { type: blob.type });
+      // Clear file input to avoid confusion
+      if(fileInput) fileInput.value = '';
+    } catch (e) {
+      console.error("Error converting captured image to file:", e);
+      announce("Could not process captured image.");
+      return;
+    }
+
     // set preview (main area)
     if(previewThumb){ previewThumb.src = data; previewThumb.hidden = false; }
-    // hide small modal thumbnail — keep modal unobstructed
-    const camThumb = document.getElementById('camThumb'); if(camThumb){ camThumb.hidden = true; camThumb.setAttribute('aria-hidden','true'); }
-    // hide any terse label (we don't need "Captured photo")
-    if(previewName) previewName.textContent = '';
+    if(previewName) previewName.textContent = capturedFile.name;
+    if(previewDownload){ previewDownload.href = data; previewDownload.hidden = false; previewDownload.setAttribute('download', capturedFile.name || 'invoice.png'); }
     if(document.getElementById('filePreview')){ const fp = document.getElementById('filePreview'); fp.hidden = false; fp.setAttribute('aria-hidden','false'); }
     // ensure upload button inside preview is visible
     const upBtn = document.getElementById('uploadBtn'); if(upBtn) upBtn.hidden = false;
+    const cancelBtn = document.getElementById('cancelPreview'); if(cancelBtn) cancelBtn.hidden = false;
+
     // close modal and remove focus trap and show initial layout with preview visible
     cameraModal.setAttribute('aria-hidden','true'); cameraCard.setAttribute('aria-hidden','true'); document.body.classList.remove('no-scroll'); document.body.classList.remove('camera-open');
     if(removeFocusTrap){ removeFocusTrap(); removeFocusTrap = null; }
     if(uploadSimple) uploadSimple.hidden = false;
     if(openCameraBtn) openCameraBtn.focus();
-    announce('Photo captured');
+    announce('Photo captured. Ready to upload.');
   }
   if(shutter){
     shutter.addEventListener('click', performCapture);
@@ -285,7 +343,13 @@ async function pageInit(){
   }
 
   // file input / preview for the simplified flow
-  if(fileInput){ fileInput.addEventListener('change', (e)=>{ const file = e.target.files && e.target.files[0]; if(!file) return; const url = URL.createObjectURL(file); if(previewThumb){ previewThumb.src = url; previewThumb.hidden = false; } if(previewName) previewName.textContent = file.name; const fp = document.getElementById('filePreview'); if(fp){ fp.hidden = false; fp.setAttribute('aria-hidden','false'); }
+  if(fileInput){ fileInput.addEventListener('change', (e)=>{ const file = e.target.files && e.target.files[0]; if(!file) return;
+      capturedFile = null; // Clear captured file if user selects a new one
+      const url = URL.createObjectURL(file); 
+      if(previewThumb){ previewThumb.src = url; previewThumb.hidden = false; } 
+      if(previewName) previewName.textContent = file.name; 
+      if(previewDownload){ previewDownload.href = url; previewDownload.hidden = false; previewDownload.setAttribute('download', file.name || 'invoice.png'); }
+      const fp = document.getElementById('filePreview'); if(fp){ fp.hidden = false; fp.setAttribute('aria-hidden','false'); }
       // show upload and cancel
       const upBtn = document.getElementById('uploadBtn'); if(upBtn) upBtn.hidden = false; const cancelBtn = document.getElementById('cancelPreview'); if(cancelBtn) cancelBtn.hidden = false;
       announce('Image ready'); }); }
@@ -294,14 +358,130 @@ async function pageInit(){
   if(chooseBtn){ chooseBtn.addEventListener('click', ()=> fileInput?.click()); }
 
   // cancel preview
-  const cancelPreview = document.getElementById('cancelPreview'); if(cancelPreview){ cancelPreview.addEventListener('click', ()=>{ const fp = document.getElementById('filePreview'); if(fp){ fp.hidden = true; fp.setAttribute('aria-hidden','true'); } if(previewThumb) previewThumb.hidden = true; if(previewName) previewName.textContent = ''; }); }
+  const cancelPreview = document.getElementById('cancelPreview'); if(cancelPreview){ cancelPreview.addEventListener('click', ()=>{
+      const fp = document.getElementById('filePreview'); if(fp){ fp.hidden = true; fp.setAttribute('aria-hidden','true'); }
+      if(previewThumb) { previewThumb.hidden = true; previewThumb.src = ''; }
+      if(previewDownload){ previewDownload.hidden = true; previewDownload.removeAttribute('href'); }
+      if(previewName) previewName.textContent = '';
+      // Clear state
+      if(fileInput) fileInput.value = '';
+      capturedFile = null;
+  }); }
 
-  // upload button in preview triggers simulated upload
-  const uploadBtnPreview = document.getElementById('uploadBtn'); if(uploadBtnPreview){ uploadBtnPreview.addEventListener('click', ()=>{ if(!fileInput || !fileInput.files || !fileInput.files[0]) { announce('Please select a file first'); return; }
-      // simulated upload progress (reusing overlay if present)
-      const progressOverlay = document.querySelector('.progress-overlay'); const progressFillLocal = document.getElementById('uploadProgress'); const progressText = document.getElementById('progressText');
-      if(progressOverlay){ progressOverlay.hidden = false; progressOverlay.setAttribute('aria-hidden','false'); if(progressFillLocal) progressFillLocal.style.width = '0%'; if(progressText) progressText.textContent = 'Uploading…'; let pct = 0; const t = setInterval(()=>{ pct += 10; if(progressFillLocal) progressFillLocal.style.width = pct+'%'; if(pct >= 100){ clearInterval(t); setTimeout(()=>{ if(progressOverlay){ progressOverlay.hidden = true; progressOverlay.setAttribute('aria-hidden','true'); } announce('Upload complete'); },400); } }, 150); } }); }
+  // Retake from preview: reopen camera if captured, else re-open file picker
+  if(previewRetake){
+    previewRetake.addEventListener('click', ()=>{
+      if(capturedFile){
+        if(cameraModal && cameraCard){
+          cameraModal.setAttribute('aria-hidden','false');
+          cameraCard.setAttribute('aria-hidden','false');
+          document.body.classList.add('no-scroll');
+          startStream(videoEl, cameraSelect?.value);
+        }
+      } else {
+        fileInput?.click();
+      }
+    });
+  }
+
+  // upload button in preview triggers actual upload to FastAPI
+  const uploadBtnPreview = document.getElementById('uploadBtn'); if(uploadBtnPreview){ uploadBtnPreview.addEventListener('click', async ()=>{
+      let fileToUpload = null;
+
+      if (capturedFile) {
+        fileToUpload = capturedFile;
+      } else if (fileInput && fileInput.files && fileInput.files[0]) {
+        fileToUpload = fileInput.files[0];
+      }
+
+      if(!fileToUpload) {
+        announce('Please select or capture a file first');
+        return;
+      }
+      
+      const formData = new FormData();
+      formData.append('file', fileToUpload);
+
+      // Show overlay
+      const progressOverlay = document.querySelector('.progress-overlay'); 
+      const progressFillLocal = document.getElementById('uploadProgress'); 
+      const progressText = document.getElementById('progressText');
+      
+      if(!progressOverlay) {
+          announce('Uploading... Please wait.');
+          uploadBtnPreview.disabled = true;
+          uploadBtnPreview.textContent = 'Uploading...';
+      } else {
+        progressOverlay.hidden = false; 
+        progressOverlay.setAttribute('aria-hidden','false'); 
+        if(progressFillLocal) progressFillLocal.style.width = '50%'; 
+        if(progressText) progressText.textContent = 'Uploading to Server…'; 
+      }
+
+      try {
+        const apiBase = await resolveApiBase();
+        // INFO: Acts like a middleware to upload the image.
+        const response = await fetch(`${apiBase}/upload/`, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            if(progressOverlay) {
+                if(progressFillLocal) progressFillLocal.style.width = '100%';
+                setTimeout(() => { progressOverlay.hidden = true; }, 500);
+            }
+            announce('Upload complete: ' + result.id);
+            alert(`✅ Invoice Uploaded Successfully!\nID: ${result.id}\nFile: ${result.filename}`);
+        } else {
+            let errorDetail = 'Upload failed';
+            try {
+                const err = await response.json();
+                errorDetail = err.detail || errorDetail;
+            } catch(e){}
+            throw new Error(errorDetail);
+        }
+      } catch (error) {
+          console.error('Error uploading:', error);
+          if(progressOverlay) progressOverlay.hidden = true;
+          announce('Upload failed');
+          alert('❌ Upload failed:\n' + error.message + '\n\nMake sure the backend server is running on port 8000.');
+      } finally {
+          if(!progressOverlay) {
+             uploadBtnPreview.disabled = false;
+             uploadBtnPreview.innerHTML = '<i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i> Upload';
+          }
+          // Reset state after upload
+          if(fileInput) fileInput.value = '';
+          capturedFile = null;
+          const fp = document.getElementById('filePreview'); if(fp){ fp.hidden = true; fp.setAttribute('aria-hidden','true'); }
+      }
+  }); }
+
+  // auth pages: toggle password visibility
+  const eyeButtons = Array.from(document.querySelectorAll('.auth-eye'));
+  if(eyeButtons.length){
+    eyeButtons.forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const wrapper = btn.closest('.auth-password');
+        const input = wrapper ? wrapper.querySelector('input[type="password"], input[type="text"]') : null;
+        if(!input) return;
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        btn.setAttribute('aria-pressed', isPassword ? 'true' : 'false');
+        btn.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+        btn.setAttribute('title', isPassword ? 'Hide password' : 'Show password');
+        const icon = btn.querySelector('i');
+        if(icon){
+          icon.classList.toggle('fa-eye', !isPassword);
+          icon.classList.toggle('fa-eye-slash', isPassword);
+        }
+      });
+    });
+  }
 }
+
 
 // Run includes first, then initialize UI
 (async function start(){ await loadIncludes(); initHeaderNav(); await pageInit(); })();
