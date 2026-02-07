@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>FINTAX • Ledger</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div id="siteHeader" data-include="partials/header.html"></div>
+
+  <main class="main" id="main" role="main">
+    <section class="card">
+      <h1 class="title">Ledger</h1>
+      <p class="subtitle">OCR results from your uploads.</p>
+    </section>
+
+    <section class="card" id="ledgerRoot" aria-live="polite">
+      <div class="subtitle" id="ledgerStatus">Loading OCR results…</div>
+      <div class="table-wrap" style="overflow:auto;margin-top:12px;">
+        <table class="ledger-table" id="ledgerTable" aria-label="Ledger table">
+          <thead>
+            <tr>
+              <th class="col-preview">Preview</th>
+              <th>Srno</th>
+              <th>Bill No</th>
+              <th>Particulars</th>
+              <th>GST Amt</th>
+              <th>Total Amt</th>
+            </tr>
+          </thead>
+          <tbody id="ledgerBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div id="ledgerImageModal" class="modal" aria-hidden="true" role="dialog" aria-label="Invoice preview">
+    <div class="modal-content ledger-image-modal">
+      <button type="button" class="close-btn" id="ledgerImageClose" aria-label="Close preview">×</button>
+      <img id="ledgerImageFull" src="" alt="Invoice preview">
+    </div>
+  </div>
+
+  <div id="siteNav" data-include="partials/nav.html"></div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

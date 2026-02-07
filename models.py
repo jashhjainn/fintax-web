@@ -17,3 +17,47 @@ class Invoice(BaseModel):
     # For MongoDB storage, we convert this model to a dict and add the binary data.
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
+
+
+class LedgerEntry(BaseModel):
+    filename: str
+    vendor: str | None = None
+    invoice_date: str | None = None
+    total_amount: str | None = None
+    raw_text: str
+    cleaned_text: str
+    lines: list[str] = Field(default_factory=list)
+    created_at: datetime = Field(default_factory=get_ist_time)
+    status: str = "processed"
+    
+    # Srno, bill no, Particulars, gst amt, total amt
+
+    
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+
+class UserCreate(BaseModel):
+    name: str
+    email: str
+    password: str
+    confirm_password: str
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+
+class UserLogin(BaseModel):
+    email: str
+    password: str
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+
+class User(BaseModel):
+    name: str
+    email: str
+    password_hash: str
+    created_at: datetime = Field(default_factory=get_ist_time)
+    status: str = "active"
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)

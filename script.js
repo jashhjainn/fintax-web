@@ -14,7 +14,7 @@ async function loadIncludes(){
       console.warn('include error', err); 
       const id = el.getAttribute('id') || '';
       if(id === 'siteNav'){
-        el.innerHTML = '<nav class="bottom-nav" role="navigation" aria-label="Primary"><a class="nav-item" href="index.html"><i class="fa-solid fa-house" aria-hidden="true"></i><span>Home</span></a><a class="nav-item" href="upload.html"><i class="fa-solid fa-file-arrow-up" aria-hidden="true"></i><span>Upload</span></a><a class="nav-item" href="profile.html"><i class="fa-solid fa-user" aria-hidden="true"></i><span>Profile</span></a></nav>';
+        el.innerHTML = '<nav class="bottom-nav" role="navigation" aria-label="Primary"><a class="nav-item" href="index.html"><i class="fa-solid fa-house" aria-hidden="true"></i><span>Home</span></a><a class="nav-item" href="upload.html"><i class="fa-solid fa-file-arrow-up" aria-hidden="true"></i><span>Upload</span></a><a class="nav-item" href="ledger.html"><i class="fa-solid fa-receipt" aria-hidden="true"></i><span>Ledger</span></a><a class="nav-item" href="profile.html"><i class="fa-solid fa-user" aria-hidden="true"></i><span>Profile</span></a></nav>';
       } else if(id === 'siteHeader'){
         el.innerHTML = '<header class="app-header" role="banner"><div class="brand"><a href="index.html" class="brand-link">FINTAX</a></div><div class="header-actions"><button type="button" id="themeToggle" aria-pressed="false" aria-label="Toggle theme" title="Toggle theme"><i class="fa-solid fa-moon" aria-hidden="true"></i></button></div><div id="globalStatus" class="visually-hidden" aria-live="polite" aria-atomic="true"></div></header>';
       }
@@ -65,6 +65,32 @@ function announce(text){
   if(messageEl) messageEl.textContent = text;
   const global = document.getElementById('globalStatus');
   if(global) global.textContent = text;
+}
+
+function ensureToastContainer(){
+  let container = document.getElementById('toastContainer');
+  if(!container){
+    container = document.createElement('div');
+    container.id = 'toastContainer';
+    container.className = 'toast-container';
+    document.body.appendChild(container);
+  }
+  return container;
+}
+
+function showToast(message, variant = 'success', duration = 1200){
+  const container = ensureToastContainer();
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${variant}`;
+  toast.setAttribute('role', 'status');
+  toast.setAttribute('aria-live', 'polite');
+  toast.textContent = message;
+  container.appendChild(toast);
+  requestAnimationFrame(()=> toast.classList.add('show'));
+  setTimeout(()=>{
+    toast.classList.remove('show');
+    setTimeout(()=> toast.remove(), 220);
+  }, duration);
 }
 
 // Focus management: trap focus inside given container (basic implementation)
@@ -420,8 +446,8 @@ async function performCapture(){
 
       try {
         const apiBase = await resolveApiBase();
-        // INFO: Acts like a middleware to upload the image.
-        const response = await fetch(`${apiBase}/upload/`, {
+        // INFO: OCR + store to ledger
+        const response = await fetch(`${apiBase}/ocr/`, {
             method: 'POST',
             body: formData
         });
@@ -432,8 +458,15 @@ async function performCapture(){
                 if(progressFillLocal) progressFillLocal.style.width = '100%';
                 setTimeout(() => { progressOverlay.hidden = true; }, 500);
             }
-            announce('Upload complete: ' + result.id);
-            alert(`✅ Invoice Uploaded Successfully!\nID: ${result.id}\nFile: ${result.filename}`);
+            announce('OCR complete: ' + result.id);
+            try{
+              if(result && result.ledger){
+                localStorage.setItem('ledgerLastId', result.id);
+                localStorage.setItem('ledgerLastData', JSON.stringify(result.ledger));
+              }
+            }catch(e){}
+            alert(`✅ OCR Processed Successfully!\nID: ${result.id}`);
+            window.location.href = 'ledger.html';
         } else {
             let errorDetail = 'Upload failed';
             try {
@@ -458,6 +491,295 @@ async function performCapture(){
           const fp = document.getElementById('filePreview'); if(fp){ fp.hidden = true; fp.setAttribute('aria-hidden','true'); }
       }
   }); }
+
+  // Ledger page: render OCR result
+  const ledgerRoot = document.getElementById('ledgerRoot');
+  if(ledgerRoot){
+    const statusEl = document.getElementById('ledgerStatus');
+    const ledgerModal = document.getElementById('ledgerImageModal');
+    const ledgerModalImg = document.getElementById('ledgerImageFull');
+    const ledgerModalClose = document.getElementById('ledgerImageClose');
+
+    function formatLines(lines){
+      if(!lines || !lines.length) return '<p class="subtitle">No text lines detected.</p>';
+      const items = lines.slice(0, 50).map(l=> `<li>${l}</li>`).join('');
+      return `<ul>${items}</ul>`;
+    }
+
+    function extractLedgerRows(data){
+      const lines = (data && data.lines) ? data.lines : [];
+      const textBlob = (data && data.cleaned_text) ? data.cleaned_text : '';
+      const moneyPattern = /\s*([0-9,]+(?:\.\d{2})?)/g;
+
+      function parseAmountToken(token){
+        if(!token) return null;
+        const cleaned = token.replace(/[, ]+/g, '').replace(/[^\d.]/g, '');
+        if(!cleaned) return null;
+        const val = Number(cleaned);
+        return Number.isFinite(val) ? val : null;
+      }
+
+      function formatAmount(val){
+        if(val == null) return 'Not detected';
+        try{
+          return `₹ ${val.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        }catch(e){
+          return `₹ ${val.toFixed(2)}`;
+        }
+      }
+
+      function lastAmountInLine(ln){
+        let match = null;
+        for(const m of ln.matchAll(moneyPattern)){ match = m; }
+        return match ? parseAmountToken(match[1]) : null;
+      }
+
+      function findAmountByKeyword(keywordRe){
+        for(const ln of lines){
+          if(keywordRe.test(ln)){
+            const amount = lastAmountInLine(ln);
+            if(amount != null) return amount;
+          }
+        }
+        return null;
+      }
+
+      function findBillNo(){
+        for(const ln of lines){
+          const m = ln.match(/(?:bill|invoice)\s*(?:no\.?|number)?\s*[:#-]?\s*([A-Z0-9-]+)/i);
+          if(m && m[1]) return m[1].trim();
+        }
+        // fallback: any token near "no"
+        for(const ln of lines){
+          if(/no\.?|number/i.test(ln)){
+            const t = ln.match(/\b([A-Z0-9-]{4,})\b/);
+            if(t && t[1]) return t[1].trim();
+          }
+        }
+        const m = textBlob.match(/(?:bill|invoice)\s*(?:no\.?|number|#|:)\s*([A-Z0-9-]+)/i);
+        return m && m[1] ? m[1].trim() : null;
+      }
+      const billNo = findBillNo() || 'Not detected';
+
+      function findClientName(){
+        for(const ln of lines){
+          const m = ln.match(/\bclient\b\s*[:\-]\s*(.+)$/i);
+          if(m && m[1]) return m[1].trim();
+        }
+        return null;
+      }
+      const clientName = findClientName();
+
+      const subtotalAmt = findAmountByKeyword(/\bsub\s*total\b|\bsubtotal\b/i);
+      const totalAmtVal = (function(){
+        const fromLine = findAmountByKeyword(/\btotal\b|\btotal amount\b|\bgrand total\b|\bamount due\b|\bnet total\b|\bbalance due\b/i);
+        if(fromLine != null) return fromLine;
+        if(data && data.total_amount) return parseAmountToken(data.total_amount);
+        return null;
+      })();
+
+      let gstAmtVal = null;
+      if(totalAmtVal != null && subtotalAmt != null && totalAmtVal >= subtotalAmt){
+        gstAmtVal = Number((totalAmtVal - subtotalAmt).toFixed(2));
+      } else if(totalAmtVal != null){
+        // If total includes GST and subtotal is missing, derive GST from total (18% default)
+        const base = totalAmtVal / 1.18;
+        gstAmtVal = Number((totalAmtVal - base).toFixed(2));
+      } else {
+        const gstMatch = (textBlob.match(/(?:gst|tax)\s*(?:amt|amount|:)\s*([0-9,]+(?:\.\d{2})?)/i) || [])[1];
+        gstAmtVal = gstMatch ? parseAmountToken(gstMatch) : null;
+      }
+
+      const gstAmt = formatAmount(gstAmtVal);
+      const totalAmt = totalAmtVal != null ? formatAmount(totalAmtVal) : (data && data.total_amount ? data.total_amount : 'Not detected');
+
+      function findParticulars(){
+        for(const ln of lines){
+          const clean = ln.replace(/\s+/g, ' ').trim();
+          if(clean.length < 3) continue;
+          if(/invoice|bill|date|gst|tax|total|amount|balance/i.test(clean)) continue;
+          if(/\bclient\b/i.test(clean)) continue;
+          if(/[A-Za-z]/.test(clean)) return clean;
+        }
+        const vendor = data && data.vendor ? data.vendor : null;
+        if(vendor) return vendor.toString().replace(/\s+/g, ' ').trim();
+        return 'Unknown';
+      }
+      let particulars = findParticulars();
+      if(clientName && !particulars.toLowerCase().includes(clientName.toLowerCase())){
+        particulars = `${particulars} (Client: ${clientName})`;
+      }
+
+      return {
+        id: data && (data.id || data._id) ? (data.id || data._id) : '',
+        billNo,
+        particulars,
+        gstAmt,
+        totalAmt
+      };
+    }
+
+    function normalizeLedgerItems(data){
+      if(!data) return [];
+      if(Array.isArray(data)) return data;
+      if(data.items && Array.isArray(data.items)) return data.items;
+      return [data];
+    }
+
+    function renderLedger(data, apiBase){
+      const items = normalizeLedgerItems(data);
+      if(!items.length){
+        if(statusEl) statusEl.textContent = 'No OCR data found.';
+        return;
+      }
+      if(statusEl) statusEl.textContent = `Showing ${items.length} ledger entr${items.length === 1 ? 'y' : 'ies'}.`;
+
+      const rows = items.map(extractLedgerRows);
+      const tbody = document.getElementById('ledgerBody');
+      if(tbody){
+        const base = apiBase || cachedApiBase || DEFAULT_API_BASES[0] || '';
+        tbody.innerHTML = rows.map((r, i)=>`
+          <tr>
+            <td class="col-preview">${r.id ? `<img class="ledger-preview" src="${base}/ledger/${r.id}/image" alt="Invoice preview">` : 'No image'}</td>
+            <td>${i + 1}</td>
+            <td>${r.billNo}</td>
+            <td>${r.particulars}</td>
+            <td>${r.gstAmt}</td>
+            <td>${r.totalAmt}</td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    function openLedgerPreview(src){
+      if(!ledgerModal || !ledgerModalImg) return;
+      ledgerModalImg.src = src;
+      ledgerModal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeLedgerPreview(){
+      if(!ledgerModal || !ledgerModalImg) return;
+      ledgerModal.setAttribute('aria-hidden', 'true');
+      ledgerModalImg.removeAttribute('src');
+    }
+
+    if(ledgerModalClose){
+      ledgerModalClose.addEventListener('click', closeLedgerPreview);
+    }
+    if(ledgerModal){
+      ledgerModal.addEventListener('click', (e)=>{ if(e.target === ledgerModal) closeLedgerPreview(); });
+      document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && ledgerModal.getAttribute('aria-hidden') === 'false') closeLedgerPreview(); });
+    }
+    const ledgerBody = document.getElementById('ledgerBody');
+    if(ledgerBody){
+      ledgerBody.addEventListener('click', (e)=>{
+        const img = e.target && e.target.closest ? e.target.closest('img.ledger-preview') : null;
+        if(img && img.getAttribute('src')){ openLedgerPreview(img.getAttribute('src')); return; }
+      });
+    }
+
+    (async ()=>{
+      try{
+        let data = null;
+        let apiBase = null;
+        try{
+          const cachedList = localStorage.getItem('ledgerListData');
+          if(cachedList) data = JSON.parse(cachedList);
+        }catch(e){}
+        if(!data){
+          try{
+            apiBase = await resolveApiBase();
+            const resList = await fetch(`${apiBase}/ledger/list?limit=50`);
+            if(resList.ok) data = await resList.json();
+          }catch(e){}
+        }
+        if(!data){
+          try{
+            const cached = localStorage.getItem('ledgerLastData');
+            if(cached) data = JSON.parse(cached);
+          }catch(e){}
+        }
+        if(!data){
+          apiBase = await resolveApiBase();
+          const lastId = localStorage.getItem('ledgerLastId');
+          const url = lastId ? `${apiBase}/ledger/${lastId}` : `${apiBase}/ledger/latest`;
+          const res = await fetch(url);
+          if(res.ok) data = await res.json();
+        }
+        try{
+          if(data && data.items) localStorage.setItem('ledgerListData', JSON.stringify(data.items));
+          else if(Array.isArray(data)) localStorage.setItem('ledgerListData', JSON.stringify(data));
+        }catch(e){}
+        renderLedger(data, apiBase);
+      }catch(e){
+        if(statusEl) statusEl.textContent = 'Unable to load ledger data.';
+      }
+    })();
+  }
+
+  // Signup form handling
+  const signupForm = document.getElementById('signupForm');
+  if(signupForm){
+    signupForm.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const name = (document.getElementById('signupName')?.value || '').trim();
+      const email = (document.getElementById('signupEmail')?.value || '').trim().toLowerCase();
+      const password = document.getElementById('signupPassword')?.value || '';
+      const confirm = document.getElementById('signupConfirmPassword')?.value || '';
+
+      if(!name){ alert('Name is required'); return; }
+      if(!email.endsWith('@gmail.com')){ alert('Email must be @gmail.com'); return; }
+      if(password.length < 6){ alert('Password must be at least 6 characters'); return; }
+      if(password !== confirm){ alert('Passwords do not match'); return; }
+
+      try{
+        const apiBase = await resolveApiBase();
+        const res = await fetch(`${apiBase}/signup/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password, confirm_password: confirm })
+        });
+        if(!res.ok){
+          const err = await res.json().catch(()=> ({}));
+          throw new Error(err.detail || 'Signup failed');
+        }
+        showToast('✅ Signup successful! Redirecting to login...', 'success', 1500);
+        setTimeout(()=> { window.location.href = 'login.html'; }, 1500);
+      }catch(err){
+        alert('❌ ' + err.message);
+      }
+    });
+  }
+
+  // Login form handling
+  const loginForm = document.getElementById('loginForm');
+  if(loginForm){
+    loginForm.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const email = (document.getElementById('loginEmail')?.value || '').trim().toLowerCase();
+      const password = document.getElementById('loginPassword')?.value || '';
+
+      if(!email || !password){ alert('Email and password are required'); return; }
+      if(!email.endsWith('@gmail.com')){ alert('Email must be @gmail.com'); return; }
+
+      try{
+        const apiBase = await resolveApiBase();
+        const res = await fetch(`${apiBase}/login/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        if(!res.ok){
+          const err = await res.json().catch(()=> ({}));
+          throw new Error(err.detail || 'Login failed');
+        }
+        showToast('✅ Login successful!', 'success', 2000);
+        setTimeout(()=> { window.location.href = 'index.html'; }, 1500);
+      }catch(err){
+        alert('❌ ' + err.message);
+      }
+    });
+  }
 
   // auth pages: toggle password visibility
   const eyeButtons = Array.from(document.querySelectorAll('.auth-eye'));
@@ -485,3 +807,11 @@ async function performCapture(){
 
 // Run includes first, then initialize UI
 (async function start(){ await loadIncludes(); initHeaderNav(); await pageInit(); })();
+
+
+
+
+
+
+
+

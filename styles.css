@@ -81,6 +81,8 @@ body{
 .brand{font-weight:800;font-size:1.6rem;letter-spacing:1px}
 .header-actions button{background:transparent;border:none;font-size:1.1rem;padding:8px;border-radius:8px;cursor:pointer}
 .header-actions button:focus{outline:3px solid rgba(0,119,204,0.2)}
+/* theme icon color in dark mode */
+:root[data-theme='dark'] #themeToggle i{color:#fff;}
 
 .main{padding:16px;max-width:780px;margin:0 auto;padding-bottom:92px}
 .card{background:var(--panel);border-radius:var(--radius);padding:16px;margin-bottom:16px;box-shadow:0 6px 30px rgba(2,6,23,0.08)}
@@ -111,8 +113,8 @@ body{
 .legend{display:flex;gap:12px;list-style:none;padding:0;margin:8px 0;color:var(--muted);justify-content:center}
 .legend .dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px}
 .legend .dot.red{background:var(--color-accent)}
-.legend .dot.yellow{background:var(--panel)}
-.legend .dot.teal{background:var(--color-primary)}
+.legend .dot.yellow{background:var(--color-primary)}
+.legend .dot.teal{background:var(--color-accent)}
 .legend .dot.blue{background:var(--color-primary)}
 
 /* CTA button (use RED accent as one of the 3 designer colors) */
@@ -184,10 +186,40 @@ img#photo,img#previewImage{max-width:100%;display:block;border-radius:8px}
 .progress-text{font-weight:700;color:var(--text)}
 .no-scroll{overflow:hidden}
 
+/* Ledger table */
+.table-wrap{width:100%}
+.ledger-table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:640px;
+}
+.ledger-table th,
+.ledger-table td{
+  text-align:left;
+  padding:14px 16px;
+  border-bottom:1px solid rgba(0,0,0,0.06);
+}
+.ledger-table th{
+  font-size:0.95rem;
+  color:var(--muted);
+  font-weight:800;
+  letter-spacing:0.2px;
+}
+.ledger-table td{
+  font-size:1rem;
+}
+
 /* modal for camera — centered, constrained dialog */
 .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:110}
 .modal[aria-hidden="false"]{display:flex;background:rgba(8,6,10,0.55)}
 .modal .modal-content{width:min(1100px,96%);max-height:90vh;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;position:relative;background:var(--panel);box-shadow:0 28px 80px rgba(10,8,20,0.6);padding:12px}
+
+/* toast notifications */
+.toast-container{position:fixed;top:18px;right:18px;display:flex;flex-direction:column;gap:10px;z-index:140;pointer-events:none}
+.toast{min-width:220px;max-width:360px;padding:12px 14px;border-radius:12px;background:var(--panel);color:var(--text);box-shadow:0 12px 30px rgba(10,8,20,0.35);border:1px solid rgba(255,255,255,0.08);transform:translateY(-8px);opacity:0;transition:transform 180ms ease, opacity 180ms ease}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-success{border-color:rgba(88,200,120,0.35);background:linear-gradient(160deg, rgba(88,200,120,0.18), rgba(20,28,22,0.9))}
+.toast-error{border-color:rgba(230,90,90,0.35);background:linear-gradient(160deg, rgba(230,90,90,0.18), rgba(28,18,18,0.9))}
 .camera-card{width:100%;height:100%;display:flex;flex-direction:column;position:relative;min-height:480px}
 
 /* camera top bar (close + controls) */
@@ -279,6 +311,36 @@ body.camera-open #siteHeader, body.camera-open #siteNav{display:none!important}
 .card.recent{padding:16px}
 .card.invoices{padding:16px}
 .invoices th, .invoices td{padding:12px;text-align:left;border-bottom:1px solid rgba(0,0,0,0.04)}
+.ledger-preview{
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: #f6f6f6;
+}
+.ledger-table{width:100%;border-collapse:collapse}
+.ledger-table th, .ledger-table td{padding:10px;border-bottom:1px solid rgba(0,0,0,0.08);text-align:left}
+.ledger-image-modal img{
+  width: 100%;
+  height: auto;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 12px;
+}
+.ledger-image-modal .close-btn{
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  border: none;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  font-size: 20px;
+  cursor: pointer;
+}
 
 /* subtle hover & focus */
 .stat-card:focus-within, .stat-card:hover{transform:translateY(-4px);transition:transform .18s ease}
