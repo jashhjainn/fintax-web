@@ -614,7 +614,7 @@ async function performCapture(){
         id: data && (data.id || data._id) ? (data.id || data._id) : '',
         billNo,
         particulars,
-        gstAmt,
+        gstPayable: (data && data.gst_payable != null) ? formatAmount(data.gst_payable) : gstAmt,
         totalAmt
       };
     }
@@ -644,7 +644,7 @@ async function performCapture(){
             <td>${i + 1}</td>
             <td>${r.billNo}</td>
             <td>${r.particulars}</td>
-            <td>${r.gstAmt}</td>
+            <td>${r.gstPayable}</td>
             <td>${r.totalAmt}</td>
           </tr>
         `).join('');

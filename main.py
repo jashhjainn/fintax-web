@@ -87,6 +87,9 @@ async def ocr_invoice(file: UploadFile = File(...)):
             vendor=ocr_data.get("vendor"),
             invoice_date=ocr_data.get("invoice_date"),
             total_amount=ocr_data.get("total_amount"),
+            items=ocr_data.get("items", []),
+            hsn_codes=ocr_data.get("hsn_codes", []),
+            gst_payable=ocr_data.get("gst_payable"),
             raw_text=ocr_data["raw_text"],
             cleaned_text=ocr_data["cleaned_text"],
             lines=ocr_data["lines"],
@@ -123,6 +126,19 @@ def get_latest_ledger():
     doc.pop("_id", None)
     doc.pop("image_data", None)
     return doc
+
+
+@app.get("/ledger/latest/total")
+def get_latest_ledger_total():
+    if db is None:
+        raise HTTPException(status_code=500, detail="Database connection not available")
+    doc = db.ledger_entries.find_one(sort=[("_id", -1)])
+    if not doc:
+        raise HTTPException(status_code=404, detail="No ledger entries found")
+    return {
+        "id": str(doc["_id"]),
+        "total_amount": doc.get("total_amount")
+    }
 
 
 @app.get("/ledger/list")
