@@ -73,7 +73,13 @@ def _extract_vendor(lines: list[str]) -> str | None:
 
 _HSN_RATE_MAP = {
     # Common GST slabs keyed by HSN. Extend as needed.
-   
+    "0405": 5.0,
+    "1905": 5.0,
+    "3401": 5.0,
+    "8516": 18.0,
+    "0401": 0.0,
+    "0902": 5.0,
+    "3305": 18.0,
     "8517": 18.0,
     "9401": 18.0,
     "8471": 18.0,

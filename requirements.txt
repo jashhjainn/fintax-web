@@ -10,3 +10,4 @@ pytesseract
 opencv-python
 pytest
 httpx
+fpdf2

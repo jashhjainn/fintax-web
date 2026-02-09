@@ -40,6 +40,28 @@ function withTimeout(promise, ms){
   return promise(ctrl).finally(()=> clearTimeout(timer));
 }
 
+function getAuthToken(){
+  try{ return localStorage.getItem('authToken'); }catch(e){ return null; }
+}
+
+function authHeaders(){
+  const token = getAuthToken();
+  return token ? { 'Authorization': `Bearer ${token}` } : {};
+}
+
+function clearAuth(){
+  try{
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('authEmail');
+  }catch(e){}
+}
+
+function handleAuthError(message){
+  clearAuth();
+  alert(message || 'Session expired. Please login again.');
+  window.location.href = 'login.html';
+}
+
 async function resolveApiBase(){
   if(cachedApiBase) return cachedApiBase;
   const override = (window.API_BASE || (function(){ try{ return localStorage.getItem('apiBase'); }catch(e){ return null; } })());
@@ -201,10 +223,27 @@ function initHeaderNav(){
       if(href.includes(path)) { a.classList.add('active'); a.setAttribute('aria-current','true'); } else { a.classList.remove('active'); a.removeAttribute('aria-current'); }
     });
   }
+
+  // header logout button (if present)
+  const logoutBtn = document.getElementById('logoutBtn');
+  if(logoutBtn){
+    logoutBtn.addEventListener('click', ()=>{
+      const ok = confirm('Do you want to logout?');
+      if(!ok) return;
+      clearAuth();
+      window.location.href = 'auth.html';
+    });
+  }
 }
 
 // Page init: attach listeners only for present elements
 async function pageInit(){
+  const currentPage = (location.pathname || '').split('/').pop() || 'index.html';
+  const authRequiredPages = ['upload.html', 'ledger.html', 'profile.html'];
+  if(authRequiredPages.includes(currentPage) && !getAuthToken()){
+    window.location.href = 'login.html';
+    return;
+  }
   // camera & upload controls (clean UI)
   const cameraModal = document.getElementById('cameraModal');
   const openCameraBtn = document.getElementById('openCameraBtn');
@@ -449,9 +488,11 @@ async function performCapture(){
         // INFO: OCR + store to ledger
         const response = await fetch(`${apiBase}/ocr/`, {
             method: 'POST',
+            headers: authHeaders(),
             body: formData
         });
 
+        if (response.status === 401) { handleAuthError('Session expired. Please login again.'); return; }
         if (response.ok) {
             const result = await response.json();
             if(progressOverlay) {
@@ -499,6 +540,7 @@ async function performCapture(){
     const ledgerModal = document.getElementById('ledgerImageModal');
     const ledgerModalImg = document.getElementById('ledgerImageFull');
     const ledgerModalClose = document.getElementById('ledgerImageClose');
+    const downloadBtn = document.getElementById('downloadLedgerPdf');
 
     function formatLines(lines){
       if(!lines || !lines.length) return '<p class="subtitle">No text lines detected.</p>';
@@ -638,9 +680,10 @@ async function performCapture(){
       const tbody = document.getElementById('ledgerBody');
       if(tbody){
         const base = apiBase || cachedApiBase || DEFAULT_API_BASES[0] || '';
+        const token = getAuthToken();
         tbody.innerHTML = rows.map((r, i)=>`
           <tr>
-            <td class="col-preview">${r.id ? `<img class="ledger-preview" src="${base}/ledger/${r.id}/image" alt="Invoice preview">` : 'No image'}</td>
+            <td class="col-preview">${r.id ? `<img class="ledger-preview" src="${base}/ledger/${r.id}/image${token ? `?token=${encodeURIComponent(token)}` : ''}" alt="Invoice preview">` : 'No image'}</td>
             <td>${i + 1}</td>
             <td>${r.billNo}</td>
             <td>${r.particulars}</td>
@@ -678,6 +721,25 @@ async function performCapture(){
       });
     }
 
+    if(downloadBtn){
+      downloadBtn.addEventListener('click', async ()=>{
+        try{
+          const apiBase = await resolveApiBase();
+          const token = getAuthToken();
+          const url = `${apiBase}/ledger/list/pdf?limit=200${token ? `&token=${encodeURIComponent(token)}` : ''}`;
+          const link = document.createElement('a');
+          link.href = url;
+          link.target = '_blank';
+          link.rel = 'noopener';
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+        }catch(e){
+          alert('Unable to download PDF. Make sure the backend is running on port 8000.');
+        }
+      });
+    }
+
     (async ()=>{
       try{
         let data = null;
@@ -689,7 +751,8 @@ async function performCapture(){
         if(!data){
           try{
             apiBase = await resolveApiBase();
-            const resList = await fetch(`${apiBase}/ledger/list?limit=50`);
+            const resList = await fetch(`${apiBase}/ledger/list?limit=50`, { headers: authHeaders() });
+            if(resList.status === 401){ handleAuthError('Session expired. Please login again.'); return; }
             if(resList.ok) data = await resList.json();
           }catch(e){}
         }
@@ -703,7 +766,8 @@ async function performCapture(){
           apiBase = await resolveApiBase();
           const lastId = localStorage.getItem('ledgerLastId');
           const url = lastId ? `${apiBase}/ledger/${lastId}` : `${apiBase}/ledger/latest`;
-          const res = await fetch(url);
+          const res = await fetch(url, { headers: authHeaders() });
+          if(res.status === 401){ handleAuthError('Session expired. Please login again.'); return; }
           if(res.ok) data = await res.json();
         }
         try{
@@ -773,6 +837,11 @@ async function performCapture(){
           const err = await res.json().catch(()=> ({}));
           throw new Error(err.detail || 'Login failed');
         }
+        const data = await res.json();
+        try{
+          if(data.token) localStorage.setItem('authToken', data.token);
+          if(data.email) localStorage.setItem('authEmail', data.email);
+        }catch(e){}
         showToast('✅ Login successful!', 'success', 2000);
         setTimeout(()=> { window.location.href = 'index.html'; }, 1500);
       }catch(err){
