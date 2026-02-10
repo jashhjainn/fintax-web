@@ -14,11 +14,28 @@
     <section class="card">
       <h1 class="title">Ledger</h1>
       <p class="subtitle">OCR results from your uploads.</p>
-      <div class="actions" style="margin-top:12px;">
-        <button class="btn outline" id="downloadLedgerPdf" type="button">
-          <i class="fa-solid fa-file-pdf" aria-hidden="true"></i>
-          Download PDF
-        </button>
+      <div class="actions" style="margin-top:12px; margin-bottom: 12px;">
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          <label for="financialYear" style="font-weight: 600; color: var(--text);">Financial Year:</label>
+          <select id="financialYear" class="btn outline" style="padding: 8px 12px; border-radius: 6px; background: var(--bg); color: var(--text); border: 1px solid var(--muted);">
+            <option value="all">All Years</option>
+            <option value="2020">2019-2020</option>
+            <option value="2021">2020-2021</option>
+            <option value="2022">2021-2022</option>
+            <option value="2023">2022-2023</option>
+            <option value="2024">2023-2024</option>
+            <option value="2025">2024-2025</option>
+            <option value="2026">2025-2026</option>
+            <option value="2027">2026-2027</option>
+            <option value="2028">2027-2028</option>
+            <option value="2029">2028-2029</option>
+            <option value="2030">2029-2030</option>
+          </select>
+          <button class="btn outline" id="downloadLedgerPdf" type="button">
+            <i class="fa-solid fa-file-pdf" aria-hidden="true"></i>
+            Download PDF
+          </button>
+        </div>
       </div>
     </section>
 

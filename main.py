@@ -185,6 +185,264 @@ def list_ledgers(request: Request, limit: int = 20):
     return {"items": items}
 
 
+@app.get("/ledger/organized")
+def get_organized_ledger(request: Request):
+    """Get ledger entries organized by year and month based on invoice_date"""
+    user = _get_auth_user(request)
+    
+    # Fetch all ledger entries for the user
+    cursor = db.ledger_entries.find(
+        {"owner_email": user.get("email")},
+        sort=[("invoice_date", 1), ("_id", 1)]  # Sort by date ascending, then by ID
+    )
+    
+    organized_data = {}
+    total_entries = 0
+    
+    for doc in cursor:
+        total_entries += 1
+        doc["id"] = str(doc["_id"])
+        doc.pop("_id", None)
+        doc.pop("image_data", None)
+        
+        # Parse invoice date
+        invoice_date = doc.get("invoice_date")
+        if not invoice_date:
+            # If no invoice date, skip this entry or put in "Unknown" category
+            continue
+            
+        try:
+            # Try to parse the date - handle various formats
+            parsed_date = None
+            date_str = str(invoice_date).strip()
+            
+            # Common date formats
+            date_formats = [
+                "%Y-%m-%d", "%d-%m-%Y", "%m-%d-%Y", "%Y/%m/%d", "%d/%m/%Y", "%m/%d/%Y",
+                "%d %b %Y", "%d %B %Y", "%b %d %Y", "%B %d %Y",
+                "%Y-%m-%d %H:%M:%S", "%d-%m-%Y %H:%M:%S"
+            ]
+            
+            for fmt in date_formats:
+                try:
+                    parsed_date = datetime.strptime(date_str, fmt)
+                    break
+                except ValueError:
+                    continue
+            
+            if not parsed_date:
+                # Try to extract year and month from string patterns
+                year_month_match = re.search(r'(\d{4})[-/](\d{1,2})', date_str)
+                if year_month_match:
+                    year = int(year_month_match.group(1))
+                    month = int(year_month_match.group(2))
+                    parsed_date = datetime(year, month, 1)
+                else:
+                    continue
+            
+            year = parsed_date.year
+            month = parsed_date.month
+            month_name = parsed_date.strftime("%B")
+            
+            # Initialize year if not exists
+            if year not in organized_data:
+                organized_data[year] = {
+                    "year": year,
+                    "total_entries": 0,
+                    "total_amount": 0.0,
+                    "months": {}
+                }
+            
+            # Initialize month if not exists
+            if month not in organized_data[year]["months"]:
+                organized_data[year]["months"][month] = {
+                    "month": month,
+                    "month_name": month_name,
+                    "entries": [],
+                    "month_total": 0.0
+                }
+            
+            # Add entry to month
+            organized_data[year]["months"][month]["entries"].append(doc)
+            organized_data[year]["months"][month]["month_total"] += float(doc.get("total_amount") or 0)
+            
+            # Update totals
+            organized_data[year]["total_entries"] += 1
+            organized_data[year]["total_amount"] += float(doc.get("total_amount") or 0)
+            
+        except Exception as e:
+            logging.warning(f"Failed to parse date '{invoice_date}' for entry {doc.get('id')}: {e}")
+            continue
+    
+    # Convert to sorted list format
+    result = {
+        "total_entries": total_entries,
+        "years": []
+    }
+    
+    # Sort years in descending order (newest first)
+    for year in sorted(organized_data.keys(), reverse=True):
+        year_data = organized_data[year]
+        
+        # Sort months in descending order (newest first)
+        sorted_months = []
+        for month in sorted(year_data["months"].keys(), reverse=True):
+            sorted_months.append(year_data["months"][month])
+        
+        year_data["months"] = sorted_months
+        result["years"].append(year_data)
+    
+    return result
+
+
+@app.get("/ledger/financial-year/{fy}")
+def get_ledger_by_financial_year(request: Request, fy: str):
+    """Get ledger entries filtered by financial year (April to March)"""
+    user = _get_auth_user(request)
+    
+    # Handle "all" case
+    if fy.lower() == "all":
+        cursor = db.ledger_entries.find(
+            {"owner_email": user.get("email")},
+            sort=[("invoice_date", 1), ("_id", 1)]
+        )
+    else:
+        # Parse financial year (e.g., "2026" means FY 2025-2026)
+        try:
+            end_year = int(fy)
+            start_year = end_year - 1
+            
+            # Financial year: April of start_year to March of end_year
+            # We need to filter dates between 01/04/start_year and 31/03/end_year
+            
+            # Build date range filters
+            # Since dates are stored as strings in format "DD/MM/YYYY", we need to handle this carefully
+            # We'll create a list of valid date patterns for the financial year
+            
+            valid_dates = []
+            
+            # Months from April to December of start_year
+            for month in range(4, 13):  # April (4) to December (12)
+                for day in range(1, 32):  # 1 to 31
+                    try:
+                        # Create date and check if it's valid
+                        test_date = datetime(start_year, month, day)
+                        date_str = test_date.strftime("%d/%m/%Y")
+                        valid_dates.append(date_str)
+                    except ValueError:
+                        # Invalid date (e.g., Feb 30), skip
+                        continue
+            
+            # Months from January to March of end_year
+            for month in range(1, 4):  # January (1) to March (3)
+                for day in range(1, 32):  # 1 to 31
+                    try:
+                        # Create date and check if it's valid
+                        test_date = datetime(end_year, month, day)
+                        date_str = test_date.strftime("%d/%m/%Y")
+                        valid_dates.append(date_str)
+                    except ValueError:
+                        # Invalid date, skip
+                        continue
+            
+            # Query for entries with invoice_date in our valid dates list
+            cursor = db.ledger_entries.find({
+                "owner_email": user.get("email"),
+                "invoice_date": {"$in": valid_dates}
+            }, sort=[("invoice_date", 1), ("_id", 1)])
+            
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid financial year format. Use 'all' or a 4-digit year like '2026'")
+    
+    items = []
+    for doc in cursor:
+        doc["id"] = str(doc["_id"])
+        doc.pop("_id", None)
+        doc.pop("image_data", None)
+        items.append(doc)
+    
+    return {"items": items, "financial_year": fy if fy.lower() != "all" else "All Years"}
+
+
+@app.get("/ledger/available-financial-years")
+def get_available_financial_years(request: Request):
+    """Get list of financial years that have actual ledger entries"""
+    user = _get_auth_user(request)
+    
+    # Get all ledger entries for the user
+    cursor = db.ledger_entries.find(
+        {"owner_email": user.get("email")},
+        {"invoice_date": 1}
+    )
+    
+    # Extract unique financial years from invoice dates
+    financial_years = set()
+    
+    for doc in cursor:
+        invoice_date = doc.get("invoice_date")
+        if not invoice_date:
+            continue
+            
+        try:
+            # Try to parse the date - handle various formats
+            parsed_date = None
+            date_str = str(invoice_date).strip()
+            
+            # Common date formats
+            date_formats = [
+                "%Y-%m-%d", "%d-%m-%Y", "%m-%d-%Y", "%Y/%m/%d", "%d/%m/%Y", "%m/%d/%Y",
+                "%d %b %Y", "%d %B %Y", "%b %d %Y", "%B %d %Y",
+                "%Y-%m-%d %H:%M:%S", "%d-%m-%Y %H:%M:%S"
+            ]
+            
+            for fmt in date_formats:
+                try:
+                    parsed_date = datetime.strptime(date_str, fmt)
+                    break
+                except ValueError:
+                    continue
+            
+            if not parsed_date:
+                # Try to extract year and month from string patterns
+                year_month_match = re.search(r'(\d{4})[-/](\d{1,2})', date_str)
+                if year_month_match:
+                    year = int(year_month_match.group(1))
+                    month = int(year_month_match.group(2))
+                    parsed_date = datetime(year, month, 1)
+                else:
+                    continue
+            
+            # Determine financial year
+            # Financial year: April (4) to March (3) of next year
+            if parsed_date.month >= 4:  # April to December
+                financial_year_end = parsed_date.year
+            else:  # January to March
+                financial_year_end = parsed_date.year
+            
+            financial_years.add(financial_year_end)
+            
+        except Exception as e:
+            logging.warning(f"Failed to parse date '{invoice_date}' for financial year calculation: {e}")
+            continue
+    
+    # Convert to sorted list (newest first)
+    available_years = sorted(list(financial_years), reverse=True)
+    
+    # Format for display
+    formatted_years = []
+    for year in available_years:
+        start_year = year - 1
+        formatted_years.append({
+            "value": str(year),
+            "label": f"{start_year}-{year}"
+        })
+    
+    return {
+        "available_years": formatted_years,
+        "total_years": len(formatted_years)
+    }
+
+
 @app.get("/ledger/list/pdf")
 def ledger_list_pdf(request: Request, limit: int = 200):
     user = _get_auth_user(request)
@@ -347,6 +605,7 @@ def signup_user(payload: UserCreate):
 
     existing = db.users.find_one({"email": email})
     if existing:
+        print("Duplicate Email: ", email)
         raise HTTPException(status_code=409, detail="Email already registered")
 
     password_hash = hashlib.sha256(password.encode("utf-8")).hexdigest()

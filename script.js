@@ -533,253 +533,306 @@ async function performCapture(){
       }
   }); }
 
-  // Ledger page: render OCR result
-  const ledgerRoot = document.getElementById('ledgerRoot');
-  if(ledgerRoot){
-    const statusEl = document.getElementById('ledgerStatus');
-    const ledgerModal = document.getElementById('ledgerImageModal');
-    const ledgerModalImg = document.getElementById('ledgerImageFull');
-    const ledgerModalClose = document.getElementById('ledgerImageClose');
-    const downloadBtn = document.getElementById('downloadLedgerPdf');
+    // Ledger page: render OCR result
+    const ledgerRoot = document.getElementById('ledgerRoot');
+    if(ledgerRoot){
+      const statusEl = document.getElementById('ledgerStatus');
+      const ledgerModal = document.getElementById('ledgerImageModal');
+      const ledgerModalImg = document.getElementById('ledgerImageFull');
+      const ledgerModalClose = document.getElementById('ledgerImageClose');
+      const downloadBtn = document.getElementById('downloadLedgerPdf');
+      const financialYearSelect = document.getElementById('financialYear');
 
-    function formatLines(lines){
-      if(!lines || !lines.length) return '<p class="subtitle">No text lines detected.</p>';
-      const items = lines.slice(0, 50).map(l=> `<li>${l}</li>`).join('');
-      return `<ul>${items}</ul>`;
-    }
-
-    function extractLedgerRows(data){
-      const lines = (data && data.lines) ? data.lines : [];
-      const textBlob = (data && data.cleaned_text) ? data.cleaned_text : '';
-      const moneyPattern = /\s*([0-9,]+(?:\.\d{2})?)/g;
-
-      function parseAmountToken(token){
-        if(!token) return null;
-        const cleaned = token.replace(/[, ]+/g, '').replace(/[^\d.]/g, '');
-        if(!cleaned) return null;
-        const val = Number(cleaned);
-        return Number.isFinite(val) ? val : null;
+      function formatLines(lines){
+        if(!lines || !lines.length) return '<p class="subtitle">No text lines detected.</p>';
+        const items = lines.slice(0, 50).map(l=> `<li>${l}</li>`).join('');
+        return `<ul>${items}</ul>`;
       }
 
-      function formatAmount(val){
-        if(val == null) return 'Not detected';
-        try{
-          return `₹ ${val.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        }catch(e){
-          return `₹ ${val.toFixed(2)}`;
+      function extractLedgerRows(data){
+        const lines = (data && data.lines) ? data.lines : [];
+        const textBlob = (data && data.cleaned_text) ? data.cleaned_text : '';
+        const moneyPattern = /\s*([0-9,]+(?:\.\d{2})?)/g;
+
+        function parseAmountToken(token){
+          if(!token) return null;
+          const cleaned = token.replace(/[, ]+/g, '').replace(/[^\d.]/g, '');
+          if(!cleaned) return null;
+          const val = Number(cleaned);
+          return Number.isFinite(val) ? val : null;
         }
-      }
 
-      function lastAmountInLine(ln){
-        let match = null;
-        for(const m of ln.matchAll(moneyPattern)){ match = m; }
-        return match ? parseAmountToken(match[1]) : null;
-      }
-
-      function findAmountByKeyword(keywordRe){
-        for(const ln of lines){
-          if(keywordRe.test(ln)){
-            const amount = lastAmountInLine(ln);
-            if(amount != null) return amount;
+        function formatAmount(val){
+          if(val == null) return 'Not detected';
+          try{
+            return `₹ ${val.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+          }catch(e){
+            return `₹ ${val.toFixed(2)}`;
           }
         }
-        return null;
-      }
 
-      function findBillNo(){
-        for(const ln of lines){
-          const m = ln.match(/(?:bill|invoice)\s*(?:no\.?|number)?\s*[:#-]?\s*([A-Z0-9-]+)/i);
-          if(m && m[1]) return m[1].trim();
+        function lastAmountInLine(ln){
+          let match = null;
+          for(const m of ln.matchAll(moneyPattern)){ match = m; }
+          return match ? parseAmountToken(match[1]) : null;
         }
-        // fallback: any token near "no"
-        for(const ln of lines){
-          if(/no\.?|number/i.test(ln)){
-            const t = ln.match(/\b([A-Z0-9-]{4,})\b/);
-            if(t && t[1]) return t[1].trim();
+
+        function findAmountByKeyword(keywordRe){
+          for(const ln of lines){
+            if(keywordRe.test(ln)){
+              const amount = lastAmountInLine(ln);
+              if(amount != null) return amount;
+            }
           }
+          return null;
         }
-        const m = textBlob.match(/(?:bill|invoice)\s*(?:no\.?|number|#|:)\s*([A-Z0-9-]+)/i);
-        return m && m[1] ? m[1].trim() : null;
-      }
-      const billNo = findBillNo() || 'Not detected';
 
-      function findClientName(){
-        for(const ln of lines){
-          const m = ln.match(/\bclient\b\s*[:\-]\s*(.+)$/i);
-          if(m && m[1]) return m[1].trim();
+        function findBillNo(){
+          for(const ln of lines){
+            const m = ln.match(/(?:bill|invoice)\s*(?:no\.?|number)?\s*[:#-]?\s*([A-Z0-9-]+)/i);
+            if(m && m[1]) return m[1].trim();
+          }
+          // fallback: any token near "no"
+          for(const ln of lines){
+            if(/no\.?|number/i.test(ln)){
+              const t = ln.match(/\b([A-Z0-9-]{4,})\b/);
+              if(t && t[1]) return t[1].trim();
+            }
+          }
+          const m = textBlob.match(/(?:bill|invoice)\s*(?:no\.?|number|#|:)\s*([A-Z0-9-]+)/i);
+          return m && m[1] ? m[1].trim() : null;
         }
-        return null;
-      }
-      const clientName = findClientName();
+        const billNo = findBillNo() || 'Not detected';
 
-      const subtotalAmt = findAmountByKeyword(/\bsub\s*total\b|\bsubtotal\b/i);
-      const totalAmtVal = (function(){
-        const fromLine = findAmountByKeyword(/\btotal\b|\btotal amount\b|\bgrand total\b|\bamount due\b|\bnet total\b|\bbalance due\b/i);
-        if(fromLine != null) return fromLine;
-        if(data && data.total_amount) return parseAmountToken(data.total_amount);
-        return null;
-      })();
-
-      let gstAmtVal = null;
-      if(totalAmtVal != null && subtotalAmt != null && totalAmtVal >= subtotalAmt){
-        gstAmtVal = Number((totalAmtVal - subtotalAmt).toFixed(2));
-      } else if(totalAmtVal != null){
-        // If total includes GST and subtotal is missing, derive GST from total (18% default)
-        const base = totalAmtVal / 1.18;
-        gstAmtVal = Number((totalAmtVal - base).toFixed(2));
-      } else {
-        const gstMatch = (textBlob.match(/(?:gst|tax)\s*(?:amt|amount|:)\s*([0-9,]+(?:\.\d{2})?)/i) || [])[1];
-        gstAmtVal = gstMatch ? parseAmountToken(gstMatch) : null;
-      }
-
-      const gstAmt = formatAmount(gstAmtVal);
-      const totalAmt = totalAmtVal != null ? formatAmount(totalAmtVal) : (data && data.total_amount ? data.total_amount : 'Not detected');
-
-      function findParticulars(){
-        for(const ln of lines){
-          const clean = ln.replace(/\s+/g, ' ').trim();
-          if(clean.length < 3) continue;
-          if(/invoice|bill|date|gst|tax|total|amount|balance/i.test(clean)) continue;
-          if(/\bclient\b/i.test(clean)) continue;
-          if(/[A-Za-z]/.test(clean)) return clean;
+        function findClientName(){
+          for(const ln of lines){
+            const m = ln.match(/\bclient\b\s*[:\-]\s*(.+)$/i);
+            if(m && m[1]) return m[1].trim();
+          }
+          return null;
         }
-        const vendor = data && data.vendor ? data.vendor : null;
-        if(vendor) return vendor.toString().replace(/\s+/g, ' ').trim();
-        return 'Unknown';
+        const clientName = findClientName();
+
+        const subtotalAmt = findAmountByKeyword(/\bsub\s*total\b|\bsubtotal\b/i);
+        const totalAmtVal = (function(){
+          const fromLine = findAmountByKeyword(/\btotal\b|\btotal amount\b|\bgrand total\b|\bamount due\b|\bnet total\b|\bbalance due\b/i);
+          if(fromLine != null) return fromLine;
+          if(data && data.total_amount) return parseAmountToken(data.total_amount);
+          return null;
+        })();
+
+        let gstAmtVal = null;
+        if(totalAmtVal != null && subtotalAmt != null && totalAmtVal >= subtotalAmt){
+          gstAmtVal = Number((totalAmtVal - subtotalAmt).toFixed(2));
+        } else if(totalAmtVal != null){
+          // If total includes GST and subtotal is missing, derive GST from total (18% default)
+          const base = totalAmtVal / 1.18;
+          gstAmtVal = Number((totalAmtVal - base).toFixed(2));
+        } else {
+          const gstMatch = (textBlob.match(/(?:gst|tax)\s*(?:amt|amount|:)\s*([0-9,]+(?:\.\d{2})?)/i) || [])[1];
+          gstAmtVal = gstMatch ? parseAmountToken(gstMatch) : null;
+        }
+
+        const gstAmt = formatAmount(gstAmtVal);
+        const totalAmt = totalAmtVal != null ? formatAmount(totalAmtVal) : (data && data.total_amount ? data.total_amount : 'Not detected');
+
+        function findParticulars(){
+          for(const ln of lines){
+            const clean = ln.replace(/\s+/g, ' ').trim();
+            if(clean.length < 3) continue;
+            if(/invoice|bill|date|gst|tax|total|amount|balance/i.test(clean)) continue;
+            if(/\bclient\b/i.test(clean)) continue;
+            if(/[A-Za-z]/.test(clean)) return clean;
+          }
+          const vendor = data && data.vendor ? data.vendor : null;
+          if(vendor) return vendor.toString().replace(/\s+/g, ' ').trim();
+          return 'Unknown';
+        }
+        let particulars = findParticulars();
+        if(clientName && !particulars.toLowerCase().includes(clientName.toLowerCase())){
+          particulars = `${particulars} (Client: ${clientName})`;
+        }
+
+        return {
+          id: data && (data.id || data._id) ? (data.id || data._id) : '',
+          billNo,
+          particulars,
+          gstPayable: (data && data.gst_payable != null) ? formatAmount(data.gst_payable) : gstAmt,
+          totalAmt
+        };
       }
-      let particulars = findParticulars();
-      if(clientName && !particulars.toLowerCase().includes(clientName.toLowerCase())){
-        particulars = `${particulars} (Client: ${clientName})`;
+
+      function normalizeLedgerItems(data){
+        if(!data) return [];
+        if(Array.isArray(data)) return data;
+        if(data.items && Array.isArray(data.items)) return data.items;
+        return [data];
       }
 
-      return {
-        id: data && (data.id || data._id) ? (data.id || data._id) : '',
-        billNo,
-        particulars,
-        gstPayable: (data && data.gst_payable != null) ? formatAmount(data.gst_payable) : gstAmt,
-        totalAmt
-      };
-    }
+      function renderLedger(data, apiBase){
+        const items = normalizeLedgerItems(data);
+        if(!items.length){
+          if(statusEl) statusEl.textContent = 'No OCR data found.';
+          // Clear the table when no data is found
+          const tbody = document.getElementById('ledgerBody');
+          if(tbody){
+            tbody.innerHTML = '';
+          }
+          return;
+        }
+        if(statusEl) statusEl.textContent = `Showing ${items.length} ledger entr${items.length === 1 ? 'y' : 'ies'}.`;
 
-    function normalizeLedgerItems(data){
-      if(!data) return [];
-      if(Array.isArray(data)) return data;
-      if(data.items && Array.isArray(data.items)) return data.items;
-      return [data];
-    }
-
-    function renderLedger(data, apiBase){
-      const items = normalizeLedgerItems(data);
-      if(!items.length){
-        if(statusEl) statusEl.textContent = 'No OCR data found.';
-        return;
-      }
-      if(statusEl) statusEl.textContent = `Showing ${items.length} ledger entr${items.length === 1 ? 'y' : 'ies'}.`;
-
-      const rows = items.map(extractLedgerRows);
-      const tbody = document.getElementById('ledgerBody');
-      if(tbody){
-        const base = apiBase || cachedApiBase || DEFAULT_API_BASES[0] || '';
-        const token = getAuthToken();
-        tbody.innerHTML = rows.map((r, i)=>`
-          <tr>
-            <td class="col-preview">${r.id ? `<img class="ledger-preview" src="${base}/ledger/${r.id}/image${token ? `?token=${encodeURIComponent(token)}` : ''}" alt="Invoice preview">` : 'No image'}</td>
-            <td>${i + 1}</td>
-            <td>${r.billNo}</td>
-            <td>${r.particulars}</td>
-            <td>${r.gstPayable}</td>
-            <td>${r.totalAmt}</td>
-          </tr>
-        `).join('');
-      }
-    }
-
-    function openLedgerPreview(src){
-      if(!ledgerModal || !ledgerModalImg) return;
-      ledgerModalImg.src = src;
-      ledgerModal.setAttribute('aria-hidden', 'false');
-    }
-
-    function closeLedgerPreview(){
-      if(!ledgerModal || !ledgerModalImg) return;
-      ledgerModal.setAttribute('aria-hidden', 'true');
-      ledgerModalImg.removeAttribute('src');
-    }
-
-    if(ledgerModalClose){
-      ledgerModalClose.addEventListener('click', closeLedgerPreview);
-    }
-    if(ledgerModal){
-      ledgerModal.addEventListener('click', (e)=>{ if(e.target === ledgerModal) closeLedgerPreview(); });
-      document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && ledgerModal.getAttribute('aria-hidden') === 'false') closeLedgerPreview(); });
-    }
-    const ledgerBody = document.getElementById('ledgerBody');
-    if(ledgerBody){
-      ledgerBody.addEventListener('click', (e)=>{
-        const img = e.target && e.target.closest ? e.target.closest('img.ledger-preview') : null;
-        if(img && img.getAttribute('src')){ openLedgerPreview(img.getAttribute('src')); return; }
-      });
-    }
-
-    if(downloadBtn){
-      downloadBtn.addEventListener('click', async ()=>{
-        try{
-          const apiBase = await resolveApiBase();
+        const rows = items.map(extractLedgerRows);
+        const tbody = document.getElementById('ledgerBody');
+        if(tbody){
+          const base = apiBase || cachedApiBase || DEFAULT_API_BASES[0] || '';
           const token = getAuthToken();
-          const url = `${apiBase}/ledger/list/pdf?limit=200${token ? `&token=${encodeURIComponent(token)}` : ''}`;
-          const link = document.createElement('a');
-          link.href = url;
-          link.target = '_blank';
-          link.rel = 'noopener';
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
-        }catch(e){
-          alert('Unable to download PDF. Make sure the backend is running on port 8000.');
+          tbody.innerHTML = rows.map((r, i)=>`
+            <tr>
+              <td class="col-preview">${r.id ? `<img class="ledger-preview" src="${base}/ledger/${r.id}/image${token ? `?token=${encodeURIComponent(token)}` : ''}" alt="Invoice preview">` : ''}</td>
+              <td>${i + 1}</td>
+              <td>${r.billNo}</td>
+              <td>${r.particulars}</td>
+              <td>${r.gstPayable}</td>
+              <td>${r.totalAmt}</td>
+            </tr>
+          `).join('');
         }
-      });
-    }
-
-    (async ()=>{
-      try{
-        let data = null;
-        let apiBase = null;
-        try{
-          const cachedList = localStorage.getItem('ledgerListData');
-          if(cachedList) data = JSON.parse(cachedList);
-        }catch(e){}
-        if(!data){
-          try{
-            apiBase = await resolveApiBase();
-            const resList = await fetch(`${apiBase}/ledger/list?limit=50`, { headers: authHeaders() });
-            if(resList.status === 401){ handleAuthError('Session expired. Please login again.'); return; }
-            if(resList.ok) data = await resList.json();
-          }catch(e){}
-        }
-        if(!data){
-          try{
-            const cached = localStorage.getItem('ledgerLastData');
-            if(cached) data = JSON.parse(cached);
-          }catch(e){}
-        }
-        if(!data){
-          apiBase = await resolveApiBase();
-          const lastId = localStorage.getItem('ledgerLastId');
-          const url = lastId ? `${apiBase}/ledger/${lastId}` : `${apiBase}/ledger/latest`;
-          const res = await fetch(url, { headers: authHeaders() });
-          if(res.status === 401){ handleAuthError('Session expired. Please login again.'); return; }
-          if(res.ok) data = await res.json();
-        }
-        try{
-          if(data && data.items) localStorage.setItem('ledgerListData', JSON.stringify(data.items));
-          else if(Array.isArray(data)) localStorage.setItem('ledgerListData', JSON.stringify(data));
-        }catch(e){}
-        renderLedger(data, apiBase);
-      }catch(e){
-        if(statusEl) statusEl.textContent = 'Unable to load ledger data.';
       }
-    })();
-  }
+
+      function openLedgerPreview(src){
+        if(!ledgerModal || !ledgerModalImg) return;
+        ledgerModalImg.src = src;
+        ledgerModal.setAttribute('aria-hidden', 'false');
+      }
+
+      function closeLedgerPreview(){
+        if(!ledgerModal || !ledgerModalImg) return;
+        ledgerModal.setAttribute('aria-hidden', 'true');
+        ledgerModalImg.removeAttribute('src');
+      }
+
+      if(ledgerModalClose){
+        ledgerModalClose.addEventListener('click', closeLedgerPreview);
+      }
+      if(ledgerModal){
+        ledgerModal.addEventListener('click', (e)=>{ if(e.target === ledgerModal) closeLedgerPreview(); });
+        document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && ledgerModal.getAttribute('aria-hidden') === 'false') closeLedgerPreview(); });
+      }
+      const ledgerBody = document.getElementById('ledgerBody');
+      if(ledgerBody){
+        ledgerBody.addEventListener('click', (e)=>{
+          const img = e.target && e.target.closest ? e.target.closest('img.ledger-preview') : null;
+          if(img && img.getAttribute('src')){ openLedgerPreview(img.getAttribute('src')); return; }
+        });
+      }
+
+      if(downloadBtn){
+        downloadBtn.addEventListener('click', async ()=>{
+          try{
+            const apiBase = await resolveApiBase();
+            const token = getAuthToken();
+            const url = `${apiBase}/ledger/list/pdf?limit=200${token ? `&token=${encodeURIComponent(token)}` : ''}`;
+            const link = document.createElement('a');
+            link.href = url;
+            link.target = '_blank';
+            link.rel = 'noopener';
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+          }catch(e){
+            alert('Unable to download PDF. Make sure the backend is running on port 8000.');
+          }
+        });
+      }
+
+      // Financial year selection functionality
+      if(financialYearSelect){
+        financialYearSelect.addEventListener('change', async ()=>{
+          try{
+            const selectedFY = financialYearSelect.value;
+            const apiBase = await resolveApiBase();
+            
+            let data = null;
+            let endpoint = '';
+            
+            if(selectedFY === 'all'){
+              endpoint = `${apiBase}/ledger/list?limit=500`;
+            } else {
+              endpoint = `${apiBase}/ledger/financial-year/${selectedFY}`;
+            }
+            
+            const res = await fetch(endpoint, { headers: authHeaders() });
+            if(res.status === 401){ handleAuthError('Session expired. Please login again.'); return; }
+            if(res.ok){
+              const response = await res.json();
+              data = response.items || response;
+              
+              // Update status to show financial year
+              if(selectedFY === 'all'){
+                statusEl.textContent = `Showing all ledger entries (${data.length} total)`;
+              } else {
+                // Convert financial year number to display format
+                const endYear = parseInt(selectedFY);
+                const startYear = endYear - 1;
+                statusEl.textContent = `Showing ledger entries for Financial Year ${startYear}-${endYear} (${data.length} entries)`;
+              }
+              
+              renderLedger(data, apiBase);
+            } else {
+              throw new Error('Failed to fetch data');
+            }
+          }catch(e){
+            console.error('Error fetching financial year data:', e);
+            statusEl.textContent = 'Unable to load financial year data.';
+          }
+        });
+      }
+
+      // Function to load initial data based on current financial year selection
+      async function loadInitialData() {
+        try{
+          const selectedFY = financialYearSelect ? financialYearSelect.value : 'all';
+          const apiBase = await resolveApiBase();
+          
+          let data = null;
+          let endpoint = '';
+          
+          if(selectedFY === 'all'){
+            endpoint = `${apiBase}/ledger/list?limit=500`;
+          } else {
+            endpoint = `${apiBase}/ledger/financial-year/${selectedFY}`;
+          }
+          
+          const res = await fetch(endpoint, { headers: authHeaders() });
+          if(res.status === 401){ handleAuthError('Session expired. Please login again.'); return; }
+          if(res.ok){
+            const response = await res.json();
+            data = response.items || response;
+            
+            // Update status to show financial year
+            if(selectedFY === 'all'){
+              statusEl.textContent = `Showing all ledger entries (${data.length} total)`;
+            } else {
+              // Convert financial year number to display format
+              const endYear = parseInt(selectedFY);
+              const startYear = endYear - 1;
+              statusEl.textContent = `Showing ledger entries for Financial Year ${startYear}-${endYear} (${data.length} entries)`;
+            }
+            
+            renderLedger(data, apiBase);
+          } else {
+            throw new Error('Failed to fetch initial data');
+          }
+        }catch(e){
+          console.error('Error loading initial data:', e);
+          if(statusEl) statusEl.textContent = 'Unable to load ledger data.';
+        }
+      }
+
+      // Load initial data when page loads
+      loadInitialData();
+    }
 
   // Signup form handling
   const signupForm = document.getElementById('signupForm');
