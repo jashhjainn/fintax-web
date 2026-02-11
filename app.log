@@ -729,3 +729,502 @@
 2026-02-10 20:51:40,672 - INFO - Database connection available.
 2026-02-10 20:51:40,778 - INFO - Ensured unique index on users.email
 2026-02-10 20:55:11,620 - INFO - OCR stored with id: 698b4dd28d816a9f9e997360
+2026-02-11 12:10:54,977 - INFO - Successfully connected to MongoDB!
+2026-02-11 12:10:58,031 - INFO - Database connection available.
+2026-02-11 12:10:58,055 - INFO - Ensured unique index on users.email
+2026-02-11 12:11:47,831 - INFO - Successfully connected to MongoDB!
+2026-02-11 12:11:49,151 - INFO - Database connection available.
+2026-02-11 12:11:49,175 - INFO - Ensured unique index on users.email
+2026-02-11 13:10:13,705 - INFO - OCR stored with id: 698c325d2dd67151006b69a8
+2026-02-11 13:21:34,722 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:21:35,916 - INFO - Database connection available.
+2026-02-11 13:21:36,000 - INFO - Ensured unique index on users.email
+2026-02-11 13:23:29,917 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:23:30,823 - INFO - Database connection available.
+2026-02-11 13:23:30,848 - INFO - Ensured unique index on users.email
+2026-02-11 13:23:43,932 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:23:44,670 - INFO - Database connection available.
+2026-02-11 13:23:44,710 - INFO - Ensured unique index on users.email
+2026-02-11 13:23:53,367 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:23:54,027 - INFO - Database connection available.
+2026-02-11 13:23:54,129 - INFO - Ensured unique index on users.email
+2026-02-11 13:23:56,802 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:23:57,408 - INFO - Database connection available.
+2026-02-11 13:23:57,434 - INFO - Ensured unique index on users.email
+2026-02-11 13:25:33,303 - INFO - OCR stored with id: 698c35f46c9fbc0c4f860761
+2026-02-11 13:27:41,992 - INFO - OCR stored with id: 698c36756c9fbc0c4f860762
+2026-02-11 13:34:25,232 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:34:26,098 - INFO - Database connection available.
+2026-02-11 13:34:26,188 - INFO - Ensured unique index on users.email
+2026-02-11 13:35:19,556 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:35:20,319 - INFO - Database connection available.
+2026-02-11 13:35:20,404 - INFO - Ensured unique index on users.email
+2026-02-11 13:35:31,322 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:35:32,063 - INFO - Database connection available.
+2026-02-11 13:35:32,097 - INFO - Ensured unique index on users.email
+2026-02-11 13:36:13,862 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:36:14,407 - INFO - Database connection available.
+2026-02-11 13:36:15,158 - INFO - Ensured unique index on users.email
+2026-02-11 13:37:15,882 - WARNING - Validation failed for file invoice-1770797234048.png: ['invoice date', 'total amount', 'hsn code']
+2026-02-11 13:37:36,524 - WARNING - Validation failed for file invoice-1770797254523.png: ['bill number', 'invoice date', 'total amount', 'hsn code']
+2026-02-11 13:37:48,004 - INFO - OCR stored with id: 698c38d317c98afff7570e33
+2026-02-11 13:49:39,441 - INFO - OCR stored with id: 698c3b9b17c98afff7570e34
+2026-02-11 13:49:51,218 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:49:51,773 - INFO - Database connection available.
+2026-02-11 13:49:51,800 - INFO - Ensured unique index on users.email
+2026-02-11 13:50:51,384 - INFO - OCR stored with id: 698c3be217c98afff7570e35
+2026-02-11 13:54:27,949 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:54:28,355 - INFO - Database connection available.
+2026-02-11 13:54:28,460 - INFO - Ensured unique index on users.email
+2026-02-11 13:56:11,679 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:56:12,243 - INFO - Database connection available.
+2026-02-11 13:56:12,266 - INFO - Ensured unique index on users.email
+2026-02-11 13:59:06,505 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:59:06,527 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:59:06,534 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:59:07,473 - INFO - Database connection available.
+2026-02-11 13:59:07,482 - INFO - Database connection available.
+2026-02-11 13:59:07,492 - INFO - Database connection available.
+2026-02-11 13:59:07,502 - INFO - Ensured unique index on users.email
+2026-02-11 13:59:07,521 - INFO - Ensured unique index on users.email
+2026-02-11 13:59:07,529 - INFO - Ensured unique index on users.email
+2026-02-11 13:59:10,486 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:59:10,493 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:59:11,119 - INFO - Database connection available.
+2026-02-11 13:59:11,119 - INFO - Database connection available.
+2026-02-11 13:59:11,122 - INFO - Database connection available.
+2026-02-11 13:59:11,201 - INFO - Ensured unique index on users.email
+2026-02-11 13:59:18,603 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:59:18,638 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:59:18,649 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:59:19,612 - INFO - Database connection available.
+2026-02-11 13:59:19,630 - INFO - Database connection available.
+2026-02-11 13:59:19,631 - INFO - Database connection available.
+2026-02-11 13:59:19,641 - INFO - Ensured unique index on users.email
+2026-02-11 13:59:19,656 - INFO - Ensured unique index on users.email
+2026-02-11 13:59:19,664 - INFO - Ensured unique index on users.email
+2026-02-11 13:59:22,506 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:59:22,548 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:59:23,176 - INFO - Database connection available.
+2026-02-11 13:59:23,177 - INFO - Database connection available.
+2026-02-11 13:59:23,185 - INFO - Database connection available.
+2026-02-11 13:59:23,209 - INFO - Ensured unique index on users.email
+2026-02-11 13:59:23,216 - INFO - Ensured unique index on users.email
+2026-02-11 13:59:23,231 - INFO - Ensured unique index on users.email
+2026-02-11 13:59:41,520 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:59:41,521 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:59:41,555 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:59:42,289 - INFO - Database connection available.
+2026-02-11 13:59:42,290 - INFO - Database connection available.
+2026-02-11 13:59:42,300 - INFO - Database connection available.
+2026-02-11 13:59:42,323 - INFO - Ensured unique index on users.email
+2026-02-11 13:59:42,328 - INFO - Ensured unique index on users.email
+2026-02-11 13:59:42,335 - INFO - Ensured unique index on users.email
+2026-02-11 13:59:45,686 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:59:45,728 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:59:45,738 - INFO - Successfully connected to MongoDB!
+2026-02-11 13:59:46,172 - INFO - Database connection available.
+2026-02-11 13:59:46,197 - INFO - Ensured unique index on users.email
+2026-02-11 13:59:46,201 - INFO - Database connection available.
+2026-02-11 13:59:46,210 - INFO - Database connection available.
+2026-02-11 13:59:46,226 - INFO - Ensured unique index on users.email
+2026-02-11 13:59:46,238 - INFO - Ensured unique index on users.email
+2026-02-11 14:00:07,334 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:00:07,335 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:00:07,845 - INFO - Database connection available.
+2026-02-11 14:00:07,845 - INFO - Database connection available.
+2026-02-11 14:00:07,845 - INFO - Database connection available.
+2026-02-11 14:00:07,931 - INFO - Ensured unique index on users.email
+2026-02-11 14:00:07,931 - INFO - Ensured unique index on users.email
+2026-02-11 14:00:10,770 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:00:10,804 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:00:11,435 - INFO - Database connection available.
+2026-02-11 14:00:11,436 - INFO - Database connection available.
+2026-02-11 14:00:11,442 - INFO - Database connection available.
+2026-02-11 14:00:11,477 - INFO - Ensured unique index on users.email
+2026-02-11 14:00:11,477 - INFO - Ensured unique index on users.email
+2026-02-11 14:00:11,477 - INFO - Ensured unique index on users.email
+2026-02-11 14:10:46,487 - INFO - OCR stored with id: 698c408e13f5bccc4dbb240b
+2026-02-11 14:12:14,017 - INFO - OCR stored with id: 698c40e513f5bccc4dbb240c
+2026-02-11 14:13:48,631 - WARNING - Validation failed for file invoice-1770799426030.png: ['invoice date', 'hsn code']
+2026-02-11 14:14:06,259 - WARNING - Validation failed for file invoice-1770799444428.png: ['invoice date', 'total amount', 'hsn code']
+2026-02-11 14:15:52,832 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:15:52,851 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:15:52,883 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:15:53,915 - INFO - Database connection available.
+2026-02-11 14:15:53,918 - INFO - Database connection available.
+2026-02-11 14:15:53,921 - INFO - Database connection available.
+2026-02-11 14:15:53,950 - INFO - Ensured unique index on users.email
+2026-02-11 14:15:54,011 - INFO - Ensured unique index on users.email
+2026-02-11 14:16:24,654 - INFO - OCR stored with id: 698c41e080767768ea530fc3
+2026-02-11 14:20:57,492 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:20:57,611 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:20:57,751 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:20:58,171 - INFO - Database connection available.
+2026-02-11 14:20:58,251 - INFO - Database connection available.
+2026-02-11 14:20:58,331 - INFO - Database connection available.
+2026-02-11 14:20:58,352 - INFO - Ensured unique index on users.email
+2026-02-11 14:20:58,362 - INFO - Ensured unique index on users.email
+2026-02-11 14:21:01,918 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:21:02,036 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:21:02,635 - INFO - Database connection available.
+2026-02-11 14:21:02,660 - INFO - Ensured unique index on users.email
+2026-02-11 14:21:02,724 - INFO - Database connection available.
+2026-02-11 14:21:02,724 - INFO - Database connection available.
+2026-02-11 14:21:02,758 - INFO - Ensured unique index on users.email
+2026-02-11 14:21:02,769 - INFO - Ensured unique index on users.email
+2026-02-11 14:29:00,875 - INFO - OCR stored with id: 698c44d4e81e83f236167392
+2026-02-11 14:31:38,133 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:31:38,161 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:31:38,171 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:31:40,624 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:31:40,628 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:31:40,639 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:31:43,673 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:31:43,740 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:31:46,053 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:31:46,070 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:31:46,082 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:31:46,549 - INFO - Database connection available.
+2026-02-11 14:31:46,549 - INFO - Database connection available.
+2026-02-11 14:31:46,586 - INFO - Ensured unique index on users.email
+2026-02-11 14:31:46,588 - INFO - Ensured unique index on users.email
+2026-02-11 14:31:49,013 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:31:49,027 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:31:49,027 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:31:49,439 - INFO - Database connection available.
+2026-02-11 14:31:49,454 - INFO - Database connection available.
+2026-02-11 14:31:49,455 - INFO - Database connection available.
+2026-02-11 14:31:49,476 - INFO - Ensured unique index on users.email
+2026-02-11 14:31:49,494 - INFO - Ensured unique index on users.email
+2026-02-11 14:31:49,501 - INFO - Ensured unique index on users.email
+2026-02-11 14:32:09,198 - INFO - OCR stored with id: 698c4591f4f8a21a9ef628ec
+2026-02-11 14:32:35,511 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:32:35,557 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:32:36,359 - INFO - Database connection available.
+2026-02-11 14:32:36,385 - INFO - Ensured unique index on users.email
+2026-02-11 14:32:36,412 - INFO - Database connection available.
+2026-02-11 14:32:36,413 - INFO - Database connection available.
+2026-02-11 14:32:36,520 - INFO - Ensured unique index on users.email
+2026-02-11 14:33:32,337 - INFO - OCR stored with id: 698c45e4dae0d37d1780bb5e
+2026-02-11 14:41:16,501 - INFO - OCR stored with id: 698c47b4dae0d37d1780bb60
+2026-02-11 14:41:26,473 - INFO - OCR stored with id: 698c47bedae0d37d1780bb61
+2026-02-11 14:42:26,816 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:42:26,847 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:42:27,590 - INFO - Database connection available.
+2026-02-11 14:42:27,591 - INFO - Database connection available.
+2026-02-11 14:42:27,624 - INFO - Ensured unique index on users.email
+2026-02-11 14:42:27,627 - INFO - Ensured unique index on users.email
+2026-02-11 14:42:30,868 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:42:30,900 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:42:30,936 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:42:31,524 - INFO - Database connection available.
+2026-02-11 14:42:31,552 - INFO - Ensured unique index on users.email
+2026-02-11 14:42:31,554 - INFO - Database connection available.
+2026-02-11 14:42:31,581 - INFO - Ensured unique index on users.email
+2026-02-11 14:42:31,598 - INFO - Database connection available.
+2026-02-11 14:42:31,628 - INFO - Ensured unique index on users.email
+2026-02-11 14:42:48,022 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:42:48,024 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:42:48,036 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:42:48,475 - INFO - Database connection available.
+2026-02-11 14:42:48,488 - INFO - Database connection available.
+2026-02-11 14:42:48,508 - INFO - Ensured unique index on users.email
+2026-02-11 14:42:48,516 - INFO - Ensured unique index on users.email
+2026-02-11 14:42:48,526 - INFO - Ensured unique index on users.email
+2026-02-11 14:45:05,239 - INFO - OCR stored with id: 698c4899f5f3d36d9afb2bd8
+2026-02-11 14:50:19,154 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:50:19,219 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:50:19,647 - INFO - Database connection available.
+2026-02-11 14:50:19,676 - INFO - Ensured unique index on users.email
+2026-02-11 14:50:19,685 - INFO - Ensured unique index on users.email
+2026-02-11 14:50:27,930 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:50:28,338 - INFO - Database connection available.
+2026-02-11 14:50:28,365 - INFO - Ensured unique index on users.email
+2026-02-11 14:50:46,368 - INFO - OCR stored with id: 698c49ee556fe25dd0f51b5d
+2026-02-11 14:52:22,022 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:52:22,032 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:52:22,041 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:52:23,093 - INFO - Database connection available.
+2026-02-11 14:52:23,122 - INFO - Ensured unique index on users.email
+2026-02-11 14:52:23,195 - INFO - Database connection available.
+2026-02-11 14:52:23,230 - INFO - Database connection available.
+2026-02-11 14:52:23,296 - INFO - Ensured unique index on users.email
+2026-02-11 14:52:52,241 - INFO - OCR stored with id: 698c4a6c59bff5f872dd9fe8
+2026-02-11 14:53:50,615 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:53:50,646 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:53:51,111 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:53:51,357 - INFO - Database connection available.
+2026-02-11 14:53:51,389 - INFO - Ensured unique index on users.email
+2026-02-11 14:53:51,406 - INFO - Ensured unique index on users.email
+2026-02-11 14:53:51,866 - INFO - Database connection available.
+2026-02-11 14:53:51,935 - INFO - Ensured unique index on users.email
+2026-02-11 14:57:48,849 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:57:48,858 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:57:48,888 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:57:49,557 - INFO - Database connection available.
+2026-02-11 14:57:49,559 - INFO - Database connection available.
+2026-02-11 14:57:49,590 - INFO - Database connection available.
+2026-02-11 14:57:49,613 - INFO - Ensured unique index on users.email
+2026-02-11 14:57:49,695 - INFO - Ensured unique index on users.email
+2026-02-11 14:57:52,718 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:57:52,776 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:57:53,421 - INFO - Database connection available.
+2026-02-11 14:57:53,478 - INFO - Ensured unique index on users.email
+2026-02-11 14:57:53,545 - INFO - Database connection available.
+2026-02-11 14:57:53,572 - INFO - Ensured unique index on users.email
+2026-02-11 14:59:06,914 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:59:06,952 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:59:06,976 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:59:07,618 - INFO - Database connection available.
+2026-02-11 14:59:07,621 - INFO - Database connection available.
+2026-02-11 14:59:07,626 - INFO - Database connection available.
+2026-02-11 14:59:07,715 - INFO - Ensured unique index on users.email
+2026-02-11 14:59:10,963 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:59:11,436 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:59:11,436 - INFO - Successfully connected to MongoDB!
+2026-02-11 14:59:11,836 - INFO - Database connection available.
+2026-02-11 14:59:11,875 - INFO - Ensured unique index on users.email
+2026-02-11 14:59:12,148 - INFO - Database connection available.
+2026-02-11 14:59:12,165 - INFO - Database connection available.
+2026-02-11 14:59:12,219 - INFO - Ensured unique index on users.email
+2026-02-11 15:03:35,341 - INFO - OCR stored with id: 698c4cef79cb1af13055e34d
+2026-02-11 15:04:36,657 - INFO - Successfully connected to MongoDB!
+2026-02-11 15:04:36,830 - INFO - Successfully connected to MongoDB!
+2026-02-11 15:04:37,235 - INFO - Successfully connected to MongoDB!
+2026-02-11 15:04:37,753 - INFO - Database connection available.
+2026-02-11 15:04:37,805 - INFO - Ensured unique index on users.email
+2026-02-11 15:04:37,976 - INFO - Database connection available.
+2026-02-11 15:04:38,005 - INFO - Ensured unique index on users.email
+2026-02-11 15:04:38,455 - INFO - Database connection available.
+2026-02-11 15:04:38,480 - INFO - Ensured unique index on users.email
+2026-02-11 15:39:08,492 - INFO - Successfully connected to MongoDB!
+2026-02-11 15:39:08,498 - INFO - Successfully connected to MongoDB!
+2026-02-11 15:39:09,334 - INFO - Database connection available.
+2026-02-11 15:39:09,366 - INFO - Ensured unique index on users.email
+2026-02-11 15:39:09,373 - INFO - Ensured unique index on users.email
+2026-02-11 15:39:09,380 - INFO - Ensured unique index on users.email
+2026-02-11 15:39:57,978 - INFO - OCR stored with id: 698c5575f0fc12aa5d68c156
+2026-02-11 15:41:22,585 - INFO - Successfully connected to MongoDB!
+2026-02-11 15:41:22,641 - INFO - Successfully connected to MongoDB!
+2026-02-11 15:41:22,650 - INFO - Successfully connected to MongoDB!
+2026-02-11 15:41:23,315 - INFO - Database connection available.
+2026-02-11 15:41:23,328 - INFO - Database connection available.
+2026-02-11 15:41:23,344 - INFO - Ensured unique index on users.email
+2026-02-11 15:41:23,363 - INFO - Ensured unique index on users.email
+2026-02-11 15:41:23,371 - INFO - Ensured unique index on users.email
+2026-02-11 15:41:33,014 - INFO - OCR stored with id: 698c55d49dd64e27db91a2fe
+2026-02-11 15:43:02,906 - INFO - Successfully connected to MongoDB!
+2026-02-11 15:43:02,979 - INFO - Successfully connected to MongoDB!
+2026-02-11 15:43:03,074 - INFO - Successfully connected to MongoDB!
+2026-02-11 15:43:03,664 - INFO - Database connection available.
+2026-02-11 15:43:03,691 - INFO - Ensured unique index on users.email
+2026-02-11 15:43:03,759 - INFO - Database connection available.
+2026-02-11 15:43:03,808 - INFO - Ensured unique index on users.email
+2026-02-11 15:43:03,813 - INFO - Database connection available.
+2026-02-11 15:43:03,871 - INFO - Ensured unique index on users.email
+2026-02-11 15:44:17,878 - INFO - OCR stored with id: 698c5679357c511de26fe1d7
+2026-02-11 15:46:44,577 - INFO - Successfully connected to MongoDB!
+2026-02-11 15:46:44,588 - INFO - Successfully connected to MongoDB!
+2026-02-11 15:46:44,611 - INFO - Successfully connected to MongoDB!
+2026-02-11 15:46:45,033 - INFO - Database connection available.
+2026-02-11 15:46:45,047 - INFO - Database connection available.
+2026-02-11 15:46:45,062 - INFO - Ensured unique index on users.email
+2026-02-11 15:46:45,082 - INFO - Ensured unique index on users.email
+2026-02-11 15:46:45,091 - INFO - Database connection available.
+2026-02-11 15:46:45,120 - INFO - Ensured unique index on users.email
+2026-02-11 15:47:44,951 - INFO - OCR stored with id: 698c57481c4e07f9f6a318ff
+2026-02-11 15:51:19,647 - INFO - OCR stored with id: 698c581f1c4e07f9f6a31900
+2026-02-11 15:51:38,416 - INFO - Successfully connected to MongoDB!
+2026-02-11 15:51:38,424 - INFO - Successfully connected to MongoDB!
+2026-02-11 15:51:39,630 - INFO - Database connection available.
+2026-02-11 15:51:39,634 - INFO - Database connection available.
+2026-02-11 15:51:39,643 - INFO - Database connection available.
+2026-02-11 15:51:39,663 - INFO - Ensured unique index on users.email
+2026-02-11 15:51:39,670 - INFO - Ensured unique index on users.email
+2026-02-11 15:51:39,675 - INFO - Ensured unique index on users.email
+2026-02-11 15:51:47,185 - WARNING - Duplicate bill number detected: SUPERMART for user q@gmail.com
+2026-02-11 15:52:06,661 - WARNING - Duplicate bill number detected: SUPERMART for user q@gmail.com
+2026-02-11 15:53:05,899 - INFO - Successfully connected to MongoDB!
+2026-02-11 15:53:05,910 - INFO - Successfully connected to MongoDB!
+2026-02-11 15:53:06,795 - INFO - Database connection available.
+2026-02-11 15:53:06,798 - INFO - Database connection available.
+2026-02-11 15:53:06,801 - INFO - Database connection available.
+2026-02-11 15:53:06,826 - INFO - Ensured unique index on users.email
+2026-02-11 15:53:06,832 - INFO - Ensured unique index on users.email
+2026-02-11 15:53:09,131 - INFO - Successfully connected to MongoDB!
+2026-02-11 15:53:09,137 - INFO - Successfully connected to MongoDB!
+2026-02-11 15:53:09,141 - INFO - Successfully connected to MongoDB!
+2026-02-11 15:53:09,567 - INFO - Database connection available.
+2026-02-11 15:53:09,569 - INFO - Database connection available.
+2026-02-11 15:53:09,573 - INFO - Database connection available.
+2026-02-11 15:53:09,597 - INFO - Ensured unique index on users.email
+2026-02-11 15:53:09,603 - INFO - Ensured unique index on users.email
+2026-02-11 15:53:44,356 - WARNING - Duplicate bill number detected: SUPERMART for user q@gmail.com
+2026-02-11 15:54:31,588 - INFO - Successfully connected to MongoDB!
+2026-02-11 15:54:31,767 - INFO - Successfully connected to MongoDB!
+2026-02-11 15:54:31,793 - INFO - Successfully connected to MongoDB!
+2026-02-11 15:54:32,360 - INFO - Database connection available.
+2026-02-11 15:54:32,384 - INFO - Ensured unique index on users.email
+2026-02-11 15:54:32,527 - INFO - Database connection available.
+2026-02-11 15:54:32,557 - INFO - Database connection available.
+2026-02-11 15:54:32,558 - INFO - Ensured unique index on users.email
+2026-02-11 15:54:32,583 - INFO - Ensured unique index on users.email
+2026-02-11 15:54:52,848 - INFO - OCR stored with id: 698c58f40340ba81e771888f
+2026-02-11 15:55:07,424 - INFO - OCR stored with id: 698c59030340ba81e7718890
+2026-02-11 16:06:10,110 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:06:10,120 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:06:11,015 - INFO - Database connection available.
+2026-02-11 16:06:11,019 - INFO - Database connection available.
+2026-02-11 16:06:11,021 - INFO - Database connection available.
+2026-02-11 16:06:11,048 - INFO - Ensured unique index on users.email
+2026-02-11 16:06:11,055 - INFO - Ensured unique index on users.email
+2026-02-11 16:06:11,056 - INFO - Ensured unique index on users.email
+2026-02-11 16:06:13,632 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:06:13,642 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:06:13,649 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:06:14,087 - INFO - Database connection available.
+2026-02-11 16:06:14,096 - INFO - Database connection available.
+2026-02-11 16:06:14,105 - INFO - Database connection available.
+2026-02-11 16:06:14,168 - INFO - Ensured unique index on users.email
+2026-02-11 16:06:14,168 - INFO - Ensured unique index on users.email
+2026-02-11 16:06:48,808 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:06:48,820 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:06:48,861 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:06:49,564 - INFO - Database connection available.
+2026-02-11 16:06:49,573 - INFO - Database connection available.
+2026-02-11 16:06:49,590 - INFO - Database connection available.
+2026-02-11 16:06:49,599 - INFO - Ensured unique index on users.email
+2026-02-11 16:06:49,606 - INFO - Ensured unique index on users.email
+2026-02-11 16:06:49,616 - INFO - Ensured unique index on users.email
+2026-02-11 16:07:28,586 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:07:28,596 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:07:28,624 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:07:29,199 - INFO - Database connection available.
+2026-02-11 16:07:29,202 - INFO - Database connection available.
+2026-02-11 16:07:29,226 - INFO - Database connection available.
+2026-02-11 16:07:29,278 - INFO - Ensured unique index on users.email
+2026-02-11 16:07:29,285 - INFO - Ensured unique index on users.email
+2026-02-11 16:07:29,290 - INFO - Ensured unique index on users.email
+2026-02-11 16:08:08,172 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:08:08,172 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:08:08,181 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:08:08,805 - INFO - Database connection available.
+2026-02-11 16:08:08,805 - INFO - Database connection available.
+2026-02-11 16:08:08,806 - INFO - Database connection available.
+2026-02-11 16:08:08,838 - INFO - Ensured unique index on users.email
+2026-02-11 16:08:08,846 - INFO - Ensured unique index on users.email
+2026-02-11 16:08:11,584 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:08:11,617 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:08:11,624 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:08:12,222 - INFO - Database connection available.
+2026-02-11 16:08:12,249 - INFO - Ensured unique index on users.email
+2026-02-11 16:08:12,279 - INFO - Database connection available.
+2026-02-11 16:08:12,309 - INFO - Ensured unique index on users.email
+2026-02-11 16:08:12,316 - INFO - Ensured unique index on users.email
+2026-02-11 16:08:18,378 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:08:18,413 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:08:18,421 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:08:19,099 - INFO - Database connection available.
+2026-02-11 16:08:19,125 - INFO - Database connection available.
+2026-02-11 16:08:19,125 - INFO - Ensured unique index on users.email
+2026-02-11 16:08:19,129 - INFO - Database connection available.
+2026-02-11 16:08:19,154 - INFO - Ensured unique index on users.email
+2026-02-11 16:08:19,160 - INFO - Ensured unique index on users.email
+2026-02-11 16:10:30,397 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:10:30,515 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:10:30,923 - INFO - Database connection available.
+2026-02-11 16:10:30,948 - INFO - Ensured unique index on users.email
+2026-02-11 16:10:31,040 - INFO - Database connection available.
+2026-02-11 16:10:31,043 - INFO - Database connection available.
+2026-02-11 16:10:31,070 - INFO - Ensured unique index on users.email
+2026-02-11 16:10:31,081 - INFO - Ensured unique index on users.email
+2026-02-11 16:11:31,858 - INFO - OCR stored with id: 698c5cdbd9965cf7094970da
+2026-02-11 16:13:10,827 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:13:10,855 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:13:10,873 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:13:12,066 - INFO - Database connection available.
+2026-02-11 16:13:12,076 - INFO - Database connection available.
+2026-02-11 16:13:12,076 - INFO - Database connection available.
+2026-02-11 16:13:12,103 - INFO - Ensured unique index on users.email
+2026-02-11 16:13:12,108 - INFO - Ensured unique index on users.email
+2026-02-11 16:13:16,600 - INFO - OCR stored with id: 698c5d4432e8ff31a8738b14
+2026-02-11 16:15:36,808 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:15:36,850 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:15:36,909 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:15:37,638 - INFO - Database connection available.
+2026-02-11 16:15:37,644 - INFO - Database connection available.
+2026-02-11 16:15:37,651 - INFO - Database connection available.
+2026-02-11 16:15:37,667 - INFO - Ensured unique index on users.email
+2026-02-11 16:15:37,679 - INFO - Ensured unique index on users.email
+2026-02-11 16:15:37,686 - INFO - Ensured unique index on users.email
+2026-02-11 16:15:40,697 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:15:40,702 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:15:40,722 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:15:41,115 - INFO - Database connection available.
+2026-02-11 16:15:41,115 - INFO - Database connection available.
+2026-02-11 16:15:41,125 - INFO - Database connection available.
+2026-02-11 16:15:41,149 - INFO - Ensured unique index on users.email
+2026-02-11 16:15:41,152 - INFO - Ensured unique index on users.email
+2026-02-11 16:15:41,159 - INFO - Ensured unique index on users.email
+2026-02-11 16:16:00,118 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:16:00,300 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:16:00,325 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:16:00,695 - INFO - Database connection available.
+2026-02-11 16:16:00,720 - INFO - Ensured unique index on users.email
+2026-02-11 16:16:00,805 - INFO - Database connection available.
+2026-02-11 16:16:00,819 - INFO - Database connection available.
+2026-02-11 16:16:00,832 - INFO - Ensured unique index on users.email
+2026-02-11 16:16:00,844 - INFO - Ensured unique index on users.email
+2026-02-11 16:16:27,343 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:16:27,350 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:16:27,355 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:16:27,948 - INFO - Database connection available.
+2026-02-11 16:16:27,956 - INFO - Database connection available.
+2026-02-11 16:16:27,958 - INFO - Database connection available.
+2026-02-11 16:16:27,981 - INFO - Ensured unique index on users.email
+2026-02-11 16:16:27,986 - INFO - Ensured unique index on users.email
+2026-02-11 16:16:27,994 - INFO - Ensured unique index on users.email
+2026-02-11 16:16:30,840 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:16:30,856 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:16:30,890 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:16:31,604 - INFO - Database connection available.
+2026-02-11 16:16:31,621 - INFO - Database connection available.
+2026-02-11 16:16:31,632 - INFO - Ensured unique index on users.email
+2026-02-11 16:16:31,646 - INFO - Ensured unique index on users.email
+2026-02-11 16:16:31,729 - INFO - Database connection available.
+2026-02-11 16:16:31,755 - INFO - Ensured unique index on users.email
+2026-02-11 16:16:37,527 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:16:37,547 - INFO - Successfully connected to MongoDB!
+2026-02-11 16:16:38,202 - INFO - Database connection available.
+2026-02-11 16:16:38,210 - INFO - Database connection available.
+2026-02-11 16:16:38,213 - INFO - Database connection available.
+2026-02-11 16:16:38,228 - INFO - Ensured unique index on users.email
+2026-02-11 16:16:38,243 - INFO - Ensured unique index on users.email
+2026-02-11 16:16:38,250 - INFO - Ensured unique index on users.email
+2026-02-11 16:19:20,283 - WARNING - Validation failed for file invoice-1770806958382.png: ['bill number', 'invoice date', 'total amount', 'hsn code']
+2026-02-11 16:24:16,016 - INFO - OCR stored with id: 698c5fd79f25d006e1329eb2
+2026-02-11 17:13:36,896 - WARNING - Validation failed for file 133840021355044111.jpg: ['invoice date', 'hsn code']
+2026-02-11 17:20:50,870 - INFO - OCR stored with id: 698c6d1a9f25d006e1329eb3
+2026-02-11 17:23:19,062 - WARNING - Validation failed for file invoice-1770810797155.png: ['invoice date', 'total amount', 'hsn code']
+2026-02-11 17:43:17,070 - INFO - Successfully connected to MongoDB!
+2026-02-11 17:43:17,075 - INFO - Successfully connected to MongoDB!
+2026-02-11 17:43:17,076 - INFO - Successfully connected to MongoDB!
+2026-02-11 17:43:21,852 - INFO - Database connection available.
+2026-02-11 17:43:21,927 - INFO - Ensured unique index on users.email
+2026-02-11 17:46:10,927 - INFO - Successfully connected to MongoDB!
+2026-02-11 17:46:11,073 - INFO - Successfully connected to MongoDB!
+2026-02-11 17:46:11,122 - INFO - Successfully connected to MongoDB!
+2026-02-11 17:46:11,614 - INFO - Database connection available.
+2026-02-11 17:46:11,652 - INFO - Ensured unique index on users.email
+2026-02-11 17:46:11,743 - INFO - Database connection available.
+2026-02-11 17:46:11,765 - INFO - Database connection available.
+2026-02-11 17:46:11,830 - INFO - Ensured unique index on users.email
+2026-02-11 17:46:18,998 - INFO - Successfully connected to MongoDB!
+2026-02-11 17:46:19,012 - INFO - Successfully connected to MongoDB!
+2026-02-11 17:46:19,021 - INFO - Successfully connected to MongoDB!
+2026-02-11 17:46:19,677 - INFO - Database connection available.
+2026-02-11 17:46:19,688 - INFO - Database connection available.
+2026-02-11 17:46:19,700 - INFO - Database connection available.
+2026-02-11 17:46:19,800 - INFO - Ensured unique index on users.email
+2026-02-11 17:46:19,800 - INFO - Ensured unique index on users.email

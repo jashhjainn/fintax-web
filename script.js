@@ -638,6 +638,23 @@ async function performCapture(){
         if (response.status === 401) { handleAuthError('Session expired. Please login again.'); return; }
         if (response.ok) {
             const result = await response.json();
+            
+            // Check for validation failure
+            if (result.validation && !result.validation.is_valid) {
+              // Show validation modal instead of proceeding
+              showValidationModal(result.validation);
+              if(progressOverlay) progressOverlay.hidden = true;
+              return;
+            }
+            
+            // Check for duplicate bill number
+            if (result.status === 'duplicate_detected') {
+              // Show duplicate detection modal
+              showDuplicateModal(result);
+              if(progressOverlay) progressOverlay.hidden = true;
+              return;
+            }
+            
             if(progressOverlay) {
                 if(progressFillLocal) progressFillLocal.style.width = '100%';
                 setTimeout(() => { progressOverlay.hidden = true; }, 500);
@@ -675,6 +692,183 @@ async function performCapture(){
           const fp = document.getElementById('filePreview'); if(fp){ fp.hidden = true; fp.setAttribute('aria-hidden','true'); }
       }
   }); }
+
+  // Validation modal functionality
+  const validationModal = document.getElementById('validationModal');
+  const validationCard = document.getElementById('validationCard');
+  const validationMessage = document.getElementById('validationMessage');
+  const validationDetails = document.getElementById('validationDetails');
+  const missingFieldsList = document.getElementById('missingFieldsList');
+  const closeValidationBtn = document.getElementById('closeValidationBtn');
+  const retryValidationBtn = document.getElementById('retryValidationBtn');
+  const cancelValidationBtn = document.getElementById('cancelValidationBtn');
+
+  function showValidationModal(validationResult) {
+    if (!validationModal || !validationCard) return;
+    
+    // Update modal content
+    validationMessage.textContent = validationResult.message || 'kindly upload the image of invoice';
+    
+    if (validationResult.missing_fields && validationResult.missing_fields.length > 0) {
+      validationDetails.hidden = false;
+      validationDetails.setAttribute('aria-hidden', 'false');
+      missingFieldsList.innerHTML = validationResult.missing_fields
+        .map(field => `<li>${field.charAt(0).toUpperCase() + field.slice(1)}</li>`)
+        .join('');
+    } else {
+      validationDetails.hidden = true;
+      validationDetails.setAttribute('aria-hidden', 'true');
+    }
+    
+    // Show modal
+    validationModal.setAttribute('aria-hidden', 'false');
+    validationCard.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('no-scroll');
+    
+    // Focus the retry button for accessibility
+    if (retryValidationBtn) retryValidationBtn.focus();
+  }
+
+  function hideValidationModal() {
+    if (!validationModal || !validationCard) return;
+    
+    validationModal.setAttribute('aria-hidden', 'true');
+    validationCard.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('no-scroll');
+  }
+
+  // Validation modal event listeners
+  if (closeValidationBtn) {
+    closeValidationBtn.addEventListener('click', hideValidationModal);
+  }
+  
+  if (cancelValidationBtn) {
+    cancelValidationBtn.addEventListener('click', () => {
+      hideValidationModal();
+      // Reset preview state
+      const fp = document.getElementById('filePreview'); 
+      if(fp){ 
+        fp.hidden = true; 
+        fp.setAttribute('aria-hidden','true'); 
+      }
+      if(fileInput) fileInput.value = '';
+      capturedFile = null;
+    });
+  }
+  
+  if (retryValidationBtn) {
+    retryValidationBtn.addEventListener('click', () => {
+      hideValidationModal();
+      // Reopen camera if captured file was used, otherwise reopen file picker
+      if (capturedFile) {
+        const openCameraBtn = document.getElementById('openCameraBtn');
+        if (openCameraBtn) openCameraBtn.click();
+      } else {
+        fileInput?.click();
+      }
+    });
+  }
+
+  // Close validation modal when clicking outside
+  if (validationModal) {
+    validationModal.addEventListener('click', (e) => {
+      if (e.target === validationModal) {
+        hideValidationModal();
+      }
+    });
+  }
+
+  // Close validation modal on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && validationModal && validationModal.getAttribute('aria-hidden') === 'false') {
+      hideValidationModal();
+    }
+  });
+
+  // Duplicate modal functionality
+  const duplicateModal = document.getElementById('duplicateModal');
+  const duplicateCard = document.getElementById('duplicateCard');
+  const duplicateMessage = document.getElementById('duplicateMessage');
+  const duplicateBillNumber = document.getElementById('duplicateBillNumber');
+  const duplicateDetails = document.getElementById('duplicateDetails');
+  const closeDuplicateBtn = document.getElementById('closeDuplicateBtn');
+  const viewExistingBtn = document.getElementById('viewExistingBtn');
+  const cancelDuplicateBtn = document.getElementById('cancelDuplicateBtn');
+
+  function showDuplicateModal(duplicateResult) {
+    if (!duplicateModal || !duplicateCard) return;
+    
+    // Update modal content
+    duplicateMessage.textContent = 'An invoice with the same bill number already exists in your ledger.';
+    
+    if (duplicateResult.bill_number) {
+      duplicateBillNumber.textContent = duplicateResult.bill_number;
+      duplicateDetails.hidden = false;
+      duplicateDetails.setAttribute('aria-hidden', 'false');
+    } else {
+      duplicateDetails.hidden = true;
+      duplicateDetails.setAttribute('aria-hidden', 'true');
+    }
+    
+    // Show modal
+    duplicateModal.setAttribute('aria-hidden', 'false');
+    duplicateCard.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('no-scroll');
+    
+    // Focus the view existing button for accessibility
+    if (viewExistingBtn) viewExistingBtn.focus();
+  }
+
+  function hideDuplicateModal() {
+    if (!duplicateModal || !duplicateCard) return;
+    
+    duplicateModal.setAttribute('aria-hidden', 'true');
+    duplicateCard.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('no-scroll');
+  }
+
+  // Duplicate modal event listeners
+  if (closeDuplicateBtn) {
+    closeDuplicateBtn.addEventListener('click', hideDuplicateModal);
+  }
+  
+  if (cancelDuplicateBtn) {
+    cancelDuplicateBtn.addEventListener('click', () => {
+      hideDuplicateModal();
+      // Reset preview state
+      const fp = document.getElementById('filePreview'); 
+      if(fp){ 
+        fp.hidden = true; 
+        fp.setAttribute('aria-hidden','true'); 
+      }
+      if(fileInput) fileInput.value = '';
+      capturedFile = null;
+    });
+  }
+  
+  if (viewExistingBtn) {
+    viewExistingBtn.addEventListener('click', () => {
+      hideDuplicateModal();
+      // Navigate to ledger page to view existing invoice
+      window.location.href = 'ledger.html';
+    });
+  }
+
+  // Close duplicate modal when clicking outside
+  if (duplicateModal) {
+    duplicateModal.addEventListener('click', (e) => {
+      if (e.target === duplicateModal) {
+        hideDuplicateModal();
+      }
+    });
+  }
+
+  // Close duplicate modal on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && duplicateModal && duplicateModal.getAttribute('aria-hidden') === 'false') {
+      hideDuplicateModal();
+    }
+  });
 
     // Ledger page: render OCR result
     const ledgerRoot = document.getElementById('ledgerRoot');
@@ -745,7 +939,9 @@ async function performCapture(){
           const m = textBlob.match(/(?:bill|invoice)\s*(?:no\.?|number|#|:)\s*([A-Z0-9-]+)/i);
           return m && m[1] ? m[1].trim() : null;
         }
-        const billNo = findBillNo() || 'Not detected';
+        
+        // Use the bill_number field from the database if available, otherwise extract from text
+        const billNo = (data && data.bill_number) || findBillNo() || 'Not detected';
 
         function findClientName(){
           for(const ln of lines){
@@ -1074,6 +1270,7 @@ async function performCapture(){
         try{
           if(data.token) localStorage.setItem('authToken', data.token);
           if(data.email) localStorage.setItem('authEmail', data.email);
+          if(data.name) localStorage.setItem('authName', data.name);
         }catch(e){}
         showToast('✅ Login successful!', 'success', 2000);
         setTimeout(()=> { window.location.href = 'index.html'; }, 1500);
@@ -1103,6 +1300,109 @@ async function performCapture(){
         }
       });
     });
+  }
+
+  // Profile page: load user information
+  const profileNameEl = document.getElementById('profileName');
+  const profileEmailEl = document.getElementById('profileEmail');
+  
+  if(profileNameEl || profileEmailEl){
+    async function loadUserProfile(){
+      try{
+        const apiBase = await resolveApiBase();
+        const token = getAuthToken();
+        
+        if(!token){
+          handleAuthError('Please login to view your profile.');
+          return;
+        }
+        
+        // Try to get user profile from the backend API
+        try {
+          const response = await fetch(`${apiBase}/profile/`, {
+            headers: authHeaders()
+          });
+          
+          if(response.status === 401){
+            handleAuthError('Session expired. Please login again.');
+            return;
+          }
+          
+          if(response.ok){
+            const profileData = await response.json();
+            
+            // Display the actual name from the database
+            if(profileNameEl && profileData.name){
+              profileNameEl.textContent = profileData.name;
+            }
+            
+            // Display the email
+            if(profileEmailEl && profileData.email){
+              profileEmailEl.textContent = `Email: ${profileData.email}`;
+            }
+            
+            // Store the name in localStorage for fallback
+            if(profileData.name){
+              try{
+                localStorage.setItem('authName', profileData.name);
+              }catch(e){}
+            }
+            
+            // Store the email in localStorage for fallback
+            if(profileData.email){
+              try{
+                localStorage.setItem('authEmail', profileData.email);
+              }catch(e){}
+            }
+            
+            return;
+          }
+        } catch (apiError) {
+          console.warn('Failed to fetch profile from API, falling back to localStorage:', apiError);
+        }
+        
+        // Fallback to localStorage if API call fails
+        const storedEmail = (function(){ try{ return localStorage.getItem('authEmail'); }catch(e){ return null; } })();
+        const storedName = (function(){ try{ return localStorage.getItem('authName'); }catch(e){ return null; } })();
+        
+        if(storedEmail){
+          if(profileEmailEl){
+            profileEmailEl.textContent = `Email: ${storedEmail}`;
+          }
+          
+          if(storedName && storedName.trim()){
+            // Use the stored name from signup exactly as written
+            if(profileNameEl){
+              profileNameEl.textContent = storedName;
+            }
+          } else {
+            // Fallback to extracting name from email (minimal processing)
+            const name = storedEmail.split('@')[0].replace(/\./g, ' ');
+            if(profileNameEl){
+              profileNameEl.textContent = name;
+            }
+          }
+        } else {
+          if(profileNameEl){
+            profileNameEl.textContent = 'User';
+          }
+          if(profileEmailEl){
+            profileEmailEl.textContent = 'Email not available';
+          }
+        }
+      }catch(error){
+        console.error('Error loading profile:', error);
+        if(profileNameEl){
+          profileNameEl.textContent = 'Error loading profile';
+        }
+        if(profileEmailEl){
+          profileEmailEl.textContent = 'Please login again';
+        }
+      }
+    }
+    
+    // Load profile when page loads
+    loadUserProfile();
   }
 }
 

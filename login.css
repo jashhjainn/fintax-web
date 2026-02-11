@@ -51,15 +51,47 @@
   color:var(--auth-text);
 }
 
-.auth-password{display:flex;flex-direction:column;gap:8px}
+.auth-password{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.auth-input{
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--auth-border);
+  font-size: 0.95rem;
+  background: #fff;
+  color: var(--auth-text);
+}
+
 .auth-eye{
-  align-self:flex-end;
-  background:transparent;
-  border:none;
-  color:var(--auth-accent);
-  font-weight:700;
-  cursor:pointer;
-  padding:4px 0;
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #000000;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  z-index: 10;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.auth-eye:hover{
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #333333;
+}
+
+.auth-eye[aria-pressed="true"]{
+  color: #333333;
+  background-color: rgba(0, 0, 0, 0.15);
 }
 
 .auth-btn{

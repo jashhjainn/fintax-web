@@ -67,6 +67,76 @@
         </section>
       </div>
     </div>
+
+    <!-- validation modal for missing invoice fields -->
+    <div id="validationModal" class="modal" aria-hidden="true" role="dialog" aria-label="Validation dialog">
+      <div class="modal-content">
+        <section id="validationCard" class="validation-card card" aria-hidden="true">
+          <div class="validation-header" role="banner">
+            <div class="validation-header-content">
+              <h2 class="validation-title">Invoice Validation</h2>
+              <button type="button" id="closeValidationBtn" class="btn btn-close" aria-label="Close validation"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+            </div>
+          </div>
+
+          <div class="validation-body">
+            <div class="validation-icon">
+              <i class="fa-solid fa-exclamation-triangle" aria-hidden="true"></i>
+            </div>
+            <div class="validation-message" id="validationMessage">
+              kindly upload the image of invoice
+            </div>
+            <div class="validation-details" id="validationDetails" aria-hidden="true">
+              <p class="subtitle">Missing fields:</p>
+              <ul id="missingFieldsList"></ul>
+            </div>
+          </div>
+
+          <div class="validation-actions">
+            <button type="button" id="retryValidationBtn" class="btn primary"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Retry</button>
+            <button type="button" id="cancelValidationBtn" class="btn"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Cancel</button>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- duplicate detection modal for duplicate bill numbers -->
+    <div id="duplicateModal" class="modal" aria-hidden="true" role="dialog" aria-label="Duplicate dialog">
+      <div class="modal-content">
+        <section id="duplicateCard" class="duplicate-card card" aria-hidden="true">
+          <div class="duplicate-header" role="banner">
+            <div class="duplicate-header-content">
+              <h2 class="duplicate-title">Duplicate Invoice</h2>
+              <button type="button" id="closeDuplicateBtn" class="btn btn-close" aria-label="Close duplicate"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+            </div>
+          </div>
+
+          <div class="duplicate-body">
+            <div class="duplicate-icon">
+              <i class="fa-solid fa-copy" aria-hidden="true"></i>
+            </div>
+            <div class="duplicate-message" id="duplicateMessage">
+              An invoice with the same bill number already exists in your ledger.
+            </div>
+            <div class="duplicate-details" id="duplicateDetails" aria-hidden="false">
+              <p class="subtitle">Duplicate Information:</p>
+              <div class="duplicate-info">
+                <span class="duplicate-label">Bill Number:</span>
+                <span id="duplicateBillNumber" class="duplicate-value"></span>
+              </div>
+              <div class="duplicate-actions">
+                <p class="duplicate-note">This invoice will not be stored to prevent duplicates.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="duplicate-actions">
+            <button type="button" id="viewExistingBtn" class="btn primary"><i class="fa-solid fa-eye" aria-hidden="true"></i> View Existing</button>
+            <button type="button" id="cancelDuplicateBtn" class="btn"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Cancel</button>
+          </div>
+        </section>
+      </div>
+    </div>
   </main>
 
   <div id="siteNav" data-include="partials/nav.html"></div>

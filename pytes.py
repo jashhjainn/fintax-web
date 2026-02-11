@@ -71,6 +71,55 @@ def _extract_vendor(lines: list[str]) -> str | None:
     return lines[0][:80]
 
 
+def _extract_bill_number(lines: list[str], text_blob: str) -> str | None:
+    """
+    Extract bill number from invoice text using multiple patterns.
+    Returns the first found bill number or None if not found.
+    """
+    if not lines and not text_blob:
+        return None
+    
+    # Enhanced bill number patterns with specific support for "bill no. - 100" format
+    bill_patterns = [
+        # Specific pattern for "bill no. - 100" format (your example)
+        r"(?:bill|invoice)\s*(?:no\.?|number)?\s*[-:]\s*([A-Z0-9-]+)",
+        
+        # General patterns for various formats
+        r"(?:bill|invoice)\s*(?:no\.?|number)?\s*[:#-]?\s*([A-Z0-9-]+)",
+        r"\b(?:bill|invoice)\s*[:#]\s*([A-Z0-9-]{4,})\b",
+        r"\b([A-Z0-9-]{6,})\b",  # Standalone alphanumeric codes
+        r"\b\d{2}[A-Z]{5}\d{7}\b",  # GST-style invoice numbers
+        r"\b[A-Z]{2,4}-?\d{3,8}\b",  # Common format: ABC-12345 or ABC12345
+        
+        # Additional patterns for better coverage
+        r"(?:bill|invoice)\s*(?:no\.?|number)?\s*[:#]\s*([A-Z0-9-]+)",
+        r"(?:bill|invoice)\s*(?:no\.?|number)?\s*[-]\s*([A-Z0-9-]+)",
+        r"(?:bill|invoice)\s*(?:no\.?|number)?\s*[:]\s*([A-Z0-9-]+)",
+        r"(?:bill|invoice)\s*(?:no\.?|number)?\s*#\s*([A-Z0-9-]+)",
+    ]
+    
+    # Search in lines first (more targeted)
+    for line in lines:
+        for pattern in bill_patterns:
+            match = re.search(pattern, line, re.IGNORECASE)
+            if match:
+                bill_no = match.group(1).strip()
+                # Validate that it looks like a bill number
+                if len(bill_no) >= 2 and re.search(r'[A-Z0-9]', bill_no):
+                    return bill_no
+    
+    # If not found in lines, search in full text blob
+    if text_blob:
+        for pattern in bill_patterns:
+            match = re.search(pattern, text_blob, re.IGNORECASE)
+            if match:
+                bill_no = match.group(1).strip()
+                if len(bill_no) >= 2 and re.search(r'[A-Z0-9]', bill_no):
+                    return bill_no
+    
+    return None
+
+
 _HSN_RATE_MAP = {
     # Common GST slabs keyed by HSN. Extend as needed.
     "0405": 5.0,
@@ -163,6 +212,38 @@ def _extract_hsn_items(lines: list[str]) -> list[dict]:
     return items
 
 
+def _validate_invoice_fields(vendor, invoice_date, total_amount, hsn_codes) -> dict:
+    """
+    Validate that all required invoice fields are present.
+    Returns a validation result with missing fields.
+    """
+    missing_fields = []
+    
+    # Check bill number (extracted from vendor field or lines)
+    if not vendor or len(vendor.strip()) < 3:
+        missing_fields.append("bill number")
+    
+    # Check invoice date
+    if not invoice_date:
+        missing_fields.append("invoice date")
+    
+    # Check total amount
+    if not total_amount:
+        missing_fields.append("total amount")
+    
+    # Check HSN code
+    if not hsn_codes or len(hsn_codes) == 0:
+        missing_fields.append("hsn code")
+    
+    is_valid = len(missing_fields) == 0
+    
+    return {
+        "is_valid": is_valid,
+        "missing_fields": missing_fields,
+        "message": "kindly upload the image of invoice" if not is_valid else "Invoice validation successful"
+    }
+
+
 def process_ocr(image_bytes: bytes, filename: str) -> dict:
     pyt.pytesseract.tesseract_cmd = TESSERACT_CMD
 
@@ -184,19 +265,30 @@ def process_ocr(image_bytes: bytes, filename: str) -> dict:
     items = _extract_hsn_items(lines)
     gst_payable = round(sum(i.get("gst_amount", 0.0) for i in items), 2) if items else None
     hsn_codes = sorted({i["hsn"] for i in items}) if items else []
+    
+    # Extract fields for validation
+    vendor = _extract_vendor(lines)
+    bill_number = _extract_bill_number(lines, cleaned_text)
+    invoice_date = _extract_date(lines)
+    total_amount = _extract_total(lines)
+    
+    # Perform validation
+    validation_result = _validate_invoice_fields(vendor, invoice_date, total_amount, hsn_codes)
 
     return {
         "filename": filename,
         "raw_text": raw_text,
         "cleaned_text": cleaned_text,
         "lines": lines,
-        "vendor": _extract_vendor(lines),
-        "invoice_date": _extract_date(lines),
-        "total_amount": _extract_total(lines),
+        "vendor": vendor,
+        "bill_number": bill_number,
+        "invoice_date": invoice_date,
+        "total_amount": total_amount,
         "items": items,
         "hsn_codes": hsn_codes,
         "gst_payable": gst_payable,
-        "status": "processed",
+        "validation": validation_result,
+        "status": "processed" if validation_result["is_valid"] else "validation_failed",
         "created_at": datetime.utcnow(),
     }
 

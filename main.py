@@ -83,6 +83,40 @@ async def upload_invoice(request: Request, file: UploadFile = File(...)):
         invoice_doc["owner_id"] = str(user.get("_id"))
         invoice_doc["image_data"] = bson.Binary(file_content)
         
+        # Check for duplicate bill number in ledger entries (same as OCR endpoint)
+        # Extract bill number from filename or do basic OCR check
+        bill_number = None
+        
+        # Try to extract bill number from filename
+        filename_lower = file.filename.lower()
+        bill_patterns = [
+            r'(?:bill|invoice)[\s_-]*no?[\s_:]*([A-Z0-9-]+)',
+            r'([A-Z0-9]{4,}-[A-Z0-9]{4,})',
+            r'([A-Z0-9]{8,})'
+        ]
+        
+        for pattern in bill_patterns:
+            match = re.search(pattern, filename_lower)
+            if match:
+                bill_number = match.group(1).upper()
+                break
+        
+        # If bill number found in filename, check for duplicates
+        if bill_number:
+            existing_entry = db.ledger_entries.find_one({
+                "owner_email": user.get("email"),
+                "bill_number": bill_number
+            })
+            
+            if existing_entry:
+                logging.warning(f"Duplicate bill number detected in upload: {bill_number} for user {user.get('email')}")
+                return {
+                    "message": "Duplicate bill number",
+                    "bill_number": bill_number,
+                    "status": "duplicate_detected",
+                    "existing_entry_id": str(existing_entry["_id"])
+                }
+        
         # Insert into MongoDB
         result = db.invoices.insert_one(invoice_doc)
         logging.info(f"File uploaded successfully with id: {result.inserted_id}")
@@ -109,9 +143,38 @@ async def ocr_invoice(request: Request, file: UploadFile = File(...)):
         file_content = await file.read()
 
         ocr_data = process_ocr(file_content, file.filename)
+        
+        # Check if validation failed - if so, don't store in database
+        if not ocr_data.get("validation", {}).get("is_valid", True):
+            logging.warning(f"Validation failed for file {file.filename}: {ocr_data.get('validation', {}).get('missing_fields', [])}")
+            return {
+                "message": "Validation failed",
+                "validation": ocr_data.get("validation"),
+                "status": "validation_failed"
+            }
+
+        # Check for duplicate bill number
+        bill_number = ocr_data.get("bill_number")
+        if bill_number:
+            existing_entry = db.ledger_entries.find_one({
+                "owner_email": user.get("email"),
+                "bill_number": bill_number
+            })
+            
+            if existing_entry:
+                logging.warning(f"Duplicate bill number detected: {bill_number} for user {user.get('email')}")
+                return {
+                    "message": "Duplicate bill number",
+                    "bill_number": bill_number,
+                    "status": "duplicate_detected",
+                    "existing_entry_id": str(existing_entry["_id"])
+                }
+
+        # Only proceed with database storage if validation passed and no duplicate
         ledger = LedgerEntry(
             filename=ocr_data["filename"],
             vendor=ocr_data.get("vendor"),
+            bill_number=ocr_data.get("bill_number"),
             invoice_date=ocr_data.get("invoice_date"),
             total_amount=ocr_data.get("total_amount"),
             items=ocr_data.get("items", []),
@@ -810,7 +873,19 @@ def login_user(payload: UserLogin):
 
     token = secrets.token_urlsafe(32)
     db.users.update_one({"_id": user["_id"]}, {"$set": {"auth_token": token, "last_login": get_ist_time()}})
-    return {"message": "Login successful", "email": email, "token": token}
+    return {"message": "Login successful", "email": email, "name": user.get("name"), "token": token}
+
+
+@app.get("/profile/")
+def get_user_profile(request: Request):
+    """Get the current user's profile information"""
+    user = _get_auth_user(request)
+    
+    return {
+        "name": user.get("name"),
+        "email": user.get("email"),
+        "last_login": user.get("last_login")
+    }
 
 if __name__ == "__main__":
     import uvicorn
