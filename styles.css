@@ -79,6 +79,58 @@ body{
   display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.04);
 }
 .brand{font-weight:800;font-size:1.6rem;letter-spacing:1px}
+.brand-link {
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 800;
+  letter-spacing: 1px;
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  position: relative;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, var(--color-primary), #2563eb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.brand-link:hover {
+  transform: translateY(-2px);
+  text-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+  -webkit-text-fill-color: #fff;
+  background: linear-gradient(135deg, #fff, #e2e8f0);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.brand-link::before {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-primary), #2563eb);
+  transition: width 0.3s ease;
+  border-radius: 2px;
+}
+
+.brand-link:hover::before {
+  width: 100%;
+}
+
+/* Add subtle glow effect for dark theme */
+[data-theme="dark"] .brand-link {
+  background: linear-gradient(135deg, #60a5fa, #34d399);
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow: 0 2px 8px rgba(52, 211, 153, 0.3);
+}
+
+[data-theme="dark"] .brand-link:hover {
+  text-shadow: 0 4px 12px rgba(96, 165, 250, 0.5);
+}
 .header-actions button{background:transparent;border:none;font-size:1.1rem;padding:8px;border-radius:8px;cursor:pointer}
 .header-actions button:focus{outline:3px solid rgba(0,119,204,0.2)}
 /* theme icon color in dark mode */

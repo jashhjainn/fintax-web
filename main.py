@@ -167,6 +167,67 @@ def get_latest_ledger_total(request: Request):
         "total_amount": doc.get("total_amount")
     }
 
+@app.get("/ledger/total-sales")
+def get_total_sales(request: Request):
+    """Calculate total sales as sum of all invoice amounts for the authenticated user"""
+    user = _get_auth_user(request)
+    
+    try:
+        # Try aggregation with $toDouble first (for newer MongoDB versions)
+        try:
+            pipeline = [
+                {"$match": {"owner_email": user.get("email")}},
+                {"$group": {
+                    "_id": None,
+                    "total_sales": {"$sum": {"$toDouble": "$total_amount"}},
+                    "count": {"$sum": 1}
+                }}
+            ]
+            result = list(db.ledger_entries.aggregate(pipeline))
+        except Exception:
+            # Fallback for older MongoDB versions - calculate in Python
+            cursor = db.ledger_entries.find({"owner_email": user.get("email")})
+            total_sales = 0.0
+            invoice_count = 0
+            
+            for doc in cursor:
+                total_amount = doc.get("total_amount")
+                if total_amount is not None:
+                    try:
+                        # Handle both string and numeric values
+                        if isinstance(total_amount, str):
+                            # Remove currency symbols and commas, then convert to float
+                            clean_amount = total_amount.replace('₹', '').replace(',', '').strip()
+                            numeric_value = float(clean_amount)
+                        else:
+                            numeric_value = float(total_amount)
+                        total_sales += numeric_value
+                        invoice_count += 1
+                    except (ValueError, TypeError):
+                        # Skip invalid values
+                        continue
+            
+            result = [{"total_sales": total_sales, "count": invoice_count}]
+        
+        if not result or result[0]["count"] == 0:
+            return {
+                "total_sales": 0.0,
+                "invoice_count": 0,
+                "message": "No invoices found"
+            }
+        
+        total_sales = result[0]["total_sales"]
+        invoice_count = result[0]["count"]
+        
+        return {
+            "total_sales": total_sales,
+            "invoice_count": invoice_count,
+            "message": f"Total sales from {invoice_count} invoices"
+        }
+    except Exception as e:
+        print(f"Error in get_total_sales: {e}")
+        raise HTTPException(status_code=500, detail=f"Error calculating total sales: {str(e)}")
+
 
 @app.get("/ledger/list")
 def list_ledgers(request: Request, limit: int = 20):
@@ -476,6 +537,116 @@ def ledger_list_pdf(request: Request, limit: int = 200):
 
     rows = []
     for doc in cursor:
+        vendor = doc.get("vendor") or ""
+        client_name = extract_client_name(doc.get("lines"), doc.get("cleaned_text"))
+        vendor_display = vendor
+        if client_name:
+            if vendor_display:
+                if client_name.lower() not in vendor_display.lower():
+                    vendor_display = f"{vendor_display} ({client_name})"
+            else:
+                vendor_display = client_name
+        rows.append({
+            "bill_no": extract_bill_no(doc.get("lines"), doc.get("cleaned_text")),
+            "vendor": vendor_display,
+            "invoice_date": doc.get("invoice_date") or "",
+            "gst_payable": doc.get("gst_payable"),
+            "total_amount": doc.get("total_amount") or "",
+        })
+
+    pdf = FPDF(orientation="L", unit="mm", format="A4")
+    pdf.set_auto_page_break(auto=True, margin=10)
+    pdf.add_page()
+    pdf.set_font("Helvetica", "B", 16)
+    pdf.cell(0, 10, "FINTAX Ledger Report", ln=1)
+    pdf.set_font("Helvetica", "", 10)
+    pdf.cell(0, 6, f"Generated: {get_ist_time().strftime('%d-%b-%Y %H:%M')}", ln=1)
+    pdf.ln(2)
+
+    col_widths = [12, 45, 70, 32, 35, 35]
+    headers = ["Sr", "Bill No", "Vendor", "Invoice Date", "GST Payable", "Total Amount"]
+
+    pdf.set_font("Helvetica", "B", 10)
+    for i, title in enumerate(headers):
+        pdf.cell(col_widths[i], 8, title, border=1)
+    pdf.ln()
+
+    def fmt_money(value):
+        if value is None:
+            return ""
+        try:
+            return f"{float(value):.2f}"
+        except Exception:
+            return str(value)
+
+    def safe_text(value):
+        text = str(value or "")
+        # FPDF core fonts expect latin-1; replace unsupported chars to avoid crashes.
+        return text.encode("latin-1", "replace").decode("latin-1")
+
+    def truncate(value, length):
+        text = safe_text(value)
+        if len(text) <= length:
+            return text
+        return text[: max(0, length - 3)] + "..."
+
+    pdf.set_font("Helvetica", "", 9)
+    for idx, row in enumerate(rows, start=1):
+        pdf.cell(col_widths[0], 7, str(idx), border=1)
+        pdf.cell(col_widths[1], 7, truncate(row["bill_no"], 20), border=1)
+        pdf.cell(col_widths[2], 7, truncate(row["vendor"], 40), border=1)
+        pdf.cell(col_widths[3], 7, truncate(row["invoice_date"], 12), border=1)
+        pdf.cell(col_widths[4], 7, fmt_money(row["gst_payable"]), border=1)
+        pdf.cell(col_widths[5], 7, truncate(row["total_amount"], 14), border=1)
+        pdf.ln()
+
+    output = pdf.output(dest="S")
+    if isinstance(output, (bytes, bytearray)):
+        pdf_bytes = bytes(output)
+    else:
+        pdf_bytes = output.encode("latin1")
+
+    filename = f"ledger-report-{get_ist_time().strftime('%Y%m%d')}.pdf"
+    headers = {
+        "Content-Disposition": f'attachment; filename="{filename}"'
+    }
+    return Response(content=pdf_bytes, media_type="application/pdf", headers=headers)
+
+
+@app.post("/ledger/pdf")
+def ledger_pdf_from_items(request: Request, items: list):
+    """Generate PDF from specific ledger items (for current filtered view)"""
+    user = _get_auth_user(request)
+    
+    def extract_bill_no(lines, text_blob):
+        lines = lines or []
+        for ln in lines:
+            m = re.search(r"(?:bill|invoice)\s*(?:no\.?|number)?\s*[:#-]?\s*([A-Z0-9-]+)", ln, re.I)
+            if m and m.group(1):
+                return m.group(1).strip()
+        for ln in lines:
+            if re.search(r"\bno\.?\b|\bnumber\b", ln, re.I):
+                t = re.search(r"\b([A-Z0-9-]{4,})\b", ln)
+                if t and t.group(1):
+                    return t.group(1).strip()
+        m = re.search(r"(?:bill|invoice)\s*(?:no\.?|number|#|:)\s*([A-Z0-9-]+)", text_blob or "", re.I)
+        return m.group(1).strip() if m and m.group(1) else ""
+
+    def extract_client_name(lines, text_blob):
+        lines = lines or []
+        for ln in lines:
+            m = re.search(r"\bclient\b\s*[:\-]\s*(.+)$", ln, re.I)
+            if m and m.group(1):
+                return m.group(1).strip()
+        m = re.search(r"\bclient\b\s*[:\-]\s*(.+)$", text_blob or "", re.I)
+        return m.group(1).strip() if m and m.group(1) else ""
+
+    rows = []
+    for doc in items:
+        # Validate that the item belongs to the current user
+        if doc.get("owner_email") != user.get("email"):
+            continue
+            
         vendor = doc.get("vendor") or ""
         client_name = extract_client_name(doc.get("lines"), doc.get("cleaned_text"))
         vendor_display = vendor

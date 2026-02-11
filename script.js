@@ -1,4 +1,4 @@
-/* App script: include loader + camera/upload logic (runs safely on all pages) */
+/* App script: include loader + camera/upload logic */
 
 // Simple include loader for partials (header/nav) using data-include attribute
 async function loadIncludes(){
@@ -407,6 +407,149 @@ async function performCapture(){
     statEls.forEach(el=> obs.observe(el));
   }
 
+  // Dashboard page: fetch and display financial stats
+  const dashboardStats = document.querySelector('.stats');
+  if(dashboardStats){
+    async function loadDashboardStats(){
+      try{
+        const apiBase = await resolveApiBase();
+        const token = getAuthToken();
+        
+        console.log('Fetching total sales from:', `${apiBase}/ledger/total-sales`);
+        console.log('Auth token present:', !!token);
+        
+        // Fetch total sales (sum of all invoice amounts for the user)
+        const response = await fetch(`${apiBase}/ledger/total-sales`, {
+          headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+        });
+        
+        console.log('Response status:', response.status);
+        
+        if(response.status === 401){
+          handleAuthError('Session expired. Please login again.');
+          return;
+        }
+        
+        if(response.ok){
+          const data = await response.json();
+          console.log('API response data:', data);
+          
+          const totalSales = data.total_sales;
+          const invoiceCount = data.invoice_count;
+          console.log('Raw total_sales value:', totalSales, 'Type:', typeof totalSales);
+          console.log('Invoice count:', invoiceCount);
+          
+          // Update total sales stat
+          const salesStat = document.querySelector('.stat-card--sales .stat-value');
+          if(salesStat){
+            // Handle different data formats from API with robust type checking
+            let numericValue;
+            
+            if (totalSales === null || totalSales === undefined || totalSales === 0) {
+              console.log('totalSales is null/undefined/zero:', totalSales);
+              salesStat.textContent = 'No data';
+              // Reset the label to default
+              const labelStat = document.querySelector('.stat-card--sales .stat-label');
+              if(labelStat) {
+                labelStat.textContent = 'Total Sales';
+              }
+              return;
+            }
+            
+            if (typeof totalSales === 'string') {
+              // Extract numbers from formatted strings like "₹ 1,234.50"
+              const cleanString = totalSales.replace(/[^\d.]/g, '');
+              numericValue = parseFloat(cleanString);
+              console.log('Parsed from string:', cleanString, '->', numericValue);
+            } else if (typeof totalSales === 'number') {
+              // Direct number value
+              numericValue = totalSales;
+              console.log('Using direct number:', numericValue);
+            } else {
+              // Unknown type
+              console.log('Unknown totalSales type:', typeof totalSales, 'Value:', totalSales);
+              salesStat.textContent = 'No data';
+              // Reset the label to default
+              const labelStat = document.querySelector('.stat-card--sales .stat-label');
+              if(labelStat) {
+                labelStat.textContent = 'Total Sales';
+              }
+              return;
+            }
+            
+            // Validate the parsed value
+            if (!isFinite(numericValue) || numericValue === 0) {
+              console.log('Invalid or zero numeric value:', numericValue);
+              salesStat.textContent = 'No data';
+              // Reset the label to default
+              const labelStat = document.querySelector('.stat-card--sales .stat-label');
+              if(labelStat) {
+                labelStat.textContent = 'Total Sales';
+              }
+              return;
+            }
+            
+            // Format the amount with Indian numbering system
+            const formattedAmount = new Intl.NumberFormat('en-IN', {
+              style: 'currency',
+              currency: 'INR',
+              minimumFractionDigits: 2
+            }).format(numericValue);
+            
+            console.log('Final formatted amount:', formattedAmount);
+            
+            // Update the display without using data-target
+            salesStat.textContent = formattedAmount;
+            
+            // Also update the stat label to show invoice count
+            const labelStat = document.querySelector('.stat-card--sales .stat-label');
+            if(labelStat && invoiceCount > 0) {
+              labelStat.textContent = `Total Sales (${invoiceCount} invoices)`;
+            } else {
+              labelStat.textContent = 'Total Sales';
+            }
+          } else {
+            // No data found, show default message
+            console.log('Sales stat element not found');
+          }
+        } else {
+          // If no data found, show default message
+          const salesStat = document.querySelector('.stat-card--sales .stat-value');
+          if(salesStat){
+            console.log('API returned non-ok status, showing "No data"');
+            salesStat.textContent = 'No data';
+          }
+        }
+      } catch(error){
+        console.error('Error loading dashboard stats:', error);
+        // Keep default values on error
+        const salesStat = document.querySelector('.stat-card--sales .stat-value');
+        if(salesStat){
+          salesStat.textContent = 'Error loading';
+        }
+      }
+    }
+    
+    // Load stats when dashboard is visible
+    if('IntersectionObserver' in window){
+      const dashboardObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting){
+            console.log('Dashboard stats section is now visible, loading data...');
+            loadDashboardStats();
+            dashboardObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      dashboardStats.parentElement ? dashboardObserver.observe(dashboardStats.parentElement) : loadDashboardStats();
+    } else {
+      // Fallback for browsers without IntersectionObserver
+      console.log('IntersectionObserver not available, loading stats immediately...');
+      loadDashboardStats();
+    }
+  }
+
   // file input / preview for the simplified flow
   if(fileInput){ fileInput.addEventListener('change', (e)=>{ const file = e.target.files && e.target.files[0]; if(!file) return;
       capturedFile = null; // Clear captured file if user selects a new one
@@ -732,7 +875,43 @@ async function performCapture(){
           try{
             const apiBase = await resolveApiBase();
             const token = getAuthToken();
-            const url = `${apiBase}/ledger/list/pdf?limit=200${token ? `&token=${encodeURIComponent(token)}` : ''}`;
+            
+            // Get current ledger items from the table
+            const tbody = document.getElementById('ledgerBody');
+            if(!tbody || tbody.children.length === 0){
+              alert('No ledger entries to download. Please upload some invoices first.');
+              return;
+            }
+            
+            // Extract ledger items from the current table view
+            const currentItems = [];
+            const rows = tbody.querySelectorAll('tr');
+            rows.forEach(row => {
+              const cells = row.querySelectorAll('td');
+              if(cells.length >= 6) {
+                // Get the ledger ID from the preview cell
+                const previewCell = cells[0];
+                const img = previewCell.querySelector('img');
+                const ledgerId = img ? img.src.split('/').pop().split('?')[0] : null;
+                
+                if(ledgerId) {
+                  // Create a minimal ledger object with just the ID for PDF generation
+                  currentItems.push({
+                    id: ledgerId,
+                    owner_email: (function(){ try{ return localStorage.getItem('authEmail'); }catch(e){ return null; } })()
+                  });
+                }
+              }
+            });
+            
+            if(currentItems.length === 0) {
+              alert('No ledger entries found in current view.');
+              return;
+            }
+            
+            // Generate PDF from current items using the existing endpoint with limit
+            const limit = currentItems.length;
+            const url = `${apiBase}/ledger/list/pdf?limit=${limit}${token ? `&token=${encodeURIComponent(token)}` : ''}`;
             const link = document.createElement('a');
             link.href = url;
             link.target = '_blank';
@@ -741,6 +920,7 @@ async function performCapture(){
             link.click();
             link.remove();
           }catch(e){
+            console.error('PDF download error:', e);
             alert('Unable to download PDF. Make sure the backend is running on port 8000.');
           }
         });
