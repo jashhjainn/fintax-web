@@ -261,6 +261,63 @@ img#photo,img#previewImage{max-width:100%;display:block;border-radius:8px}
   font-size:1rem;
 }
 
+/* Actions cell styling for delete button */
+.actions-cell{
+  text-align: center;
+  vertical-align: middle;
+}
+
+.delete-ledger-btn{
+  background: transparent;
+  border: 1px solid rgba(230, 90, 90, 0.3);
+  color: var(--danger);
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.delete-ledger-btn:hover{
+  background: rgba(230, 90, 90, 0.12);
+  border-color: rgba(230, 90, 90, 0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(230, 90, 90, 0.2);
+}
+
+.delete-ledger-btn:focus{
+  outline: 3px solid rgba(230, 90, 90, 0.25);
+  outline-offset: 2px;
+}
+
+.delete-ledger-btn:active{
+  transform: translateY(0);
+}
+
+/* Danger color for delete button */
+:root{
+  --danger: #e65a5a;
+}
+
+:root[data-theme='dark']{
+  --danger: #ff6b6b;
+}
+
+/* Ensure delete button is visible in dark theme */
+:root[data-theme='dark'] .delete-ledger-btn{
+  border-color: rgba(255, 107, 107, 0.4);
+  color: #ff6b6b;
+}
+
+:root[data-theme='dark'] .delete-ledger-btn:hover{
+  background: rgba(255, 107, 107, 0.15);
+  border-color: rgba(255, 107, 107, 0.6);
+}
+
 /* modal for camera — centered, constrained dialog */
 .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:110}
 .modal[aria-hidden="false"]{display:flex;background:rgba(8,6,10,0.55)}

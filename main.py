@@ -315,6 +315,68 @@ def get_total_sales(request: Request):
         raise HTTPException(status_code=500, detail=f"Error calculating total sales: {str(e)}")
 
 
+@app.get("/ledger/total-gst-payable")
+def get_total_gst_payable(request: Request):
+    """Calculate total GST payable as sum of all gst_payable amounts for the authenticated user"""
+    user = _get_auth_user(request)
+    
+    try:
+        # Try aggregation with $toDouble first (for newer MongoDB versions)
+        try:
+            pipeline = [
+                {"$match": {"owner_email": user.get("email")}},
+                {"$group": {
+                    "_id": None,
+                    "total_gst": {"$sum": {"$toDouble": "$gst_payable"}},
+                    "count": {"$sum": 1}
+                }}
+            ]
+            result = list(db.ledger_entries.aggregate(pipeline))
+        except Exception:
+            # Fallback for older MongoDB versions - calculate in Python
+            cursor = db.ledger_entries.find({"owner_email": user.get("email")})
+            total_gst = 0.0
+            invoice_count = 0
+            
+            for doc in cursor:
+                gst_payable = doc.get("gst_payable")
+                if gst_payable is not None:
+                    try:
+                        # Handle both string and numeric values
+                        if isinstance(gst_payable, str):
+                            # Remove currency symbols and commas, then convert to float
+                            clean_amount = gst_payable.replace('₹', '').replace(',', '').strip()
+                            numeric_value = float(clean_amount)
+                        else:
+                            numeric_value = float(gst_payable)
+                        total_gst += numeric_value
+                        invoice_count += 1
+                    except (ValueError, TypeError):
+                        # Skip invalid values
+                        continue
+            
+            result = [{"total_gst": total_gst, "count": invoice_count}]
+        
+        if not result or result[0]["count"] == 0:
+            return {
+                "total_gst_payable": 0.0,
+                "invoice_count": 0,
+                "message": "No GST data found"
+            }
+        
+        total_gst = result[0]["total_gst"]
+        invoice_count = result[0]["count"]
+        
+        return {
+            "total_gst_payable": total_gst,
+            "invoice_count": invoice_count,
+            "message": f"Total GST payable from {invoice_count} invoices"
+        }
+    except Exception as e:
+        print(f"Error in get_total_gst_payable: {e}")
+        raise HTTPException(status_code=500, detail=f"Error calculating total GST payable: {str(e)}")
+
+
 @app.get("/ledger/list")
 def list_ledgers(request: Request, limit: int = 20):
     user = _get_auth_user(request)
@@ -849,6 +911,42 @@ def get_ledger_image(request: Request, ledger_id: str):
     if not doc or "image_data" not in doc:
         raise HTTPException(status_code=404, detail="Ledger image not found")
     return Response(content=doc["image_data"], media_type="image/png")
+
+@app.delete("/ledger/{ledger_id}")
+def delete_ledger_entry(request: Request, ledger_id: str):
+    user = _get_auth_user(request)
+    
+    # First, check if the ledger entry exists and belongs to the user
+    doc = db.ledger_entries.find_one({
+        "_id": bson.ObjectId(ledger_id),
+        "owner_email": user.get("email"),
+    })
+    
+    if not doc:
+        raise HTTPException(status_code=404, detail="Ledger entry not found")
+    
+    try:
+        # Delete the ledger entry
+        result = db.ledger_entries.delete_one({
+            "_id": bson.ObjectId(ledger_id),
+            "owner_email": user.get("email"),
+        })
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Ledger entry not found")
+        
+        # Also delete from invoices collection if it exists there
+        db.invoices.delete_one({
+            "owner_email": user.get("email"),
+            "bill_number": doc.get("bill_number")
+        })
+        
+        logging.info(f"Ledger entry deleted successfully: {ledger_id} for user {user.get('email')}")
+        return {"message": "Ledger entry deleted successfully", "id": ledger_id}
+        
+    except Exception as e:
+        logging.error(f"Error deleting ledger entry {ledger_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error deleting ledger entry: {str(e)}")
 
 @app.get("/")
 def read_root():

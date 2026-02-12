@@ -584,13 +584,228 @@ async function performCapture(){
       }
     }
     
+    async function loadDashboardGSTPayable(){
+      try{
+        const apiBase = await resolveApiBase();
+        const token = getAuthToken();
+        
+        console.log('Fetching total GST payable from:', `${apiBase}/ledger/total-gst-payable`);
+        console.log('Auth token present:', !!token);
+        
+        // Fetch total GST payable (sum of all gst_payable amounts for the user)
+        const response = await fetch(`${apiBase}/ledger/total-gst-payable`, {
+          headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+        });
+        
+        console.log('GST Response status:', response.status);
+        
+        if(response.status === 401){
+          handleAuthError('Session expired. Please login again.');
+          return;
+        }
+        
+        if(response.ok){
+          const data = await response.json();
+          console.log('GST API response data:', data);
+          
+          const totalGSTPayable = data.total_gst_payable;
+          const invoiceCount = data.invoice_count;
+          console.log('Raw total_gst_payable value:', totalGSTPayable, 'Type:', typeof totalGSTPayable);
+          console.log('GST Invoice count:', invoiceCount);
+          
+          // Update GST payable stat
+          const gstStat = document.querySelector('.stat-card--gst .stat-value');
+          if(gstStat){
+            // Handle different data formats from API with robust type checking
+            let numericValue;
+            
+            if (totalGSTPayable === null || totalGSTPayable === undefined || totalGSTPayable === 0) {
+              console.log('total_gst_payable is null/undefined/zero:', totalGSTPayable);
+              gstStat.textContent = 'No data';
+              // Reset the label to default
+              const labelStat = document.querySelector('.stat-card--gst .stat-label');
+              if(labelStat) {
+                labelStat.textContent = 'Gst Payable';
+              }
+              return;
+            }
+            
+            if (typeof totalGSTPayable === 'string') {
+              // Extract numbers from formatted strings like "₹ 1,234.50"
+              const cleanString = totalGSTPayable.replace(/[^\d.]/g, '');
+              numericValue = parseFloat(cleanString);
+              console.log('GST Parsed from string:', cleanString, '->', numericValue);
+            } else if (typeof totalGSTPayable === 'number') {
+              // Direct number value
+              numericValue = totalGSTPayable;
+              console.log('GST Using direct number:', numericValue);
+            } else {
+              // Unknown type
+              console.log('Unknown total_gst_payable type:', typeof totalGSTPayable, 'Value:', totalGSTPayable);
+              gstStat.textContent = 'No data';
+              // Reset the label to default
+              const labelStat = document.querySelector('.stat-card--gst .stat-label');
+              if(labelStat) {
+                labelStat.textContent = 'Gst Payable';
+              }
+              return;
+            }
+            
+            // Validate the parsed value
+            if (!isFinite(numericValue) || numericValue === 0) {
+              console.log('Invalid or zero numeric value:', numericValue);
+              gstStat.textContent = 'No data';
+              // Reset the label to default
+              const labelStat = document.querySelector('.stat-card--gst .stat-label');
+              if(labelStat) {
+                labelStat.textContent = 'Gst Payable';
+              }
+              return;
+            }
+            
+            // Format the amount with Indian numbering system
+            const formattedAmount = new Intl.NumberFormat('en-IN', {
+              style: 'currency',
+              currency: 'INR',
+              minimumFractionDigits: 2
+            }).format(numericValue);
+            
+            console.log('GST Final formatted amount:', formattedAmount);
+            
+            // Update the display
+            gstStat.textContent = formattedAmount;
+            
+            // Also update the stat label to show invoice count
+            const labelStat = document.querySelector('.stat-card--gst .stat-label');
+            if(labelStat && invoiceCount > 0) {
+              labelStat.textContent = `Gst Payable (${invoiceCount} invoices)`;
+            } else {
+              labelStat.textContent = 'Gst Payable';
+            }
+          } else {
+            // No data found, show default message
+            console.log('GST stat element not found');
+          }
+        } else {
+          // If no data found, show default message
+          const gstStat = document.querySelector('.stat-card--gst .stat-value');
+          if(gstStat){
+            console.log('GST API returned non-ok status, showing "No data"');
+            gstStat.textContent = 'No data';
+          }
+        }
+      } catch(error){
+        console.error('Error loading dashboard GST stats:', error);
+        // Keep default values on error
+        const gstStat = document.querySelector('.stat-card--gst .stat-value');
+        if(gstStat){
+          gstStat.textContent = 'Error loading';
+        }
+      }
+    }
+    
+    async function calculateTaxableAmount(){
+      try{
+        const salesStat = document.querySelector('.stat-card--sales .stat-value');
+        const gstStat = document.querySelector('.stat-card--gst .stat-value');
+        const taxableStat = document.querySelector('.stat-card--taxable .stat-value');
+        
+        if(!salesStat || !gstStat || !taxableStat){
+          console.log('One or more stat elements not found for taxable calculation');
+          return;
+        }
+        
+        // Get sales amount
+        const salesText = salesStat.textContent.trim();
+        let salesAmount = 0;
+        
+        if(salesText !== 'No data' && salesText !== 'Error loading' && salesText !== ''){
+          try{
+            // Extract number from formatted currency string
+            const salesMatch = salesText.replace(/[^\d.]/g, '');
+            salesAmount = parseFloat(salesMatch);
+            if(!isFinite(salesAmount)) salesAmount = 0;
+          }catch(e){
+            console.log('Could not parse sales amount:', salesText);
+            salesAmount = 0;
+          }
+        }
+        
+        // Get GST amount
+        const gstText = gstStat.textContent.trim();
+        let gstAmount = 0;
+        
+        if(gstText !== 'No data' && gstText !== 'Error loading' && gstText !== ''){
+          try{
+            // Extract number from formatted currency string
+            const gstMatch = gstText.replace(/[^\d.]/g, '');
+            gstAmount = parseFloat(gstMatch);
+            if(!isFinite(gstAmount)) gstAmount = 0;
+          }catch(e){
+            console.log('Could not parse GST amount:', gstText);
+            gstAmount = 0;
+          }
+        }
+        
+        console.log('Sales amount:', salesAmount, 'GST amount:', gstAmount);
+        
+        // Calculate taxable amount: Total Sales - GST Payable
+        let taxableAmount = salesAmount - gstAmount;
+        
+        // Handle edge cases
+        if(salesAmount === 0 && gstAmount === 0){
+          taxableStat.textContent = 'No data';
+          const labelStat = document.querySelector('.stat-card--taxable .stat-label');
+          if(labelStat) {
+            labelStat.textContent = 'Taxable Amount';
+          }
+          return;
+        }
+        
+        if(taxableAmount < 0){
+          console.warn('Taxable amount is negative, setting to 0');
+          taxableAmount = 0;
+        }
+        
+        // Format the taxable amount with Indian numbering system
+        const formattedAmount = new Intl.NumberFormat('en-IN', {
+          style: 'currency',
+          currency: 'INR',
+          minimumFractionDigits: 2
+        }).format(taxableAmount);
+        
+        console.log('Taxable amount calculated:', formattedAmount);
+        
+        // Update the display
+        taxableStat.textContent = formattedAmount;
+        
+        // Update the label to show calculation info
+        const labelStat = document.querySelector('.stat-card--taxable .stat-label');
+        if(labelStat) {
+          labelStat.textContent = 'Taxable Amount (Sales - GST)';
+        }
+        
+      } catch(error){
+        console.error('Error calculating taxable amount:', error);
+        const taxableStat = document.querySelector('.stat-card--taxable .stat-value');
+        if(taxableStat){
+          taxableStat.textContent = 'Error calculating';
+        }
+      }
+    }
+    
     // Load stats when dashboard is visible
     if('IntersectionObserver' in window){
       const dashboardObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if(entry.isIntersecting){
             console.log('Dashboard stats section is now visible, loading data...');
-            loadDashboardStats();
+            loadDashboardStats().then(() => {
+              loadDashboardGSTPayable().then(() => {
+                // Calculate taxable amount after both sales and GST are loaded
+                setTimeout(calculateTaxableAmount, 100);
+              });
+            });
             dashboardObserver.unobserve(entry.target);
           }
         });
@@ -601,6 +816,9 @@ async function performCapture(){
       // Fallback for browsers without IntersectionObserver
       console.log('IntersectionObserver not available, loading stats immediately...');
       loadDashboardStats();
+      loadDashboardGSTPayable();
+      // Calculate taxable amount after a short delay to ensure both are loaded
+      setTimeout(calculateTaxableAmount, 500);
     }
   }
 
@@ -1081,13 +1299,19 @@ async function performCapture(){
           const base = apiBase || cachedApiBase || DEFAULT_API_BASES[0] || '';
           const token = getAuthToken();
           tbody.innerHTML = rows.map((r, i)=>`
-            <tr>
+            <tr data-ledger-id="${r.id}">
               <td class="col-preview">${r.id ? `<img class="ledger-preview" src="${base}/ledger/${r.id}/image${token ? `?token=${encodeURIComponent(token)}` : ''}" alt="Invoice preview">` : ''}</td>
               <td>${i + 1}</td>
               <td>${r.billNo}</td>
               <td>${r.particulars}</td>
               <td>${r.gstPayable}</td>
               <td>${r.totalAmt}</td>
+              <td class="actions-cell">
+                <button class="btn danger delete-ledger-btn" data-ledger-id="${r.id}" title="Delete entry">
+                  <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                  <span class="sr-only">Delete</span>
+                </button>
+              </td>
             </tr>
           `).join('');
         }
@@ -1114,9 +1338,18 @@ async function performCapture(){
       }
       const ledgerBody = document.getElementById('ledgerBody');
       if(ledgerBody){
-        ledgerBody.addEventListener('click', (e)=>{
+        ledgerBody.addEventListener('click', async (e)=>{
           const img = e.target && e.target.closest ? e.target.closest('img.ledger-preview') : null;
           if(img && img.getAttribute('src')){ openLedgerPreview(img.getAttribute('src')); return; }
+          
+          // Handle delete button clicks
+          const deleteBtn = e.target && e.target.closest ? e.target.closest('.delete-ledger-btn') : null;
+          if(deleteBtn){
+            const ledgerId = deleteBtn.getAttribute('data-ledger-id');
+            if(ledgerId){
+              await handleDeleteLedger(ledgerId);
+            }
+          }
         });
       }
 
@@ -1262,6 +1495,55 @@ async function performCapture(){
 
       // Load initial data when page loads
       loadInitialData();
+    }
+
+    // Handle delete ledger entry
+    async function handleDeleteLedger(ledgerId) {
+      if (!ledgerId) return;
+
+      // Confirm deletion
+      const confirmed = confirm('Are you sure you want to delete this ledger entry? This action cannot be undone.');
+      if (!confirmed) return;
+
+      try {
+        const apiBase = await resolveApiBase();
+        const token = getAuthToken();
+
+        const response = await fetch(`${apiBase}/ledger/${ledgerId}`, {
+          method: 'DELETE',
+          headers: authHeaders()
+        });
+
+        if (response.status === 401) {
+          handleAuthError('Session expired. Please login again.');
+          return;
+        }
+
+        if (response.ok) {
+          showToast('✅ Ledger entry deleted successfully!', 'success', 1500);
+          
+          // Remove the row from the table
+          const row = document.querySelector(`tr[data-ledger-id="${ledgerId}"]`);
+          if (row) {
+            row.remove();
+          }
+
+          // Update status message
+          const statusEl = document.getElementById('ledgerStatus');
+          const tbody = document.getElementById('ledgerBody');
+          if (statusEl && tbody) {
+            const rowCount = tbody.children.length;
+            statusEl.textContent = `Showing ${rowCount} ledger entr${rowCount === 1 ? 'y' : 'ies'}.`;
+          }
+        } else {
+          const errorData = await response.json().catch(() => ({}));
+          const errorMessage = errorData.detail || 'Failed to delete ledger entry';
+          showToast(`❌ ${errorMessage}`, 'error', 2000);
+        }
+      } catch (error) {
+        console.error('Error deleting ledger entry:', error);
+        showToast('❌ Network error. Please try again.', 'error', 2000);
+      }
     }
 
   // Signup form handling
@@ -1717,11 +1999,8 @@ async function performCapture(){
       passwordError.textContent = message;
     }
   }
-}
 
-
-// Edit Personal Info Modal Logic
-document.addEventListener('DOMContentLoaded', () => {
+  // Edit Personal Info Modal functionality
   const editPersonalInfoModal = document.getElementById('editPersonalInfoModal');
   const editPersonalInfoTrigger = document.querySelector('.dropdown-item[href="#"]');
   const closeEditPersonalInfoModalBtn = document.getElementById('closeEditPersonalInfoModal');
@@ -1733,23 +2012,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const personalInfoError = document.getElementById('personalInfoError');
 
   // Find the correct "Edit Personal Info" dropdown item (not the change password one)
-  const dropdownItems = document.querySelectorAll('.dropdown-item');
+  const editDropdownItems = document.querySelectorAll('.dropdown-item');
   let editPersonalInfoTriggerElement = null;
-  dropdownItems.forEach(item => {
+  editDropdownItems.forEach(item => {
     if (item.textContent.includes('Edit Personal Info')) {
       editPersonalInfoTriggerElement = item;
     }
   });
-
-  // Open modal
-  if (editPersonalInfoTriggerElement) {
-    editPersonalInfoTriggerElement.addEventListener('click', (e) => {
-      e.preventDefault();
-      loadUserProfileForEdit();
-      editPersonalInfoModal.setAttribute('aria-hidden', 'false');
-      document.body.classList.add('no-scroll');
-    });
-  }
 
   // Close modal functions
   const closeEditPersonalInfoModal = () => {
@@ -1766,11 +2035,23 @@ document.addEventListener('DOMContentLoaded', () => {
   if (closeEditPersonalInfoModalBtn2) {
     closeEditPersonalInfoModalBtn2.addEventListener('click', closeEditPersonalInfoModal);
   }
-  editPersonalInfoModal.addEventListener('click', (e) => {
-    if (e.target === editPersonalInfoModal) {
-      closeEditPersonalInfoModal();
-    }
-  });
+  if (editPersonalInfoModal) {
+    editPersonalInfoModal.addEventListener('click', (e) => {
+      if (e.target === editPersonalInfoModal) {
+        closeEditPersonalInfoModal();
+      }
+    });
+  }
+
+  // Open modal
+  if (editPersonalInfoTriggerElement) {
+    editPersonalInfoTriggerElement.addEventListener('click', (e) => {
+      e.preventDefault();
+      loadUserProfileForEdit();
+      editPersonalInfoModal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('no-scroll');
+    });
+  }
 
   // Load user profile data into the modal
   const loadUserProfileForEdit = async () => {
@@ -1853,7 +2134,9 @@ document.addEventListener('DOMContentLoaded', () => {
       profileNameElement.textContent = newName;
     }
   };
-});
+}
+
+
 
 // Run includes first, then initialize UI
 (async function start(){ await loadIncludes(); initHeaderNav(); await pageInit(); })();

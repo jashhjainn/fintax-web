@@ -1659,3 +1659,87 @@ bill_number
 2026-02-12 11:50:37,766 - INFO - Ensured unique index on users.email
 2026-02-12 11:51:01,800 - INFO - Profile updated successfully for user: yash@gmail.com
 2026-02-12 11:57:40,537 - INFO - OCR stored with id: 698d72dc87d9b77ec08c8bd8
+2026-02-12 12:18:46,595 - INFO - Successfully connected to MongoDB!
+2026-02-12 12:18:47,603 - INFO - Database connection available.
+2026-02-12 12:18:47,700 - INFO - Ensured unique index on users.email
+2026-02-12 12:19:29,601 - INFO - Successfully connected to MongoDB!
+2026-02-12 12:19:30,033 - INFO - Database connection available.
+2026-02-12 12:19:30,062 - INFO - Ensured unique index on users.email
+2026-02-12 12:22:13,407 - INFO - Successfully connected to MongoDB!
+2026-02-12 12:22:19,586 - INFO - Database connection available.
+2026-02-12 12:22:19,615 - INFO - Ensured unique index on users.email
+2026-02-12 12:31:39,405 - INFO - OCR stored with id: 698d7ad332e8410f33e9e752
+2026-02-12 12:37:34,678 - INFO - Successfully connected to MongoDB!
+2026-02-12 12:37:35,399 - INFO - Database connection available.
+2026-02-12 12:37:35,425 - INFO - Ensured unique index on users.email
+2026-02-12 12:39:46,275 - INFO - Ledger entry deleted successfully: 698d7ad332e8410f33e9e752 for user yash@gmail.com
+2026-02-12 12:40:19,154 - INFO - OCR stored with id: 698d7cdb6285e5b027435d71
+2026-02-12 16:27:29,883 - INFO - Successfully connected to MongoDB!
+2026-02-12 16:27:30,602 - INFO - Database connection available.
+2026-02-12 16:27:30,730 - INFO - Ensured unique index on users.email
+2026-02-12 16:36:14,772 - INFO - Ledger entry deleted successfully: 698d7cdb6285e5b027435d71 for user yash@gmail.com
+2026-02-12 16:47:10,018 - INFO - Successfully connected to MongoDB!
+2026-02-12 16:47:10,354 - INFO - Database connection available.
+2026-02-12 16:47:10,381 - INFO - Ensured unique index on users.email
+2026-02-12 17:14:17,293 - INFO - Successfully connected to MongoDB!
+2026-02-12 17:14:18,571 - INFO - Database connection available.
+2026-02-12 17:14:18,593 - INFO - Ensured unique index on users.email
+2026-02-12 17:18:42,256 - INFO - Successfully connected to MongoDB!
+2026-02-12 17:18:42,806 - INFO - Database connection available.
+2026-02-12 17:18:42,832 - INFO - Ensured unique index on users.email
+2026-02-12 17:20:44,124 - INFO - Successfully connected to MongoDB!
+2026-02-12 17:20:44,733 - INFO - Database connection available.
+2026-02-12 17:20:44,758 - INFO - Ensured unique index on users.email
+2026-02-12 17:23:05,646 - INFO - OCR stored with id: 698dbf20e463932085c3d728
+2026-02-12 17:32:42,490 - INFO - OCR stored with id: 698dc162e463932085c3d729
+2026-02-12 17:33:06,071 - INFO - OCR stored with id: 698dc17ae463932085c3d72a
+2026-02-12 17:35:43,149 - INFO - Ledger entry deleted successfully: 698d72dc87d9b77ec08c8bd8 for user yash@gmail.com
+2026-02-12 17:39:16,521 - INFO - Successfully connected to MongoDB!
+2026-02-12 17:39:17,591 - INFO - Database connection available.
+2026-02-12 17:39:23,600 - INFO - Ensured unique index on users.email
+2026-02-12 17:42:53,649 - INFO - Ledger entry deleted successfully: 698dc17ae463932085c3d72a for user yash@gmail.com
+2026-02-12 17:42:56,074 - INFO - Ledger entry deleted successfully: 698dc162e463932085c3d729 for user yash@gmail.com
+2026-02-12 17:42:59,456 - INFO - Ledger entry deleted successfully: 698dbf20e463932085c3d728 for user yash@gmail.com
+2026-02-12 17:43:02,252 - INFO - Ledger entry deleted successfully: 698ca77bd89825a64acc9eab for user yash@gmail.com
+2026-02-12 17:43:15,575 - INFO - OCR stored with id: 698dc3dbe463932085c3d72b
+2026-02-12 17:45:14,223 - INFO - OCR stored with id: 698dc452e463932085c3d72c
+2026-02-12 17:46:25,652 - INFO - OCR stored with id: 698dc499e463932085c3d72d
+2026-02-12 17:56:29,395 - INFO - OCR stored with id: 698dc6f5e463932085c3d72e
+2026-02-12 18:05:15,191 - INFO - Successfully connected to MongoDB!
+2026-02-12 18:05:15,728 - INFO - Database connection available.
+2026-02-12 18:05:15,756 - INFO - Ensured unique index on users.email
+2026-02-12 18:08:00,315 - INFO - Successfully connected to MongoDB!
+2026-02-12 18:08:00,357 - INFO - Successfully connected to MongoDB!
+2026-02-12 18:08:00,773 - INFO - Database connection available.
+2026-02-12 18:08:00,774 - INFO - Database connection available.
+2026-02-12 18:08:00,803 - INFO - Ensured unique index on users.email
+2026-02-12 18:08:00,807 - INFO - Ensured unique index on users.email
+2026-02-12 18:08:04,405 - INFO - Successfully connected to MongoDB!
+2026-02-12 18:08:04,439 - INFO - Successfully connected to MongoDB!
+2026-02-12 18:08:04,834 - INFO - Database connection available.
+2026-02-12 18:08:04,839 - INFO - Database connection available.
+2026-02-12 18:08:04,864 - INFO - Ensured unique index on users.email
+2026-02-12 18:08:04,870 - INFO - Ensured unique index on users.email
+2026-02-12 18:08:34,900 - INFO - Successfully connected to MongoDB!
+2026-02-12 18:08:34,932 - INFO - Successfully connected to MongoDB!
+2026-02-12 18:08:35,288 - INFO - Database connection available.
+2026-02-12 18:08:35,312 - INFO - Database connection available.
+2026-02-12 18:08:35,314 - INFO - Ensured unique index on users.email
+2026-02-12 18:08:35,333 - INFO - Ensured unique index on users.email
+2026-02-12 18:09:50,505 - INFO - Successfully connected to MongoDB!
+2026-02-12 18:09:50,848 - INFO - Database connection available.
+2026-02-12 18:09:50,906 - INFO - Ensured unique index on users.email
+2026-02-12 18:12:15,528 - INFO - Successfully connected to MongoDB!
+2026-02-12 18:12:15,922 - INFO - Database connection available.
+2026-02-12 18:12:15,972 - INFO - Ensured unique index on users.email
+2026-02-12 18:13:14,268 - INFO - Password changed successfully for user: yash@gmail.com
+2026-02-12 20:57:46,543 - INFO - Successfully connected to MongoDB!
+2026-02-12 20:57:47,706 - INFO - Database connection available.
+2026-02-12 20:57:47,840 - INFO - Ensured unique index on users.email
+2026-02-12 21:00:26,654 - INFO - Successfully connected to MongoDB!
+2026-02-12 21:00:26,936 - INFO - Database connection available.
+2026-02-12 21:00:26,959 - INFO - Ensured unique index on users.email
+2026-02-12 21:00:44,350 - INFO - Successfully connected to MongoDB!
+2026-02-12 21:00:44,603 - INFO - Database connection available.
+2026-02-12 21:00:44,700 - INFO - Ensured unique index on users.email
+2026-02-12 21:33:42,088 - INFO - OCR stored with id: 698df9dd9a345860d323e6f5
