@@ -567,6 +567,89 @@ body.camera-open #siteHeader, body.camera-open #siteNav{display:none!important}
   padding: 10px 14px;
   border-radius: 10px;
 }
+
+/* Dropdown styles */
+.dropdown-container{
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-trigger{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.dropdown-trigger:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(124,74,166,0.2);
+}
+
+.dropdown-trigger[aria-expanded="true"] .fa-chevron-down{
+  transform: rotate(180deg);
+}
+
+.dropdown-menu{
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 220px;
+  background: var(--panel);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(10,8,20,0.25);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: all 0.2s ease;
+  z-index: 1000;
+  margin-top: 6px;
+  padding: 8px 0;
+}
+
+.dropdown-container:hover .dropdown-menu{
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-item{
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  margin: 2px 6px;
+}
+
+.dropdown-item:hover{
+  background: rgba(124,74,166,0.12);
+  color: var(--color-accent);
+  transform: translateX(2px);
+}
+
+.dropdown-item:focus{
+  outline: 2px solid rgba(124,74,166,0.3);
+  outline-offset: 2px;
+}
+
+/* Dark mode adjustments */
+:root[data-theme='dark'] .dropdown-menu{
+  border-color: rgba(255,255,255,0.1);
+  background: var(--panel);
+}
+
+:root[data-theme='dark'] .dropdown-item:hover{
+  background: rgba(155,107,216,0.18);
+  color: var(--color-primary);
+}
 /* When YOU toggle dark mode */
 :root[data-theme='dark'] .btn.outline {
   color: #fff;
@@ -756,6 +839,542 @@ body.camera-open #siteHeader, body.camera-open #siteNav{display:none!important}
   }
   
   .duplicate-actions .btn{
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Change Password Modal Styles */
+.change-password-modal{
+  width: min(500px, 90%);
+  max-width: 500px;
+  background: var(--panel);
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 20px 60px rgba(10, 8, 20, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.change-password-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: -10px;
+}
+
+.change-password-title{
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.change-password-close{
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.change-password-close:hover{
+  background: rgba(124, 74, 166, 0.12);
+  color: var(--color-accent);
+}
+
+.change-password-body{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label{
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.auth-password{
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.auth-password input{
+  width: 100%;
+  padding: 12px 44px 12px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: rgba(255,255,255,0.95);
+  color: var(--text);
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+
+
+
+.password-hint{
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.error-message{
+  color: var(--danger);
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: rgba(230, 90, 90, 0.1);
+  border: 1px solid rgba(230, 90, 90, 0.3);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-top: -8px;
+}
+
+.change-password-footer{
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.change-password-footer .btn{
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.change-password-footer .btn.primary{
+  background: var(--color-accent);
+  color: white;
+}
+
+.change-password-footer .btn.primary:hover{
+  background: var(--color-accent);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(124, 74, 166, 0.3);
+}
+
+.change-password-footer .btn:not(.primary){
+  background: transparent;
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.change-password-footer .btn:not(.primary):hover{
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Responsive adjustments for change password modal */
+@media (max-width: 600px){
+  .change-password-modal{
+    width: 95%;
+    padding: 20px;
+  }
+  
+  .change-password-footer{
+    flex-direction: column;
+  }
+  
+  .change-password-footer .btn{
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* New password field styles for change password modal (different from auth pages) */
+.password-field{
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-field input{
+  width: 100%;
+  padding: 12px 44px 12px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: rgba(255,255,255,0.95);
+  color: var(--text);
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+:root[data-theme='dark'] .password-field input{
+  background: var(--panel);
+  border-color: rgba(255,255,255,0.1);
+  color: var(--text);
+}
+
+.password-field input:focus{
+  outline: none;
+  border-color: rgba(124, 74, 166, 0.4);
+  box-shadow: 0 0 0 3px rgba(124, 74, 166, 0.15);
+}
+
+.password-toggle{
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.password-toggle:hover{
+  background: rgba(124, 74, 166, 0.12);
+  color: var(--color-accent);
+}
+
+.password-toggle[aria-pressed="true"]{
+  color: var(--color-accent);
+}
+
+/* Logout Modal Styles */
+.logout-modal{
+  width: min(500px, 90%);
+  max-width: 500px;
+  background: var(--panel);
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 20px 60px rgba(10, 8, 20, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.logout-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: -10px;
+}
+
+.logout-header-content{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logout-icon{
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(124, 74, 166, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(124, 74, 166, 0.3);
+}
+
+.logout-icon i{
+  font-size: 1.2rem;
+  color: #7c4aa6;
+}
+
+.logout-title{
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.logout-close{
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.logout-close:hover{
+  background: rgba(124, 74, 166, 0.12);
+  color: var(--color-accent);
+}
+
+.logout-body{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.logout-body-content{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.logout-icon-large{
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(124, 74, 166, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(124, 74, 166, 0.3);
+}
+
+.logout-icon-large i{
+  font-size: 2.5rem;
+  color: #7c4aa6;
+}
+
+.logout-message{
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.logout-subtitle{
+  font-size: 0.95rem;
+  color: var(--muted);
+  font-style: italic;
+  margin: 0;
+}
+
+.logout-footer{
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.logout-footer .btn{
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logout-footer .btn.primary{
+  background: var(--color-accent);
+  color: white;
+}
+
+.logout-footer .btn.primary:hover{
+  background: var(--color-accent);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(124, 74, 166, 0.3);
+}
+
+.logout-footer .btn:not(.primary){
+  background: transparent;
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.logout-footer .btn:not(.primary):hover{
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Responsive adjustments for logout modal */
+@media (max-width: 600px){
+  .logout-modal{
+    width: 95%;
+    padding: 20px;
+  }
+  
+  .logout-footer{
+    flex-direction: column;
+  }
+  
+  .logout-footer .btn{
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Edit Personal Info Modal Styles */
+.edit-personal-info-modal{
+  width: min(500px, 90%);
+  max-width: 500px;
+  background: var(--panel);
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 20px 60px rgba(10, 8, 20, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.edit-personal-info-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: -10px;
+}
+
+.edit-personal-info-title{
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.edit-personal-info-close{
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.edit-personal-info-close:hover{
+  background: rgba(124, 74, 166, 0.12);
+  color: var(--color-accent);
+}
+
+.edit-personal-info-body{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.edit-personal-info-body .form-group{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.edit-personal-info-body .form-group label{
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.edit-personal-info-body input{
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: rgba(255,255,255,0.95);
+  color: var(--text);
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+:root[data-theme='dark'] .edit-personal-info-body input{
+  background: var(--panel);
+  border-color: rgba(255,255,255,0.1);
+  color: var(--text);
+}
+
+.edit-personal-info-body input:focus{
+  outline: none;
+  border-color: rgba(124, 74, 166, 0.4);
+  box-shadow: 0 0 0 3px rgba(124, 74, 166, 0.15);
+}
+
+.edit-personal-info-body input[readonly]{
+  background: rgba(0,0,0,0.04);
+  color: var(--muted);
+  cursor: not-allowed;
+  border-color: rgba(0,0,0,0.06);
+}
+
+.email-note{
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-style: italic;
+  margin-top: -8px;
+}
+
+.edit-personal-info-footer{
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.edit-personal-info-footer .btn{
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.edit-personal-info-footer .btn.primary{
+  background: var(--color-accent);
+  color: white;
+}
+
+.edit-personal-info-footer .btn.primary:hover{
+  background: var(--color-accent);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(124, 74, 166, 0.3);
+}
+
+.edit-personal-info-footer .btn:not(.primary){
+  background: transparent;
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.edit-personal-info-footer .btn:not(.primary):hover{
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Responsive adjustments for edit personal info modal */
+@media (max-width: 600px){
+  .edit-personal-info-modal{
+    width: 95%;
+    padding: 20px;
+  }
+  
+  .edit-personal-info-footer{
+    flex-direction: column;
+  }
+  
+  .edit-personal-info-footer .btn{
     width: 100%;
     justify-content: center;
   }

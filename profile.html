@@ -20,27 +20,46 @@
         </div>
 
         <div class="hero-actions">
-          <button type="button" class="btn primary" aria-label="Edit profile">Edit Profile</button>
+          <div class="dropdown-container">
+            <button type="button" class="btn primary dropdown-trigger" aria-label="Edit profile" aria-expanded="false" aria-haspopup="true">
+              Edit Profile
+              <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; margin-left: 6px; transition: transform 0.2s ease;"></i>
+            </button>
+            <div class="dropdown-menu" role="menu" aria-hidden="true">
+              <a href="#" class="dropdown-item" role="menuitem">
+                <i class="fa-solid fa-user" style="margin-right: 8px;"></i>
+                Edit Personal Info
+              </a>
+              <a href="#" class="dropdown-item change-password-trigger" role="menuitem">
+                <i class="fa-solid fa-lock" style="margin-right: 8px;"></i>
+                Change Password
+              </a>
+              <a href="#" class="dropdown-item" role="menuitem">
+                <i class="fa-solid fa-cog" style="margin-right: 8px;"></i>
+                Account Settings
+              </a>
+            </div>
+          </div>
           <!-- <button type="button" class="btn outline" aria-label="Export data">Export</button> -->
         </div>
       </div>
     </section>
 
     <section class="profile-content">
-      <div class="card-grid">
+      <!-- <div class="card-grid">
         <div class="stat-card big">
-          <div class="stat-label">Total Sales</div>
+          <div class="stat-label"></div>
           <div class="stat-value" data-target="354000">₹ 3,54,000</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Taxable Amount</div>
+          <div class="stat-label"></div>
           <div class="stat-value" data-target="300000">₹ 3,00,000</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">GST Payable</div>
+          <div class="stat-label"></div>
           <div class="stat-value" data-target="54000">₹ 54,000</div>
         </div>
-      </div>
+      </div> -->
 
       <div class="cards-row">
         <section class="card recent" aria-labelledby="recentHeading">
@@ -67,6 +86,77 @@
   </main>
 
   <div id="siteNav" data-include="partials/nav.html"></div>
+
+  <!-- Edit Personal Info Modal -->
+  <div id="editPersonalInfoModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="editPersonalInfoTitle">
+    <div class="edit-personal-info-modal" role="document">
+      <div class="edit-personal-info-header">
+        <h2 id="editPersonalInfoTitle" class="edit-personal-info-title">Edit Personal Info</h2>
+        <button type="button" class="edit-personal-info-close" id="closeEditPersonalInfoModal" aria-label="Close">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+      <div class="edit-personal-info-body">
+        <form id="editPersonalInfoForm">
+          <div class="form-group">
+            <label for="editName">Full Name</label>
+            <input type="text" id="editName" name="name" required>
+          </div>
+          <div class="form-group">
+            <label for="editEmail">Email Address</label>
+            <input type="email" id="editEmail" name="email" required readonly>
+            <div class="email-note">Email cannot be changed</div>
+          </div>
+          <div id="personalInfoError" class="error-message" style="display: none;"></div>
+        </form>
+      </div>
+      <div class="edit-personal-info-footer">
+        <button type="button" class="btn outline" id="closeEditPersonalInfoModalBtn">Cancel</button>
+        <button type="button" class="btn primary" id="savePersonalInfoBtn">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div id="changePasswordModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="changePasswordTitle">
+    <div class="change-password-modal" role="document">
+      <div class="change-password-header">
+        <h2 id="changePasswordTitle" class="change-password-title">Change Password</h2>
+        <button type="button" class="change-password-close" id="closeChangePasswordModal" aria-label="Close">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+      <div class="change-password-body">
+        <form id="changePasswordForm">
+          <div class="form-group">
+            <label for="currentPassword">Current Password</label>
+            <div class="password-field">
+              <input type="password" id="currentPassword" name="currentPassword" required>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="newPassword">New Password</label>
+            <div class="password-field">
+              <input type="password" id="newPassword" name="newPassword" required>
+            </div>
+            <div class="password-hint">Password must be at least 6 characters long</div>
+          </div>
+          <div class="form-group">
+            <label for="confirmNewPassword">Confirm New Password</label>
+            <div class="password-field">
+              <input type="password" id="confirmNewPassword" name="confirmNewPassword" required>
+            </div>
+          </div>
+          <div id="passwordError" class="error-message" style="display: none;"></div>
+        </form>
+      </div>
+      <div class="change-password-footer">
+        <button type="button" class="btn outline" id="closeChangePasswordModalBtn">Cancel</button>
+        <button type="button" class="btn primary" id="savePasswordBtn">Save Password</button>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js" defer></script>
 </body>

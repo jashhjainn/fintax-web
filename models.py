@@ -57,6 +57,14 @@ class UserLogin(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str
+    confirm_new_password: str
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+
 class User(BaseModel):
     name: str
     email: str

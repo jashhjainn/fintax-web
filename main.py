@@ -1,5 +1,6 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException, Response, Request
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
 from db import db
 from models import Invoice, LedgerEntry, UserCreate, UserLogin, User, get_ist_time
 from pytes import process_ocr
@@ -11,6 +12,11 @@ import re
 import secrets
 from pymongo.errors import DuplicateKeyError
 from fpdf import FPDF
+
+class ChangePasswordRequest(BaseModel):
+    current_password: str = Field(..., min_length=1, description="Current password")
+    new_password: str = Field(..., min_length=6, description="New password (minimum 6 characters)")
+    confirm_new_password: str = Field(..., description="Confirmation of new password")
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, filename='app.log', filemode='a', 
@@ -87,7 +93,7 @@ async def upload_invoice(request: Request, file: UploadFile = File(...)):
         # Extract bill number from filename or do basic OCR check
         bill_number = None
         
-        # Try to extract bill number from filename
+        # Try to extract bill number from filename first
         filename_lower = file.filename.lower()
         bill_patterns = [
             r'(?:bill|invoice)[\s_-]*no?[\s_:]*([A-Z0-9-]+)',
@@ -101,15 +107,32 @@ async def upload_invoice(request: Request, file: UploadFile = File(...)):
                 bill_number = match.group(1).upper()
                 break
         
-        # If bill number found in filename, check for duplicates
+        # If no bill number found in filename, try to extract from the image using OCR
+        if not bill_number:
+            try:
+                # Use the same OCR processing as the /ocr/ endpoint
+                ocr_data = process_ocr(file_content, file.filename)
+                bill_number = ocr_data.get("bill_number")
+            except Exception as ocr_error:
+                logging.warning(f"OCR failed during upload duplicate check: {ocr_error}")
+                # Continue without bill number if OCR fails
+        
+        # If bill number found (from filename or OCR), check for duplicates
         if bill_number:
-            existing_entry = db.ledger_entries.find_one({
+            # Check both ledger_entries and invoices collections for duplicates
+            existing_ledger = db.ledger_entries.find_one({
                 "owner_email": user.get("email"),
                 "bill_number": bill_number
             })
             
-            if existing_entry:
+            existing_invoice = db.invoices.find_one({
+                "owner_email": user.get("email"),
+                "bill_number": bill_number
+            })
+            
+            if existing_ledger or existing_invoice:
                 logging.warning(f"Duplicate bill number detected in upload: {bill_number} for user {user.get('email')}")
+                existing_entry = existing_ledger or existing_invoice
                 return {
                     "message": "Duplicate bill number",
                     "bill_number": bill_number,
@@ -154,7 +177,7 @@ async def ocr_invoice(request: Request, file: UploadFile = File(...)):
             }
 
         # Check for duplicate bill number
-        bill_number = ocr_data.get("bill_number")
+        bill_number = ocr_data.get("vendor")  # Original code used vendor as bill number
         if bill_number:
             existing_entry = db.ledger_entries.find_one({
                 "owner_email": user.get("email"),
@@ -174,7 +197,7 @@ async def ocr_invoice(request: Request, file: UploadFile = File(...)):
         ledger = LedgerEntry(
             filename=ocr_data["filename"],
             vendor=ocr_data.get("vendor"),
-            bill_number=ocr_data.get("bill_number"),
+            bill_number=ocr_data.get("vendor"),  # Original code used vendor as bill number
             invoice_date=ocr_data.get("invoice_date"),
             total_amount=ocr_data.get("total_amount"),
             items=ocr_data.get("items", []),
@@ -638,12 +661,23 @@ def ledger_list_pdf(request: Request, limit: int = 200):
         if value is None:
             return ""
         try:
-            return f"{float(value):.2f}"
-        except Exception:
+            # Handle string values that might contain currency symbols
+            if isinstance(value, str):
+                # Remove currency symbols and commas, then convert to float
+                clean_value = str(value).replace('₹', '').replace('Rs', '').replace(',', '').replace('$', '').strip()
+                numeric_value = float(clean_value)
+                return f"Rs {numeric_value:.2f}"
+            else:
+                # Handle numeric values
+                return f"Rs {float(value):.2f}"
+        except (ValueError, TypeError):
+            # If conversion fails, return the original value as string
             return str(value)
 
     def safe_text(value):
         text = str(value or "")
+        # Replace rupee symbol with 'Rs' for PDF compatibility
+        text = text.replace('₹', 'Rs')
         # FPDF core fonts expect latin-1; replace unsupported chars to avoid crashes.
         return text.encode("latin-1", "replace").decode("latin-1")
 
@@ -748,14 +782,18 @@ def ledger_pdf_from_items(request: Request, items: list):
         if value is None:
             return ""
         try:
-            return f"{float(value):.2f}"
-        except Exception:
+            # Handle string values that might contain currency symbols
+            if isinstance(value, str):
+                # Remove currency symbols and commas, then convert to float
+                clean_value = str(value).replace('₹', '').replace('Rs', '').replace(',', '').replace('$', '').strip()
+                numeric_value = float(clean_value)
+                return f"Rs {numeric_value:.2f}"
+            else:
+                # Handle numeric values
+                return f"Rs {float(value):.2f}"
+        except (ValueError, TypeError):
+            # If conversion fails, return the original value as string
             return str(value)
-
-    def safe_text(value):
-        text = str(value or "")
-        # FPDF core fonts expect latin-1; replace unsupported chars to avoid crashes.
-        return text.encode("latin-1", "replace").decode("latin-1")
 
     def truncate(value, length):
         text = safe_text(value)
@@ -886,6 +924,83 @@ def get_user_profile(request: Request):
         "email": user.get("email"),
         "last_login": user.get("last_login")
     }
+
+
+class UpdateProfileRequest(BaseModel):
+    name: str = Field(..., min_length=1, description="Full name")
+
+@app.post("/change-password/")
+def change_password(request: Request, payload: ChangePasswordRequest):
+    """Change user password - requires current password verification"""
+    if db is None:
+        logging.error("Database connection not available for password change.")
+        raise HTTPException(status_code=500, detail="Database connection not available")
+
+    user = _get_auth_user(request)
+    current_password = payload.current_password
+    new_password = payload.new_password
+    confirm_new_password = payload.confirm_new_password
+
+    # Validate new password
+    if len(new_password) < 6:
+        raise HTTPException(status_code=400, detail="New password must be at least 6 characters")
+    
+    if new_password != confirm_new_password:
+        raise HTTPException(status_code=400, detail="New password and confirmation do not match")
+
+    # Verify current password
+    current_password_hash = hashlib.sha256(current_password.encode("utf-8")).hexdigest()
+    if current_password_hash != user.get("password_hash"):
+        raise HTTPException(status_code=400, detail="Current password is incorrect")
+
+    # Check if new password is different from current password
+    new_password_hash = hashlib.sha256(new_password.encode("utf-8")).hexdigest()
+    if new_password_hash == user.get("password_hash"):
+        raise HTTPException(status_code=400, detail="New password must be different from current password")
+
+    # Update password
+    db.users.update_one(
+        {"_id": user["_id"]},
+        {"$set": {
+            "password_hash": new_password_hash,
+            "updated_at": get_ist_time()
+        }}
+    )
+
+    logging.info(f"Password changed successfully for user: {user.get('email')}")
+    return {"message": "Password changed successfully"}
+
+@app.post("/update-profile/")
+def update_profile(request: Request, payload: UpdateProfileRequest):
+    """Update user profile information (name only)"""
+    if db is None:
+        logging.error("Database connection not available for profile update.")
+        raise HTTPException(status_code=500, detail="Database connection not available")
+
+    user = _get_auth_user(request)
+    new_name = payload.name.strip()
+
+    # Validate name
+    if not new_name:
+        raise HTTPException(status_code=400, detail="Name is required")
+    
+    # Check if name is different from current name
+    if new_name == user.get("name"):
+        raise HTTPException(status_code=400, detail="New name must be different from current name")
+
+    # Update profile
+    db.users.update_one(
+        {"_id": user["_id"]},
+        {"$set": {
+            "name": new_name,
+            "updated_at": get_ist_time()
+        }}
+    )
+
+    logging.info(f"Profile updated successfully for user: {user.get('email')}")
+    return {"message": "Profile updated successfully", "name": new_name}
+
+# Let me create a proper password change model and route
 
 if __name__ == "__main__":
     import uvicorn

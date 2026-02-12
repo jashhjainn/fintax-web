@@ -7,3 +7,37 @@
   </div>
   <div id="globalStatus" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
 </header>
+
+<!-- Logout Confirmation Modal -->
+<div id="logoutModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="logoutTitle">
+  <div class="logout-modal" role="document">
+    <div class="logout-header">
+      <div class="logout-header-content">
+        <div class="logout-icon">
+          <i class="fa-solid fa-sign-out-alt"></i>
+        </div>
+        <h2 id="logoutTitle" class="logout-title">Logout Confirmation</h2>
+      </div>
+      <button type="button" class="logout-close" id="closeLogoutModal" aria-label="Close">
+        <i class="fa-solid fa-times"></i>
+      </button>
+    </div>
+    <div class="logout-body">
+      <div class="logout-body-content">
+        <div class="logout-icon-large">
+          <i class="fa-solid fa-sign-out-alt"></i>
+        </div>
+        <div class="logout-message">
+          Are you sure you want to logout?
+        </div>
+        <div class="logout-subtitle">
+          <!-- You will be redirected to the login page. -->
+        </div>
+      </div>
+    </div>
+    <div class="logout-footer">
+      <button type="button" class="btn outline" id="cancelLogoutBtn">Cancel</button>
+      <button type="button" class="btn primary" id="confirmLogoutBtn">Logout</button>
+    </div>
+  </div>
+</div>

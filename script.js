@@ -226,14 +226,68 @@ function initHeaderNav(){
 
   // header logout button (if present)
   const logoutBtn = document.getElementById('logoutBtn');
+  const logoutModal = document.getElementById('logoutModal');
+  const confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
+  const cancelLogoutBtn = document.getElementById('cancelLogoutBtn');
+  const closeLogoutModal = document.getElementById('closeLogoutModal');
+  
+  function showLogoutModal() {
+    if (!logoutModal) return;
+    logoutModal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('no-scroll');
+    // Focus the cancel button for accessibility
+    if (cancelLogoutBtn) cancelLogoutBtn.focus();
+  }
+  
+  function hideLogoutModal() {
+    if (!logoutModal) return;
+    logoutModal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('no-scroll');
+  }
+  
   if(logoutBtn){
-    logoutBtn.addEventListener('click', ()=>{
-      const ok = confirm('Do you want to logout?');
-      if(!ok) return;
+    logoutBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      showLogoutModal();
+    });
+  }
+  
+  // Confirm logout
+  if(confirmLogoutBtn) {
+    confirmLogoutBtn.addEventListener('click', () => {
+      hideLogoutModal();
       clearAuth();
       window.location.href = 'auth.html';
     });
   }
+  
+  // Cancel logout
+  if(cancelLogoutBtn) {
+    cancelLogoutBtn.addEventListener('click', () => {
+      hideLogoutModal();
+    });
+  }
+  
+  // Close logout modal
+  if(closeLogoutModal) {
+    closeLogoutModal.addEventListener('click', hideLogoutModal);
+  }
+  
+  // Close logout modal when clicking outside
+  if(logoutModal) {
+    logoutModal.addEventListener('click', (e) => {
+      if (e.target === logoutModal) {
+        hideLogoutModal();
+      }
+    });
+  }
+  
+  // Close logout modal on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && logoutModal && logoutModal.getAttribute('aria-hidden') === 'false') {
+      hideLogoutModal();
+    }
+  });
 }
 
 // Page init: attach listeners only for present elements
@@ -1280,12 +1334,12 @@ async function performCapture(){
     });
   }
 
-  // auth pages: toggle password visibility
-  const eyeButtons = Array.from(document.querySelectorAll('.auth-eye'));
+  // auth pages: toggle password visibility for login, signup, and change password
+  const eyeButtons = Array.from(document.querySelectorAll('.auth-eye, .login-eye, .signup-eye, .password-toggle'));
   if(eyeButtons.length){
     eyeButtons.forEach(btn=>{
       btn.addEventListener('click', ()=>{
-        const wrapper = btn.closest('.auth-password');
+        const wrapper = btn.closest('.auth-password, .login-password, .signup-password, .password-field');
         const input = wrapper ? wrapper.querySelector('input[type="password"], input[type="text"]') : null;
         if(!input) return;
         const isPassword = input.type === 'password';
@@ -1404,16 +1458,402 @@ async function performCapture(){
     // Load profile when page loads
     loadUserProfile();
   }
+
+  // Profile dropdown functionality
+  const dropdownTrigger = document.querySelector('.dropdown-trigger');
+  const dropdownMenu = document.querySelector('.dropdown-menu');
+  const dropdownItems = document.querySelectorAll('.dropdown-item');
+
+  if(dropdownTrigger && dropdownMenu){
+    // Toggle dropdown on click
+    dropdownTrigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      const isExpanded = dropdownTrigger.getAttribute('aria-expanded') === 'true';
+      dropdownTrigger.setAttribute('aria-expanded', String(!isExpanded));
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!dropdownTrigger.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        dropdownTrigger.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // Keyboard navigation
+    dropdownTrigger.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        const isExpanded = dropdownTrigger.getAttribute('aria-expanded') === 'true';
+        dropdownTrigger.setAttribute('aria-expanded', String(!isExpanded));
+        if (!isExpanded && dropdownItems.length > 0) {
+          dropdownItems[0].focus();
+        }
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        dropdownTrigger.setAttribute('aria-expanded', 'true');
+        if (dropdownItems.length > 0) {
+          dropdownItems[0].focus();
+        }
+      }
+    });
+
+    // Handle dropdown items keyboard navigation
+    dropdownItems.forEach((item, index) => {
+      item.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          const nextIndex = (index + 1) % dropdownItems.length;
+          dropdownItems[nextIndex].focus();
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          const prevIndex = (index - 1 + dropdownItems.length) % dropdownItems.length;
+          dropdownItems[prevIndex].focus();
+        } else if (e.key === 'Escape') {
+          e.preventDefault();
+          dropdownTrigger.setAttribute('aria-expanded', 'false');
+          dropdownTrigger.focus();
+        }
+      });
+
+      // Close dropdown when an item is clicked
+      item.addEventListener('click', () => {
+        dropdownTrigger.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+
+  // Change Password Modal functionality
+  const changePasswordTrigger = document.querySelector('.change-password-trigger');
+  const changePasswordModal = document.getElementById('changePasswordModal');
+  const closeChangePasswordModal = document.getElementById('closeChangePasswordModal');
+  const closeChangePasswordModalBtn = document.getElementById('closeChangePasswordModalBtn');
+  const savePasswordBtn = document.getElementById('savePasswordBtn');
+  const changePasswordForm = document.getElementById('changePasswordForm');
+  const passwordError = document.getElementById('passwordError');
+
+  // Password visibility toggle for change password modal
+  function setupPasswordVisibilityToggles() {
+    // General password eye buttons (for all modals and forms)
+    const passwordEyeButtons = Array.from(document.querySelectorAll('.password-toggle'));
+    if(passwordEyeButtons.length){
+      passwordEyeButtons.forEach(btn=>{
+        // Remove existing listeners to avoid duplicates by using event delegation
+        btn.removeEventListener('click', togglePasswordVisibility);
+        btn.addEventListener('click', togglePasswordVisibility);
+      });
+    }
+  }
+
+  // Password toggle function
+  function togglePasswordVisibility(e) {
+    const btn = e.currentTarget;
+    const wrapper = btn.closest('.password-field');
+    const input = wrapper ? wrapper.querySelector('input[type="password"], input[type="text"]') : null;
+    if(!input) return;
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+    btn.setAttribute('aria-pressed', isPassword ? 'true' : 'false');
+    btn.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+    btn.setAttribute('title', isPassword ? 'Hide password' : 'Show password');
+    const icon = btn.querySelector('i');
+    if(icon){
+      icon.classList.toggle('fa-eye', !isPassword);
+      icon.classList.toggle('fa-eye-slash', isPassword);
+    }
+  }
+
+  // Setup password visibility toggles initially
+  setupPasswordVisibilityToggles();
+
+  // Also setup when change password modal is shown
+  if (changePasswordTrigger) {
+    changePasswordTrigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      showChangePasswordModal();
+      // Setup password visibility toggles after modal is shown
+      setTimeout(setupPasswordVisibilityToggles, 100);
+    });
+  }
+
+  function showChangePasswordModal() {
+    if (!changePasswordModal) return;
+    changePasswordModal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('no-scroll');
+    
+    // Clear form and error
+    if (changePasswordForm) {
+      changePasswordForm.reset();
+    }
+    if (passwordError) {
+      passwordError.style.display = 'none';
+      passwordError.textContent = '';
+    }
+    
+    // Focus first input
+    const firstInput = document.getElementById('currentPassword');
+    if (firstInput) firstInput.focus();
+  }
+
+  function hideChangePasswordModal() {
+    if (!changePasswordModal) return;
+    changePasswordModal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('no-scroll');
+  }
+
+  // Open change password modal
+  if (changePasswordTrigger) {
+    changePasswordTrigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      showChangePasswordModal();
+    });
+  }
+
+  // Close change password modal
+  if (closeChangePasswordModal) {
+    closeChangePasswordModal.addEventListener('click', hideChangePasswordModal);
+  }
+
+  if (closeChangePasswordModalBtn) {
+    closeChangePasswordModalBtn.addEventListener('click', hideChangePasswordModal);
+  }
+
+  // Close change password modal when clicking outside
+  if (changePasswordModal) {
+    changePasswordModal.addEventListener('click', (e) => {
+      if (e.target === changePasswordModal) {
+        hideChangePasswordModal();
+      }
+    });
+  }
+
+  // Close change password modal on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && changePasswordModal && changePasswordModal.getAttribute('aria-hidden') === 'false') {
+      hideChangePasswordModal();
+    }
+  });
+
+  // Handle password change form submission
+  if (savePasswordBtn && changePasswordForm) {
+    savePasswordBtn.addEventListener('click', async () => {
+      const currentPassword = document.getElementById('currentPassword').value;
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+      // Clear previous error
+      if (passwordError) {
+        passwordError.style.display = 'none';
+        passwordError.textContent = '';
+      }
+
+      // Validate form
+      if (!currentPassword) {
+        showError('Please enter your current password');
+        return;
+      }
+
+      if (!newPassword) {
+        showError('Please enter a new password');
+        return;
+      }
+
+      if (newPassword.length < 6) {
+        showError('New password must be at least 6 characters long');
+        return;
+      }
+
+      if (!confirmNewPassword) {
+        showError('Please confirm your new password');
+        return;
+      }
+
+      if (newPassword !== confirmNewPassword) {
+        showError('New password and confirmation do not match');
+        return;
+      }
+
+      try {
+        const apiBase = await resolveApiBase();
+        const token = getAuthToken();
+
+        const response = await fetch(`${apiBase}/change-password/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            current_password: currentPassword,
+            new_password: newPassword,
+            confirm_new_password: confirmNewPassword
+          })
+        });
+
+        if (response.status === 401) {
+          handleAuthError('Session expired. Please login again.');
+          return;
+        }
+
+        if (response.ok) {
+          showToast('✅ Password changed successfully!', 'success', 2000);
+          hideChangePasswordModal();
+          // Clear form
+          changePasswordForm.reset();
+        } else {
+          const errorData = await response.json().catch(() => ({}));
+          const errorMessage = errorData.detail || 'Failed to change password';
+          showError(errorMessage);
+        }
+      } catch (error) {
+        console.error('Error changing password:', error);
+        showError('Network error. Please try again.');
+      }
+    });
+  }
+
+  function showError(message) {
+    if (passwordError) {
+      passwordError.style.display = 'block';
+      passwordError.textContent = message;
+    }
+  }
 }
 
 
+// Edit Personal Info Modal Logic
+document.addEventListener('DOMContentLoaded', () => {
+  const editPersonalInfoModal = document.getElementById('editPersonalInfoModal');
+  const editPersonalInfoTrigger = document.querySelector('.dropdown-item[href="#"]');
+  const closeEditPersonalInfoModalBtn = document.getElementById('closeEditPersonalInfoModal');
+  const closeEditPersonalInfoModalBtn2 = document.getElementById('closeEditPersonalInfoModalBtn');
+  const savePersonalInfoBtn = document.getElementById('savePersonalInfoBtn');
+  const editPersonalInfoForm = document.getElementById('editPersonalInfoForm');
+  const editNameInput = document.getElementById('editName');
+  const editEmailInput = document.getElementById('editEmail');
+  const personalInfoError = document.getElementById('personalInfoError');
+
+  // Find the correct "Edit Personal Info" dropdown item (not the change password one)
+  const dropdownItems = document.querySelectorAll('.dropdown-item');
+  let editPersonalInfoTriggerElement = null;
+  dropdownItems.forEach(item => {
+    if (item.textContent.includes('Edit Personal Info')) {
+      editPersonalInfoTriggerElement = item;
+    }
+  });
+
+  // Open modal
+  if (editPersonalInfoTriggerElement) {
+    editPersonalInfoTriggerElement.addEventListener('click', (e) => {
+      e.preventDefault();
+      loadUserProfileForEdit();
+      editPersonalInfoModal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('no-scroll');
+    });
+  }
+
+  // Close modal functions
+  const closeEditPersonalInfoModal = () => {
+    editPersonalInfoModal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('no-scroll');
+    editPersonalInfoForm.reset();
+    personalInfoError.style.display = 'none';
+  };
+
+  // Close modal events
+  if (closeEditPersonalInfoModalBtn) {
+    closeEditPersonalInfoModalBtn.addEventListener('click', closeEditPersonalInfoModal);
+  }
+  if (closeEditPersonalInfoModalBtn2) {
+    closeEditPersonalInfoModalBtn2.addEventListener('click', closeEditPersonalInfoModal);
+  }
+  editPersonalInfoModal.addEventListener('click', (e) => {
+    if (e.target === editPersonalInfoModal) {
+      closeEditPersonalInfoModal();
+    }
+  });
+
+  // Load user profile data into the modal
+  const loadUserProfileForEdit = async () => {
+    try {
+      const apiBase = await resolveApiBase();
+      const token = getAuthToken();
+      
+      if(!token){
+        handleAuthError('Please login to view your profile.');
+        return;
+      }
+      
+      const response = await fetch(`${apiBase}/profile/`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        if (editNameInput) editNameInput.value = userData.name || '';
+        if (editEmailInput) editEmailInput.value = userData.email || '';
+      } else {
+        console.error('Failed to load user profile');
+      }
+    } catch (error) {
+      console.error('Error loading user profile:', error);
+    }
+  };
+
+  // Form submission
+  if (savePersonalInfoBtn) {
+    savePersonalInfoBtn.addEventListener('click', async () => {
+      const newName = editNameInput ? editNameInput.value.trim() : '';
+
+      if (!newName) {
+        personalInfoError.textContent = 'Name is required.';
+        personalInfoError.style.display = 'block';
+        return;
+      }
+
+      try {
+        const apiBase = await resolveApiBase();
+        const token = getAuthToken();
+
+        const response = await fetch(`${apiBase}/update-profile/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            name: newName
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          showToast('Profile updated successfully!', 'success');
+          closeEditPersonalInfoModal();
+          // Update the profile display
+          updateProfileDisplay(newName);
+        } else {
+          personalInfoError.textContent = data.detail || 'Failed to update profile.';
+          personalInfoError.style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Error updating profile:', error);
+        personalInfoError.textContent = 'An error occurred. Please try again.';
+        personalInfoError.style.display = 'block';
+      }
+    });
+  }
+
+  // Function to update the profile display with new name
+  const updateProfileDisplay = (newName) => {
+    const profileNameElement = document.getElementById('profileName');
+    if (profileNameElement) {
+      profileNameElement.textContent = newName;
+    }
+  };
+});
+
 // Run includes first, then initialize UI
 (async function start(){ await loadIncludes(); initHeaderNav(); await pageInit(); })();
-
-
-
-
-
-
-
-
