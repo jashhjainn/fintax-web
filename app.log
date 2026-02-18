@@ -1743,3 +1743,594 @@ bill_number
 2026-02-12 21:00:44,603 - INFO - Database connection available.
 2026-02-12 21:00:44,700 - INFO - Ensured unique index on users.email
 2026-02-12 21:33:42,088 - INFO - OCR stored with id: 698df9dd9a345860d323e6f5
+2026-02-12 21:34:56,790 - INFO - Successfully connected to MongoDB!
+2026-02-12 21:34:57,402 - INFO - Database connection available.
+2026-02-12 21:34:57,433 - INFO - Ensured unique index on users.email
+2026-02-12 21:35:33,771 - WARNING - Validation failed for file invoice-1770912332066.png: ['invoice date', 'total amount', 'hsn code']
+2026-02-12 21:35:52,174 - WARNING - Validation failed for file invoice-1770912349730.png: ['bill number', 'invoice date', 'total amount', 'hsn code']
+2026-02-12 21:36:24,805 - WARNING - Validation failed for file invoice-1770912382229.png: ['bill number', 'invoice date', 'total amount', 'hsn code']
+2026-02-12 21:38:54,894 - INFO - OCR stored with id: 698dfb169a345860d323e6f6
+2026-02-12 21:39:10,489 - INFO - Ledger entry deleted successfully: 698dfb169a345860d323e6f6 for user yash@gmail.com
+2026-02-12 21:39:18,223 - INFO - OCR stored with id: 698dfb2e9a345860d323e6f7
+2026-02-12 21:39:37,742 - INFO - OCR stored with id: 698dfb409a345860d323e6f8
+2026-02-12 21:39:45,406 - INFO - Ledger entry deleted successfully: 698dfb409a345860d323e6f8 for user yash@gmail.com
+2026-02-12 21:39:48,734 - INFO - Ledger entry deleted successfully: 698dfb2e9a345860d323e6f7 for user yash@gmail.com
+2026-02-12 21:39:51,639 - INFO - Ledger entry deleted successfully: 698df9dd9a345860d323e6f5 for user yash@gmail.com
+2026-02-12 21:40:55,485 - INFO - OCR stored with id: 698dfb8f9a345860d323e6f9
+2026-02-12 21:41:01,567 - INFO - Ledger entry deleted successfully: 698dfb8f9a345860d323e6f9 for user yash@gmail.com
+2026-02-12 21:41:04,282 - INFO - Ledger entry deleted successfully: 698dc6f5e463932085c3d72e for user yash@gmail.com
+2026-02-12 21:41:07,690 - INFO - Ledger entry deleted successfully: 698dc499e463932085c3d72d for user yash@gmail.com
+2026-02-13 17:01:26,718 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:01:27,408 - INFO - Database connection available.
+2026-02-13 17:01:27,431 - INFO - Ensured unique index on users.email
+2026-02-13 17:02:38,775 - WARNING - Validation failed for file invoice-1770982351813.png: ['invoice date', 'hsn code']
+2026-02-13 17:03:10,424 - WARNING - Validation failed for file invoice-1770982387765.png: ['invoice date', 'hsn code']
+2026-02-13 17:03:37,078 - WARNING - Validation failed for file 133860116061604917.jpg: ['invoice date', 'hsn code']
+2026-02-13 17:20:21,131 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:20:21,434 - INFO - Database connection available.
+2026-02-13 17:20:21,461 - INFO - Ensured unique index on users.email
+2026-02-13 17:21:15,101 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:21:23,892 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:21:24,191 - INFO - Database connection available.
+2026-02-13 17:21:24,216 - INFO - Ensured unique index on users.email
+2026-02-13 17:21:27,125 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:21:30,190 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:21:30,624 - INFO - Database connection available.
+2026-02-13 17:21:30,652 - INFO - Ensured unique index on users.email
+2026-02-13 17:21:32,692 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:21:33,017 - INFO - Database connection available.
+2026-02-13 17:21:33,045 - INFO - Ensured unique index on users.email
+2026-02-13 17:21:51,585 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:21:51,960 - INFO - Database connection available.
+2026-02-13 17:21:51,996 - INFO - Ensured unique index on users.email
+2026-02-13 17:21:55,134 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:21:55,554 - INFO - Database connection available.
+2026-02-13 17:21:55,587 - INFO - Ensured unique index on users.email
+2026-02-13 17:21:58,219 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:21:58,522 - INFO - Database connection available.
+2026-02-13 17:21:58,544 - INFO - Ensured unique index on users.email
+2026-02-13 17:22:31,696 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:22:31,981 - INFO - Database connection available.
+2026-02-13 17:22:32,008 - INFO - Ensured unique index on users.email
+2026-02-13 17:22:37,976 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:22:40,155 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:22:43,889 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:22:44,154 - INFO - Database connection available.
+2026-02-13 17:22:44,183 - INFO - Ensured unique index on users.email
+2026-02-13 17:23:20,003 - INFO - OCR stored with id: 698f10af04ed734792a2545c
+2026-02-13 17:23:34,506 - WARNING - Duplicate bill number detected: SUPERMART for user yash@gmail.com
+2026-02-13 17:23:48,349 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:23:50,698 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:23:51,106 - INFO - Database connection available.
+2026-02-13 17:23:51,130 - INFO - Ensured unique index on users.email
+2026-02-13 17:23:54,203 - WARNING - Duplicate bill number detected: SUPERMART for user yash@gmail.com
+2026-02-13 17:24:08,313 - WARNING - Duplicate bill number detected: SUPERMART for user yash@gmail.com
+2026-02-13 17:24:22,724 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:24:23,086 - INFO - Database connection available.
+2026-02-13 17:24:23,117 - INFO - Ensured unique index on users.email
+2026-02-13 17:24:28,157 - WARNING - Duplicate bill number detected: SUPERMART for user yash@gmail.com
+2026-02-13 17:24:40,632 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:24:41,066 - INFO - Database connection available.
+2026-02-13 17:24:41,093 - INFO - Ensured unique index on users.email
+2026-02-13 17:24:52,533 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:24:52,809 - INFO - Database connection available.
+2026-02-13 17:24:52,836 - INFO - Ensured unique index on users.email
+2026-02-13 17:25:03,651 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:25:04,030 - INFO - Database connection available.
+2026-02-13 17:25:04,062 - INFO - Ensured unique index on users.email
+2026-02-13 17:25:08,059 - WARNING - Duplicate bill number detected: SUPERMART for user yash@gmail.com
+2026-02-13 17:25:19,964 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:25:20,254 - INFO - Database connection available.
+2026-02-13 17:25:20,278 - INFO - Ensured unique index on users.email
+2026-02-13 17:25:33,318 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:25:33,594 - INFO - Database connection available.
+2026-02-13 17:25:33,618 - INFO - Ensured unique index on users.email
+2026-02-13 17:25:40,614 - INFO - Ledger entry deleted successfully: 698f10af04ed734792a2545c for user yash@gmail.com
+2026-02-13 17:25:48,767 - INFO - OCR stored with id: 698f1144079ab67142a28eae
+2026-02-13 17:26:07,046 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:26:07,357 - INFO - Database connection available.
+2026-02-13 17:26:07,385 - INFO - Ensured unique index on users.email
+2026-02-13 17:26:12,296 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:26:12,591 - INFO - Database connection available.
+2026-02-13 17:26:12,617 - INFO - Ensured unique index on users.email
+2026-02-13 17:26:21,211 - INFO - OCR stored with id: 698f1165180aa3bf01188f01
+2026-02-13 17:27:08,821 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:27:09,221 - INFO - Database connection available.
+2026-02-13 17:27:09,246 - INFO - Ensured unique index on users.email
+2026-02-13 17:27:22,386 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:27:22,898 - INFO - Database connection available.
+2026-02-13 17:27:22,930 - INFO - Ensured unique index on users.email
+2026-02-13 17:27:24,986 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:27:25,298 - INFO - Database connection available.
+2026-02-13 17:27:25,322 - INFO - Ensured unique index on users.email
+2026-02-13 17:27:28,880 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:27:29,226 - INFO - Database connection available.
+2026-02-13 17:27:29,252 - INFO - Ensured unique index on users.email
+2026-02-13 17:27:31,908 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:27:32,198 - INFO - Database connection available.
+2026-02-13 17:27:32,226 - INFO - Ensured unique index on users.email
+2026-02-13 17:27:42,269 - WARNING - Duplicate bill number detected: SUPERMART for user yash@gmail.com
+2026-02-13 17:27:47,550 - INFO - Ledger entry deleted successfully: 698f1165180aa3bf01188f01 for user yash@gmail.com
+2026-02-13 17:28:01,167 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:28:01,457 - INFO - Database connection available.
+2026-02-13 17:28:01,482 - INFO - Ensured unique index on users.email
+2026-02-13 17:28:05,461 - INFO - Ledger entry deleted successfully: 698f1144079ab67142a28eae for user yash@gmail.com
+2026-02-13 17:30:43,423 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:30:44,087 - INFO - Database connection available.
+2026-02-13 17:30:44,123 - INFO - Ensured unique index on users.email
+2026-02-13 17:30:46,180 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:30:46,524 - INFO - Database connection available.
+2026-02-13 17:30:46,579 - INFO - Ensured unique index on users.email
+2026-02-13 17:30:53,651 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:30:54,016 - INFO - Database connection available.
+2026-02-13 17:30:54,040 - INFO - Ensured unique index on users.email
+2026-02-13 17:31:00,444 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:31:00,784 - INFO - Database connection available.
+2026-02-13 17:31:00,810 - INFO - Ensured unique index on users.email
+2026-02-13 17:31:04,107 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:31:04,479 - INFO - Database connection available.
+2026-02-13 17:31:04,504 - INFO - Ensured unique index on users.email
+2026-02-13 17:31:06,583 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:31:07,075 - INFO - Database connection available.
+2026-02-13 17:31:07,105 - INFO - Ensured unique index on users.email
+2026-02-13 17:31:09,867 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:31:10,198 - INFO - Database connection available.
+2026-02-13 17:31:10,220 - INFO - Ensured unique index on users.email
+2026-02-13 17:38:04,002 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:38:04,393 - INFO - Database connection available.
+2026-02-13 17:38:04,416 - INFO - Ensured unique index on users.email
+2026-02-13 17:46:49,007 - INFO - Successfully connected to MongoDB!
+2026-02-13 17:46:49,279 - INFO - Database connection available.
+2026-02-13 17:46:49,353 - INFO - Ensured unique index on users.email
+2026-02-13 17:47:05,763 - WARNING - Validation failed for file 133860116061604917.jpg: ['invoice date', 'hsn code']
+2026-02-13 18:00:29,574 - WARNING - Validation failed for file Virtual destructor.png: ['invoice date', 'hsn code']
+2026-02-13 18:43:21,137 - INFO - Successfully connected to MongoDB!
+2026-02-13 18:43:21,724 - INFO - Database connection available.
+2026-02-13 18:43:21,751 - INFO - Ensured unique index on users.email
+2026-02-13 18:48:02,681 - INFO - Successfully connected to MongoDB!
+2026-02-13 18:48:03,240 - INFO - Database connection available.
+2026-02-13 18:48:03,267 - INFO - Ensured unique index on users.email
+2026-02-13 18:56:09,650 - INFO - Successfully connected to MongoDB!
+2026-02-13 18:56:10,246 - INFO - Database connection available.
+2026-02-13 18:56:10,430 - INFO - Ensured unique index on users.email
+2026-02-13 19:47:10,384 - INFO - Successfully connected to MongoDB!
+2026-02-13 19:47:11,097 - INFO - Database connection available.
+2026-02-13 19:47:11,123 - INFO - Ensured unique index on users.email
+2026-02-13 19:58:22,098 - INFO - Successfully connected to MongoDB!
+2026-02-13 19:58:22,654 - INFO - Database connection available.
+2026-02-13 19:58:22,695 - INFO - Ensured unique index on users.email
+2026-02-14 09:48:34,772 - ERROR - MongoDB Configuration Error: All nameservers failed to answer the query _mongodb._tcp.cluster0.r54v5sf.mongodb.net. IN SRV: Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered [WinError 10051] A socket operation was attempted to an unreachable network
+2026-02-14 09:48:34,775 - ERROR - Tip: Ensure your password does not contain unescaped characters like '@'.
+2026-02-14 09:48:37,359 - ERROR - Database connection not available.
+2026-02-14 10:28:38,164 - INFO - Successfully connected to MongoDB!
+2026-02-14 10:28:39,675 - INFO - Database connection available.
+2026-02-14 10:28:39,791 - INFO - Ensured unique index on users.email
+2026-02-14 10:42:13,980 - INFO - Successfully connected to MongoDB!
+2026-02-14 10:42:15,813 - INFO - Database connection available.
+2026-02-14 10:42:15,927 - INFO - Ensured unique index on users.email
+2026-02-14 10:44:53,374 - INFO - Successfully connected to MongoDB!
+2026-02-14 10:44:54,407 - INFO - Database connection available.
+2026-02-14 10:44:54,484 - INFO - Ensured unique index on users.email
+2026-02-14 10:47:15,155 - INFO - Successfully connected to MongoDB!
+2026-02-14 10:47:15,647 - INFO - Database connection available.
+2026-02-14 10:47:15,813 - INFO - Ensured unique index on users.email
+2026-02-14 10:49:22,783 - INFO - OCR stored with id: 699005d9e2b4c3a43797ecb6
+2026-02-14 21:37:49,658 - INFO - Successfully connected to MongoDB!
+2026-02-14 21:37:51,566 - INFO - Database connection available.
+2026-02-14 21:37:51,624 - INFO - Ensured unique index on users.email
+2026-02-14 21:41:34,071 - INFO - Ledger entry deleted successfully: 699005d9e2b4c3a43797ecb6 for user yash@gmail.com
+2026-02-14 21:43:57,957 - INFO - Successfully connected to MongoDB!
+2026-02-14 21:43:58,626 - INFO - Database connection available.
+2026-02-14 21:43:58,767 - INFO - Ensured unique index on users.email
+2026-02-14 21:44:17,310 - INFO - Successfully connected to MongoDB!
+2026-02-14 21:44:17,962 - INFO - Database connection available.
+2026-02-14 21:44:17,995 - INFO - Ensured unique index on users.email
+2026-02-14 21:47:11,406 - INFO - Successfully connected to MongoDB!
+2026-02-14 21:47:11,780 - INFO - Database connection available.
+2026-02-14 21:47:11,807 - INFO - Ensured unique index on users.email
+2026-02-14 21:47:27,690 - INFO - Successfully connected to MongoDB!
+2026-02-14 21:47:28,122 - INFO - Database connection available.
+2026-02-14 21:47:28,166 - INFO - Ensured unique index on users.email
+2026-02-14 21:52:58,611 - INFO - Successfully connected to MongoDB!
+2026-02-14 21:52:58,986 - INFO - Database connection available.
+2026-02-14 21:52:59,048 - INFO - Ensured unique index on users.email
+2026-02-14 21:55:33,205 - INFO - Successfully connected to MongoDB!
+2026-02-14 21:55:33,767 - INFO - Database connection available.
+2026-02-14 21:55:33,818 - INFO - Ensured unique index on users.email
+2026-02-14 22:08:58,436 - INFO - OCR stored with id: 6990a522fa1ceea32c566191
+2026-02-14 22:10:04,030 - WARNING - Validation failed for file 133840021355044111.jpg: ['invoice date', 'hsn code']
+2026-02-14 22:10:22,628 - WARNING - Validation failed for file 133848889643327606.jpg: ['invoice date', 'hsn code']
+2026-02-14 22:10:55,972 - INFO - Profile updated successfully for user: jashjain@gmail.com
+2026-02-14 22:11:18,366 - INFO - Password changed successfully for user: jashjain@gmail.com
+2026-02-17 15:21:36,674 - ERROR - Error initializing MongoDB client: SSL handshake failed: ac-q6fmepz-shard-00-01.r54v5sf.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1006) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-q6fmepz-shard-00-02.r54v5sf.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1006) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-q6fmepz-shard-00-00.r54v5sf.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1006) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 69943a09e466ea97b02c766a, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-q6fmepz-shard-00-00.r54v5sf.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-q6fmepz-shard-00-00.r54v5sf.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1006) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-q6fmepz-shard-00-01.r54v5sf.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-q6fmepz-shard-00-01.r54v5sf.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1006) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-q6fmepz-shard-00-02.r54v5sf.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-q6fmepz-shard-00-02.r54v5sf.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1006) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2026-02-17 15:21:36,676 - INFO - Falling back to local MongoDB after remote connection failure.
+2026-02-17 15:21:36,727 - INFO - Successfully connected to local MongoDB!
+2026-02-17 15:21:38,267 - INFO - Database connection available.
+2026-02-17 15:21:38,283 - INFO - Ensured unique index on users.email
+2026-02-17 15:24:44,444 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:24:44,785 - INFO - Database connection available.
+2026-02-17 15:24:44,814 - INFO - Ensured unique index on users.email
+2026-02-17 15:25:40,688 - INFO - OCR stored with id: 69943b1c78c3853e37f6dfc4
+2026-02-17 15:25:49,263 - INFO - OCR stored with id: 69943b2578c3853e37f6dfc5
+2026-02-17 15:25:55,047 - INFO - Ledger entry deleted successfully: 69943b2578c3853e37f6dfc5 for user a@gmail.com
+2026-02-17 15:26:20,742 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:26:21,157 - INFO - Database connection available.
+2026-02-17 15:26:21,189 - INFO - Ensured unique index on users.email
+2026-02-17 15:26:23,754 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:26:24,212 - INFO - Database connection available.
+2026-02-17 15:26:24,421 - INFO - Ensured unique index on users.email
+2026-02-17 15:26:36,187 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:26:36,621 - INFO - Database connection available.
+2026-02-17 15:26:36,655 - INFO - Ensured unique index on users.email
+2026-02-17 15:26:42,950 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:26:43,384 - INFO - Database connection available.
+2026-02-17 15:26:43,606 - INFO - Ensured unique index on users.email
+2026-02-17 15:27:28,783 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:27:29,180 - INFO - Database connection available.
+2026-02-17 15:27:29,208 - INFO - Ensured unique index on users.email
+2026-02-17 15:27:41,174 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:27:41,562 - INFO - Database connection available.
+2026-02-17 15:27:41,606 - INFO - Ensured unique index on users.email
+2026-02-17 15:27:49,125 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:27:49,692 - INFO - Database connection available.
+2026-02-17 15:27:49,733 - INFO - Ensured unique index on users.email
+2026-02-17 15:27:55,702 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:27:56,054 - INFO - Database connection available.
+2026-02-17 15:27:56,128 - INFO - Ensured unique index on users.email
+2026-02-17 15:28:41,122 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:28:41,491 - INFO - Database connection available.
+2026-02-17 15:28:41,689 - INFO - Ensured unique index on users.email
+2026-02-17 15:29:17,885 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:29:18,311 - INFO - Database connection available.
+2026-02-17 15:29:18,372 - INFO - Ensured unique index on users.email
+2026-02-17 15:29:20,736 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:29:21,194 - INFO - Database connection available.
+2026-02-17 15:29:21,275 - INFO - Ensured unique index on users.email
+2026-02-17 15:32:55,975 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:32:56,378 - INFO - Database connection available.
+2026-02-17 15:32:56,408 - INFO - Ensured unique index on users.email
+2026-02-17 15:33:03,573 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:33:06,312 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:33:08,709 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:33:09,137 - INFO - Database connection available.
+2026-02-17 15:33:09,180 - INFO - Ensured unique index on users.email
+2026-02-17 15:33:21,054 - INFO - OCR stored with id: 69943ce834e97ffb5863c626
+2026-02-17 15:35:14,541 - INFO - OCR stored with id: 69943d5a34e97ffb5863c627
+2026-02-17 15:41:01,318 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:41:01,996 - INFO - Database connection available.
+2026-02-17 15:41:02,023 - INFO - Ensured unique index on users.email
+2026-02-17 15:41:12,108 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:41:13,001 - INFO - Database connection available.
+2026-02-17 15:41:13,065 - INFO - Ensured unique index on users.email
+2026-02-17 15:41:56,801 - INFO - Ledger entry deleted successfully: 69943d5a34e97ffb5863c627 for user a@gmail.com
+2026-02-17 15:42:06,821 - INFO - OCR stored with id: 69943ef6da49188f5d77d630
+2026-02-17 15:44:21,455 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:44:21,862 - INFO - Database connection available.
+2026-02-17 15:44:22,098 - INFO - Ensured unique index on users.email
+2026-02-17 15:44:27,290 - INFO - Ledger entry deleted successfully: 69943ef6da49188f5d77d630 for user a@gmail.com
+2026-02-17 15:44:36,190 - INFO - OCR stored with id: 69943f8cd674587961f1472f
+2026-02-17 15:45:29,975 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:45:30,628 - INFO - Database connection available.
+2026-02-17 15:45:30,756 - INFO - Ensured unique index on users.email
+2026-02-17 15:45:34,324 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:45:34,781 - INFO - Database connection available.
+2026-02-17 15:45:34,831 - INFO - Ensured unique index on users.email
+2026-02-17 15:45:39,862 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:45:40,196 - INFO - Database connection available.
+2026-02-17 15:45:40,427 - INFO - Ensured unique index on users.email
+2026-02-17 15:45:43,632 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:45:44,145 - INFO - Database connection available.
+2026-02-17 15:45:44,200 - INFO - Ensured unique index on users.email
+2026-02-17 15:45:47,160 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:45:47,660 - INFO - Database connection available.
+2026-02-17 15:45:47,805 - INFO - Ensured unique index on users.email
+2026-02-17 15:48:06,306 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:48:06,771 - INFO - Database connection available.
+2026-02-17 15:48:06,828 - INFO - Ensured unique index on users.email
+2026-02-17 15:49:02,468 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:49:02,768 - INFO - Database connection available.
+2026-02-17 15:49:02,789 - INFO - Ensured unique index on users.email
+2026-02-17 15:49:23,926 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:49:24,311 - INFO - Database connection available.
+2026-02-17 15:49:24,337 - INFO - Ensured unique index on users.email
+2026-02-17 15:49:41,392 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:49:41,678 - INFO - Database connection available.
+2026-02-17 15:49:41,703 - INFO - Ensured unique index on users.email
+2026-02-17 15:50:13,655 - INFO - Ledger entry deleted successfully: 69943f8cd674587961f1472f for user a@gmail.com
+2026-02-17 15:50:47,378 - INFO - OCR stored with id: 699440ff19fd695519206cfa
+2026-02-17 15:51:14,231 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:51:14,554 - INFO - Database connection available.
+2026-02-17 15:51:14,666 - INFO - Ensured unique index on users.email
+2026-02-17 15:52:09,122 - INFO - Ledger entry deleted successfully: 699440ff19fd695519206cfa for user a@gmail.com
+2026-02-17 15:52:15,791 - INFO - OCR stored with id: 69944157db9b1c85a45332d8
+2026-02-17 15:52:45,055 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:52:45,716 - INFO - Database connection available.
+2026-02-17 15:52:45,738 - INFO - Ensured unique index on users.email
+2026-02-17 15:52:47,543 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:52:47,871 - INFO - Database connection available.
+2026-02-17 15:52:47,896 - INFO - Ensured unique index on users.email
+2026-02-17 15:52:50,745 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:52:51,113 - INFO - Database connection available.
+2026-02-17 15:52:51,140 - INFO - Ensured unique index on users.email
+2026-02-17 15:53:00,651 - INFO - Ledger entry deleted successfully: 69944157db9b1c85a45332d8 for user a@gmail.com
+2026-02-17 15:53:13,763 - INFO - OCR stored with id: 6994419119bfbc1a13fd8db7
+2026-02-17 15:54:05,940 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:54:06,261 - INFO - Database connection available.
+2026-02-17 15:54:06,285 - INFO - Ensured unique index on users.email
+2026-02-17 15:54:10,132 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:54:10,579 - INFO - Database connection available.
+2026-02-17 15:54:10,606 - INFO - Ensured unique index on users.email
+2026-02-17 15:54:28,633 - INFO - OCR stored with id: 699441dc270eecc1e8ff1e2d
+2026-02-17 15:55:01,595 - INFO - Ledger entry deleted successfully: 699441dc270eecc1e8ff1e2d for user a@gmail.com
+2026-02-17 15:55:04,561 - INFO - Ledger entry deleted successfully: 6994419119bfbc1a13fd8db7 for user a@gmail.com
+2026-02-17 15:55:15,104 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:55:15,753 - INFO - Database connection available.
+2026-02-17 15:55:15,777 - INFO - Ensured unique index on users.email
+2026-02-17 15:55:34,371 - INFO - OCR stored with id: 6994421e0b001eb2417c1aad
+2026-02-17 15:56:49,682 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:56:50,076 - INFO - Database connection available.
+2026-02-17 15:56:50,103 - INFO - Ensured unique index on users.email
+2026-02-17 15:56:52,344 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:56:52,723 - INFO - Database connection available.
+2026-02-17 15:56:52,754 - INFO - Ensured unique index on users.email
+2026-02-17 15:57:15,268 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:57:15,712 - INFO - Database connection available.
+2026-02-17 15:57:15,736 - INFO - Ensured unique index on users.email
+2026-02-17 15:57:17,809 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:57:18,234 - INFO - Database connection available.
+2026-02-17 15:57:18,260 - INFO - Ensured unique index on users.email
+2026-02-17 15:57:54,780 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:57:55,079 - INFO - Database connection available.
+2026-02-17 15:57:55,101 - INFO - Ensured unique index on users.email
+2026-02-17 15:58:16,998 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:58:17,357 - INFO - Database connection available.
+2026-02-17 15:58:17,384 - INFO - Ensured unique index on users.email
+2026-02-17 15:59:11,784 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:59:12,136 - INFO - Database connection available.
+2026-02-17 15:59:12,208 - INFO - Ensured unique index on users.email
+2026-02-17 15:59:36,232 - INFO - Successfully connected to MongoDB!
+2026-02-17 15:59:36,668 - INFO - Database connection available.
+2026-02-17 15:59:36,695 - INFO - Ensured unique index on users.email
+2026-02-17 15:59:40,461 - INFO - Ledger entry deleted successfully: 6994421e0b001eb2417c1aad for user a@gmail.com
+2026-02-17 15:59:47,029 - INFO - OCR stored with id: 6994431a661c89adf3514a7e
+2026-02-17 16:20:46,596 - INFO - Successfully connected to MongoDB!
+2026-02-17 16:20:46,918 - INFO - Database connection available.
+2026-02-17 16:20:46,943 - INFO - Ensured unique index on users.email
+2026-02-17 16:26:55,123 - INFO - Successfully connected to MongoDB!
+2026-02-17 16:26:55,497 - INFO - Database connection available.
+2026-02-17 16:26:55,520 - INFO - Ensured unique index on users.email
+2026-02-17 16:28:28,080 - INFO - Successfully connected to MongoDB!
+2026-02-17 16:28:28,393 - INFO - Database connection available.
+2026-02-17 16:28:28,418 - INFO - Ensured unique index on users.email
+2026-02-17 16:28:45,382 - INFO - Successfully connected to MongoDB!
+2026-02-17 16:28:45,844 - INFO - Database connection available.
+2026-02-17 16:28:45,865 - INFO - Ensured unique index on users.email
+2026-02-17 16:29:07,173 - INFO - Successfully connected to MongoDB!
+2026-02-17 16:29:07,567 - INFO - Database connection available.
+2026-02-17 16:29:07,596 - INFO - Ensured unique index on users.email
+2026-02-17 16:29:07,678 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-17 16:29:07,741 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-17 16:29:07,807 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-17 16:29:07,845 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-17 16:29:07,877 - INFO - Ensured index on invoices.owner_email
+2026-02-17 16:29:41,990 - INFO - OCR stored with id: 69944a1d3e44a894aa7c183e
+2026-02-17 16:29:56,557 - WARNING - Duplicate bill number detected: 100 for user a@gmail.com
+2026-02-17 16:30:04,914 - WARNING - Duplicate bill number detected: 100 for user a@gmail.com
+2026-02-17 16:30:53,048 - INFO - Ledger entry deleted successfully: 69943b1c78c3853e37f6dfc4 for user a@gmail.com
+2026-02-17 16:30:55,623 - INFO - Ledger entry deleted successfully: 6994431a661c89adf3514a7e for user a@gmail.com
+2026-02-17 16:30:58,380 - INFO - Ledger entry deleted successfully: 69943ce834e97ffb5863c626 for user a@gmail.com
+2026-02-17 16:31:09,741 - INFO - OCR stored with id: 69944a753e44a894aa7c183f
+2026-02-17 16:31:20,689 - WARNING - Duplicate bill number detected: 652 for user a@gmail.com
+2026-02-17 16:35:28,124 - INFO - Successfully connected to MongoDB!
+2026-02-17 16:35:28,472 - INFO - Database connection available.
+2026-02-17 16:35:28,503 - INFO - Ensured unique index on users.email
+2026-02-17 16:35:28,565 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-17 16:35:28,672 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-17 16:35:28,706 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-17 16:35:28,754 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-17 16:35:28,877 - INFO - Ensured index on invoices.owner_email
+2026-02-17 16:54:51,802 - INFO - OCR stored with id: 699450036bdfe2bdf2f8fa26
+2026-02-17 16:55:00,687 - INFO - OCR stored with id: 6994500c6bdfe2bdf2f8fa27
+2026-02-17 16:56:39,845 - WARNING - Validation failed for file invoice-1771327598187.png: ['bill number', 'invoice date', 'total amount', 'hsn code']
+2026-02-17 16:57:17,531 - WARNING - Duplicate bill number detected: 652 for user a@gmail.com
+2026-02-17 16:59:04,268 - WARNING - Duplicate bill number detected: 652 for user a@gmail.com
+2026-02-17 17:01:30,779 - WARNING - Duplicate bill number detected: 652 for user a@gmail.com
+2026-02-17 17:01:47,698 - WARNING - Duplicate bill number detected: 652 for user a@gmail.com
+2026-02-17 17:01:58,798 - WARNING - Validation failed for file invoice-1771327916866.png: ['bill number', 'invoice date', 'hsn code']
+2026-02-17 17:03:39,173 - INFO - Ledger entry deleted successfully: 6994500c6bdfe2bdf2f8fa27 for user a@gmail.com
+2026-02-17 17:04:20,361 - INFO - OCR stored with id: 6994523c6bdfe2bdf2f8fa28
+2026-02-17 17:06:30,282 - WARNING - Validation failed for file invoice-1771328188116.png: ['bill number', 'invoice date', 'total amount', 'hsn code']
+2026-02-17 17:07:22,133 - WARNING - Duplicate bill number detected: 652 for user a@gmail.com
+2026-02-17 17:10:49,744 - WARNING - Duplicate bill number detected: 121 for user a@gmail.com
+2026-02-17 17:13:16,640 - WARNING - Duplicate bill number detected: 652 for user a@gmail.com
+2026-02-17 17:13:32,132 - INFO - Successfully connected to MongoDB!
+2026-02-17 17:13:32,989 - INFO - Database connection available.
+2026-02-17 17:13:33,018 - INFO - Ensured unique index on users.email
+2026-02-17 17:13:33,045 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-17 17:13:33,129 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-17 17:13:33,157 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-17 17:13:33,183 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-17 17:13:33,209 - INFO - Ensured index on invoices.owner_email
+2026-02-17 17:13:53,300 - WARNING - Duplicate bill number detected: 652 for user a@gmail.com
+2026-02-17 17:14:13,303 - WARNING - Duplicate bill number detected: 652 for user a@gmail.com
+2026-02-17 17:17:09,487 - WARNING - Duplicate bill number detected: 121 for user a@gmail.com
+2026-02-17 17:17:38,913 - INFO - Ledger entry deleted successfully: 6994523c6bdfe2bdf2f8fa28 for user a@gmail.com
+2026-02-17 17:17:42,738 - INFO - Ledger entry deleted successfully: 699450036bdfe2bdf2f8fa26 for user a@gmail.com
+2026-02-17 17:17:55,285 - INFO - Successfully connected to MongoDB!
+2026-02-17 17:17:55,708 - INFO - Database connection available.
+2026-02-17 17:17:55,780 - INFO - Ensured unique index on users.email
+2026-02-17 17:17:55,839 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-17 17:17:55,983 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-17 17:17:56,091 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-17 17:17:56,190 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-17 17:17:56,293 - INFO - Ensured index on invoices.owner_email
+2026-02-17 17:24:01,996 - WARNING - Duplicate bill number detected: 100 for user a@gmail.com
+2026-02-17 17:25:29,313 - INFO - Successfully connected to MongoDB!
+2026-02-17 17:25:29,734 - INFO - Database connection available.
+2026-02-17 17:25:29,762 - INFO - Ensured unique index on users.email
+2026-02-17 17:25:29,848 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-17 17:25:29,932 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-17 17:25:30,022 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-17 17:25:30,095 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-17 17:25:30,178 - INFO - Ensured index on invoices.owner_email
+2026-02-17 17:25:42,166 - WARNING - Duplicate bill number detected: 100 for user a@gmail.com
+2026-02-17 17:27:40,636 - INFO - Successfully connected to MongoDB!
+2026-02-17 17:27:41,388 - INFO - Database connection available.
+2026-02-17 17:27:41,421 - INFO - Ensured unique index on users.email
+2026-02-17 17:27:41,509 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-17 17:27:41,535 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-17 17:27:41,610 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-17 17:27:41,750 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-17 17:27:41,833 - INFO - Ensured index on invoices.owner_email
+2026-02-17 17:28:37,689 - WARNING - Duplicate bill number detected: 100 for user a@gmail.com
+2026-02-17 17:28:46,153 - WARNING - Duplicate bill number detected: 652 for user a@gmail.com
+2026-02-17 17:28:52,609 - INFO - OCR stored with id: 699457fc0149bd5e03641e2e
+2026-02-17 17:28:59,457 - INFO - Ledger entry deleted successfully: 699457fc0149bd5e03641e2e for user a@gmail.com
+2026-02-17 17:33:14,182 - WARNING - Duplicate bill number detected: 100 for user a@gmail.com
+2026-02-18 16:47:35,681 - ERROR - Error initializing MongoDB client: SSL handshake failed: ac-q6fmepz-shard-00-00.r54v5sf.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1006) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-q6fmepz-shard-00-02.r54v5sf.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1006) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-q6fmepz-shard-00-01.r54v5sf.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1006) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 69959faf5922e7e5fe576203, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-q6fmepz-shard-00-00.r54v5sf.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-q6fmepz-shard-00-00.r54v5sf.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1006) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-q6fmepz-shard-00-01.r54v5sf.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-q6fmepz-shard-00-01.r54v5sf.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1006) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-q6fmepz-shard-00-02.r54v5sf.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-q6fmepz-shard-00-02.r54v5sf.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1006) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2026-02-18 16:47:35,683 - INFO - Falling back to local MongoDB after remote connection failure.
+2026-02-18 16:47:35,699 - INFO - Successfully connected to local MongoDB!
+2026-02-18 16:47:38,248 - INFO - Database connection available.
+2026-02-18 16:47:38,250 - INFO - Ensured unique index on users.email
+2026-02-18 16:47:38,604 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-18 16:47:38,648 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-18 16:47:38,673 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-18 16:47:38,697 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-18 16:47:38,706 - INFO - Ensured index on invoices.owner_email
+2026-02-18 16:49:56,871 - ERROR - Error initializing MongoDB client: SSL handshake failed: ac-q6fmepz-shard-00-02.r54v5sf.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1006) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-q6fmepz-shard-00-01.r54v5sf.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1006) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-q6fmepz-shard-00-00.r54v5sf.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1006) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 6995a03dbd1551f985e3bd60, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-q6fmepz-shard-00-00.r54v5sf.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-q6fmepz-shard-00-00.r54v5sf.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1006) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-q6fmepz-shard-00-01.r54v5sf.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-q6fmepz-shard-00-01.r54v5sf.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1006) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-q6fmepz-shard-00-02.r54v5sf.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-q6fmepz-shard-00-02.r54v5sf.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1006) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2026-02-18 16:49:56,871 - INFO - Falling back to local MongoDB after remote connection failure.
+2026-02-18 16:49:56,907 - INFO - Successfully connected to local MongoDB!
+2026-02-18 16:49:57,339 - INFO - Database connection available.
+2026-02-18 16:49:57,340 - INFO - Ensured unique index on users.email
+2026-02-18 16:49:57,340 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-18 16:49:57,341 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-18 16:49:57,342 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-18 16:49:57,342 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-18 16:49:57,343 - INFO - Ensured index on invoices.owner_email
+2026-02-18 16:50:36,416 - ERROR - Error initializing MongoDB client: SSL handshake failed: ac-q6fmepz-shard-00-01.r54v5sf.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1006) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-q6fmepz-shard-00-02.r54v5sf.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1006) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-q6fmepz-shard-00-00.r54v5sf.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1006) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 6995a065e4368e49abc338c9, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-q6fmepz-shard-00-00.r54v5sf.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-q6fmepz-shard-00-00.r54v5sf.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1006) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-q6fmepz-shard-00-01.r54v5sf.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-q6fmepz-shard-00-01.r54v5sf.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1006) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-q6fmepz-shard-00-02.r54v5sf.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-q6fmepz-shard-00-02.r54v5sf.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1006) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2026-02-18 16:50:36,417 - INFO - Falling back to local MongoDB after remote connection failure.
+2026-02-18 16:50:36,434 - INFO - Successfully connected to local MongoDB!
+2026-02-18 16:50:37,461 - INFO - Database connection available.
+2026-02-18 16:50:37,463 - INFO - Ensured unique index on users.email
+2026-02-18 16:50:37,465 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-18 16:50:37,466 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-18 16:50:37,468 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-18 16:50:37,469 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-18 16:50:37,471 - INFO - Ensured index on invoices.owner_email
+2026-02-18 16:51:04,173 - INFO - OCR stored with id: 6995a0a0e4368e49abc338cb
+2026-02-18 16:51:11,354 - INFO - Ledger entry deleted successfully: 6995a0a0e4368e49abc338cb for user z@gmail.com
+2026-02-18 16:51:28,714 - INFO - OCR stored with id: 6995a0b8e4368e49abc338cc
+2026-02-18 16:51:37,762 - WARNING - Duplicate bill number detected: 652 for user z@gmail.com
+2026-02-18 16:58:06,452 - INFO - Successfully connected to MongoDB!
+2026-02-18 16:58:07,058 - INFO - Database connection available.
+2026-02-18 16:58:07,099 - INFO - Ensured unique index on users.email
+2026-02-18 16:58:07,191 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-18 16:58:07,228 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-18 16:58:07,252 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-18 16:58:07,287 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-18 16:58:07,308 - INFO - Ensured index on invoices.owner_email
+2026-02-18 17:00:45,109 - WARNING - Validation failed for file Screenshot (3).png: ['invoice date', 'hsn code']
+2026-02-18 17:01:06,947 - INFO - OCR stored with id: 6995a2f942aa72998de64fa8
+2026-02-18 17:02:08,891 - WARNING - Validation failed for file invoice-1771414327391.png: ['invoice date', 'total amount', 'hsn code']
+2026-02-18 17:03:48,402 - ERROR - MongoDB Configuration Error: The resolution lifetime expired after 21.179 seconds: Server Do53:192.168.29.1@53 answered The DNS operation timed out.; Server Do53:192.168.29.1@53 answered The DNS operation timed out.; Server Do53:192.168.29.1@53 answered The DNS operation timed out.; Server Do53:192.168.29.1@53 answered The DNS operation timed out.; Server Do53:192.168.29.1@53 answered The DNS operation timed out.; Server Do53:192.168.29.1@53 answered The DNS operation timed out.; Server Do53:192.168.29.1@53 answered The DNS operation timed out.
+2026-02-18 17:03:48,404 - ERROR - Tip: Ensure your password does not contain unescaped characters like '@'.
+2026-02-18 17:03:48,786 - ERROR - Database connection not available.
+2026-02-18 18:31:28,350 - INFO - Successfully connected to MongoDB!
+2026-02-18 18:31:29,433 - INFO - Database connection available.
+2026-02-18 18:31:29,456 - INFO - Ensured unique index on users.email
+2026-02-18 18:31:29,481 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-18 18:31:29,506 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-18 18:31:29,531 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-18 18:31:29,555 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-18 18:31:29,582 - INFO - Ensured index on invoices.owner_email
+2026-02-18 18:32:30,808 - INFO - Successfully connected to MongoDB!
+2026-02-18 18:32:31,265 - INFO - Database connection available.
+2026-02-18 18:32:31,300 - INFO - Ensured unique index on users.email
+2026-02-18 18:32:31,322 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-18 18:32:31,347 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-18 18:32:31,375 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-18 18:32:31,416 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-18 18:32:31,440 - INFO - Ensured index on invoices.owner_email
+2026-02-18 18:33:23,676 - INFO - Successfully connected to MongoDB!
+2026-02-18 18:33:24,045 - INFO - Database connection available.
+2026-02-18 18:33:24,071 - INFO - Ensured unique index on users.email
+2026-02-18 18:33:24,096 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-18 18:33:24,120 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-18 18:33:24,143 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-18 18:33:24,168 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-18 18:33:24,193 - INFO - Ensured index on invoices.owner_email
+2026-02-18 18:36:11,894 - INFO - Successfully connected to MongoDB!
+2026-02-18 18:36:12,377 - INFO - Database connection available.
+2026-02-18 18:36:12,403 - INFO - Ensured unique index on users.email
+2026-02-18 18:36:12,427 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-18 18:36:12,452 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-18 18:36:12,477 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-18 18:36:12,511 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-18 18:36:12,536 - INFO - Ensured index on invoices.owner_email
+2026-02-18 18:36:37,025 - INFO - Successfully connected to MongoDB!
+2026-02-18 18:36:59,389 - INFO - Successfully connected to MongoDB!
+2026-02-18 18:36:59,854 - INFO - Database connection available.
+2026-02-18 18:36:59,878 - INFO - Ensured unique index on users.email
+2026-02-18 18:36:59,902 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-18 18:36:59,927 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-18 18:36:59,950 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-18 18:36:59,974 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-18 18:36:59,994 - INFO - Ensured index on invoices.owner_email
+2026-02-18 18:37:13,073 - INFO - Successfully connected to MongoDB!
+2026-02-18 18:37:13,516 - INFO - Database connection available.
+2026-02-18 18:37:13,542 - INFO - Ensured unique index on users.email
+2026-02-18 18:37:13,566 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-18 18:37:13,589 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-18 18:37:13,616 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-18 18:37:13,654 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-18 18:37:13,678 - INFO - Ensured index on invoices.owner_email
+2026-02-18 18:37:36,866 - INFO - Successfully connected to MongoDB!
+2026-02-18 18:37:37,475 - INFO - Database connection available.
+2026-02-18 18:37:37,499 - INFO - Ensured unique index on users.email
+2026-02-18 18:37:37,525 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-18 18:37:37,550 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-18 18:37:37,573 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-18 18:37:37,599 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-18 18:37:37,634 - INFO - Ensured index on invoices.owner_email
+2026-02-18 18:37:40,385 - INFO - Successfully connected to MongoDB!
+2026-02-18 18:37:40,897 - INFO - Database connection available.
+2026-02-18 18:37:41,006 - INFO - Ensured unique index on users.email
+2026-02-18 18:37:41,037 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-18 18:37:41,058 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-18 18:37:41,082 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-18 18:37:41,106 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-18 18:37:41,129 - INFO - Ensured index on invoices.owner_email
+2026-02-18 18:37:43,208 - INFO - Successfully connected to MongoDB!
+2026-02-18 18:37:43,623 - INFO - Database connection available.
+2026-02-18 18:37:43,647 - INFO - Ensured unique index on users.email
+2026-02-18 18:37:43,673 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-18 18:37:43,696 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-18 18:37:43,721 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-18 18:37:43,747 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-18 18:37:43,771 - INFO - Ensured index on invoices.owner_email
+2026-02-18 18:38:17,746 - INFO - Successfully connected to MongoDB!
+2026-02-18 18:38:18,231 - INFO - Database connection available.
+2026-02-18 18:38:18,252 - INFO - Ensured unique index on users.email
+2026-02-18 18:38:18,278 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-18 18:38:18,301 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-18 18:38:18,325 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-18 18:38:18,350 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-18 18:38:18,374 - INFO - Ensured index on invoices.owner_email
+2026-02-18 18:38:54,921 - WARNING - Validation failed for file nbn.jpeg: ['bill number']
+2026-02-18 18:39:09,843 - INFO - OCR stored with id: 6995b9f5a9fffda9fee71964
+2026-02-18 18:39:19,443 - INFO - Ledger entry deleted successfully: 6995b9f5a9fffda9fee71964 for user xx@gmail.com
+2026-02-18 18:40:27,880 - WARNING - Duplicate bill number detected: 652 for user xx@gmail.com
+2026-02-18 18:40:46,651 - WARNING - Duplicate bill number detected: 652 for user xx@gmail.com
+2026-02-18 18:41:29,805 - WARNING - Validation failed for file invoice-1771420288044.png: ['bill number', 'invoice date', 'hsn code']
+2026-02-18 18:41:46,047 - WARNING - Validation failed for file nbn.jpeg: ['bill number']
+2026-02-18 18:52:44,091 - WARNING - Failed to parse date '17/01/2026' for entry 6995a2f942aa72998de64fa8: could not convert string to float: '\u20b9 1,080.00'
+2026-02-18 18:55:34,642 - WARNING - Failed to parse date '17/01/2026' for entry 6995a2f942aa72998de64fa8: could not convert string to float: '\u20b9 1,080.00'
+2026-02-18 18:57:47,762 - WARNING - Validation failed for file nbn.jpeg: ['bill number']
+2026-02-18 19:11:49,800 - INFO - Successfully connected to MongoDB!
+2026-02-18 19:11:50,409 - INFO - Database connection available.
+2026-02-18 19:11:50,444 - INFO - Ensured unique index on users.email
+2026-02-18 19:11:50,470 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-18 19:11:50,493 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-18 19:11:50,518 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-18 19:11:50,542 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-18 19:11:50,567 - INFO - Ensured index on invoices.owner_email

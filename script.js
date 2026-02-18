@@ -163,6 +163,23 @@ function captureToCanvas(videoEl, canvasEl){ if(!videoEl || videoEl.readyState =
 
 // Initialize header (theme toggle) and nav active state
 function initHeaderNav(){
+  const currentPage = (location.pathname || '').split('/').pop() || 'index.html';
+
+  // Show About FinTax in header only on auth page
+  const aboutUsBtn = document.getElementById('aboutUsBtn');
+  if(aboutUsBtn){
+    const isAuthPage = currentPage === 'auth.html';
+    aboutUsBtn.hidden = !isAuthPage;
+    aboutUsBtn.setAttribute('aria-hidden', String(!isAuthPage));
+  }
+
+  const logoutBtn = document.getElementById('logoutBtn');
+  if(logoutBtn){
+    const isAuthPage = currentPage === 'auth.html';
+    logoutBtn.hidden = isAuthPage;
+    logoutBtn.setAttribute('aria-hidden', String(isAuthPage));
+  }
+
   // theme toggle (persisted Gruvbox themes: 'light' | 'dark')
   const themeToggle = document.getElementById('themeToggle');
   function applyTheme(theme){
@@ -217,15 +234,13 @@ function initHeaderNav(){
   const nav = document.querySelector('#siteNav');
   if(nav){
     const links = Array.from(nav.querySelectorAll('.nav-item'));
-    const path = (location.pathname || '').split('/').pop() || 'index.html';
     links.forEach(a=>{
       const href = a.getAttribute('href') || '';
-      if(href.includes(path)) { a.classList.add('active'); a.setAttribute('aria-current','true'); } else { a.classList.remove('active'); a.removeAttribute('aria-current'); }
+      if(href.includes(currentPage)) { a.classList.add('active'); a.setAttribute('aria-current','true'); } else { a.classList.remove('active'); a.removeAttribute('aria-current'); }
     });
   }
 
   // header logout button (if present)
-  const logoutBtn = document.getElementById('logoutBtn');
   const logoutModal = document.getElementById('logoutModal');
   const confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
   const cancelLogoutBtn = document.getElementById('cancelLogoutBtn');
@@ -290,6 +305,50 @@ function initHeaderNav(){
   });
 }
 
+function setupAboutModal(){
+  const aboutUsBtn = document.getElementById('aboutUsBtn');
+  const aboutModal = document.getElementById('aboutModal');
+  const closeAboutBtn = document.getElementById('closeAboutBtn');
+
+  if(!aboutUsBtn || !aboutModal || !closeAboutBtn) return;
+
+  let removeAboutFocusTrap = null;
+
+  function openAboutModal(){
+    aboutModal.setAttribute('aria-hidden', 'false');
+    aboutUsBtn.setAttribute('aria-expanded', 'true');
+    document.body.classList.add('no-scroll');
+    closeAboutBtn.focus();
+
+    if(removeAboutFocusTrap){
+      removeAboutFocusTrap();
+      removeAboutFocusTrap = null;
+    }
+    removeAboutFocusTrap = trapFocus(aboutModal, closeAboutModal);
+  }
+
+  function closeAboutModal(){
+    aboutModal.setAttribute('aria-hidden', 'true');
+    aboutUsBtn.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('no-scroll');
+
+    if(removeAboutFocusTrap){
+      removeAboutFocusTrap();
+      removeAboutFocusTrap = null;
+    }
+
+    aboutUsBtn.focus();
+  }
+
+  aboutUsBtn.addEventListener('click', openAboutModal);
+  closeAboutBtn.addEventListener('click', closeAboutModal);
+
+  aboutModal.addEventListener('click', (e)=>{
+    if(e.target === aboutModal){
+      closeAboutModal();
+    }
+  });
+}
 // Page init: attach listeners only for present elements
 async function pageInit(){
   const currentPage = (location.pathname || '').split('/').pop() || 'index.html';
@@ -298,6 +357,8 @@ async function pageInit(){
     window.location.href = 'login.html';
     return;
   }
+  setupAboutModal();
+
   // camera & upload controls (clean UI)
   const cameraModal = document.getElementById('cameraModal');
   const openCameraBtn = document.getElementById('openCameraBtn');
@@ -384,7 +445,8 @@ async function pageInit(){
   // After capturing, close camera and show preview in the main layout
   // use the shutter control (single capture control) to perform capture  
   const shutter = document.querySelector('.camera-shutter');
-async function performCapture(){
+
+  async function performCapture(){
     const data = captureToCanvas(videoEl,canvasEl); if(!data) return;
     stopStream();
 
@@ -461,10 +523,10 @@ async function performCapture(){
     statEls.forEach(el=> obs.observe(el));
   }
 
-  // Dashboard page: fetch and display financial stats
-  const dashboardStats = document.querySelector('.stats');
-  if(dashboardStats){
-    async function loadDashboardStats(){
+    // Dashboard page: fetch and display financial stats
+    const dashboardStats = document.querySelector('.stats');
+    if(dashboardStats){
+      async function loadDashboardStats(){
       try{
         const apiBase = await resolveApiBase();
         const token = getAuthToken();
@@ -919,13 +981,16 @@ async function performCapture(){
               return;
             }
             
-            // Check for duplicate bill number
-            if (result.status === 'duplicate_detected') {
-              // Show duplicate detection modal
-              showDuplicateModal(result);
-              if(progressOverlay) progressOverlay.hidden = true;
-              return;
-            }
+        // Check for duplicate bill number
+        if (result.status === 'duplicate_detected') {
+          // Show duplicate detection modal
+          showDuplicateModal(result);
+          if(progressOverlay) progressOverlay.hidden = true;
+          
+          // Also show a clear toast message
+          showToast('❌ This bill is already uploaded', 'error', 3000);
+          return;
+        }
             
             if(progressOverlay) {
                 if(progressFillLocal) progressFillLocal.style.width = '100%';
@@ -1071,7 +1136,7 @@ async function performCapture(){
     if (!duplicateModal || !duplicateCard) return;
     
     // Update modal content
-    duplicateMessage.textContent = 'An invoice with the same bill number already exists in your ledger.';
+    duplicateMessage.textContent = duplicateResult.message || 'An invoice with the same bill number already exists in your ledger.';
     
     if (duplicateResult.bill_number) {
       duplicateBillNumber.textContent = duplicateResult.bill_number;
@@ -2134,9 +2199,7 @@ async function performCapture(){
       profileNameElement.textContent = newName;
     }
   };
-}
+};
+  // Run includes first, then initialize UI
+  (async function start(){ await loadIncludes(); initHeaderNav(); await pageInit(); })();
 
-
-
-// Run includes first, then initialize UI
-(async function start(){ await loadIncludes(); initHeaderNav(); await pageInit(); })();

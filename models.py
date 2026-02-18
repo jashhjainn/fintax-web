@@ -25,6 +25,7 @@ class Invoice(BaseModel):
 class LedgerEntry(BaseModel):
     filename: str
     vendor: str | None = None
+    bill_number: str | None = None
     invoice_date: str | None = None
     total_amount: str | None = None
     items: list[dict] = Field(default_factory=list)

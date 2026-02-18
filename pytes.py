@@ -79,9 +79,9 @@ def _extract_bill_number(lines: list[str], text_blob: str) -> str | None:
     if not lines and not text_blob:
         return None
     
-    # Enhanced bill number patterns with specific support for "bill no. - 100" format
+    # Enhanced bill number patterns with specific support for "bill No: 100" format
     bill_patterns = [
-        # Specific pattern for "bill no. - 100" format (your example)
+        # Specific pattern for "Bill No: 100" format 
         r"(?:bill|invoice)\s*(?:no\.?|number)?\s*[-:]\s*([A-Z0-9-]+)",
         
         # General patterns for various formats
@@ -96,6 +96,19 @@ def _extract_bill_number(lines: list[str], text_blob: str) -> str | None:
         r"(?:bill|invoice)\s*(?:no\.?|number)?\s*[-]\s*([A-Z0-9-]+)",
         r"(?:bill|invoice)\s*(?:no\.?|number)?\s*[:]\s*([A-Z0-9-]+)",
         r"(?:bill|invoice)\s*(?:no\.?|number)?\s*#\s*([A-Z0-9-]+)",
+        
+        # Alternative patterns for different invoice layouts
+        r"(?:bill|invoice)\s*[:]\s*([A-Z0-9-]{3,})",
+        r"(?:bill|invoice)\s*#\s*([A-Z0-9-]{3,})",
+        r"(?:bill|invoice)\s*No\.\s*([A-Z0-9-]{3,})",
+        r"(?:bill|invoice)\s*Number\s*[:]\s*([A-Z0-9-]{3,})",
+        r"(?:bill|invoice)\s*Number\s*#\s*([A-Z0-9-]{3,})",
+        
+        # Patterns for standalone bill numbers
+        r"\b[A-Z]{2,3}\d{3,8}\b",  # ABC123456
+        r"\b\d{3,8}[A-Z]{2,3}\b",  # 123456ABC
+        r"\b[A-Z]{2,3}-\d{3,8}\b",  # ABC-123456
+        r"\b\d{3,8}-[A-Z]{2,3}\b",  # 123456-ABC
     ]
     
     # Search in lines first (more targeted)
@@ -106,7 +119,9 @@ def _extract_bill_number(lines: list[str], text_blob: str) -> str | None:
                 bill_no = match.group(1).strip()
                 # Validate that it looks like a bill number
                 if len(bill_no) >= 2 and re.search(r'[A-Z0-9]', bill_no):
-                    return bill_no
+                    # Additional validation: ensure it's not just random text
+                    if re.match(r'^[A-Z0-9-]+$', bill_no) and not re.match(r'^[A-Z]{2,}$', bill_no):
+                        return bill_no
     
     # If not found in lines, search in full text blob
     if text_blob:
@@ -115,7 +130,9 @@ def _extract_bill_number(lines: list[str], text_blob: str) -> str | None:
             if match:
                 bill_no = match.group(1).strip()
                 if len(bill_no) >= 2 and re.search(r'[A-Z0-9]', bill_no):
-                    return bill_no
+                    # Additional validation: ensure it's not just random text
+                    if re.match(r'^[A-Z0-9-]+$', bill_no) and not re.match(r'^[A-Z]{2,}$', bill_no):
+                        return bill_no
     
     return None
 
@@ -212,15 +229,15 @@ def _extract_hsn_items(lines: list[str]) -> list[dict]:
     return items
 
 
-def _validate_invoice_fields(vendor, invoice_date, total_amount, hsn_codes) -> dict:
+def _validate_invoice_fields(vendor, invoice_date, total_amount, hsn_codes, bill_number) -> dict:
     """
     Validate that all required invoice fields are present.
     Returns a validation result with missing fields.
     """
     missing_fields = []
     
-    # Check bill number (extracted from vendor field or lines)
-    if not vendor or len(vendor.strip()) < 3:
+    # Check bill number (extracted separately from OCR)
+    if not bill_number:
         missing_fields.append("bill number")
     
     # Check invoice date
@@ -273,7 +290,7 @@ def process_ocr(image_bytes: bytes, filename: str) -> dict:
     total_amount = _extract_total(lines)
     
     # Perform validation
-    validation_result = _validate_invoice_fields(vendor, invoice_date, total_amount, hsn_codes)
+    validation_result = _validate_invoice_fields(vendor, invoice_date, total_amount, hsn_codes, bill_number)
 
     return {
         "filename": filename,

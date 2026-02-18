@@ -59,10 +59,31 @@ async def startup_event():
     else:
         logging.info("Database connection available.")
         try:
+            # Create indexes for better performance and data integrity
             db.users.create_index("email", unique=True)
             logging.info("Ensured unique index on users.email")
+            
+            # Create compound index for bill number duplication checks
+            db.ledger_entries.create_index([("owner_email", 1), ("bill_number", 1)])
+            logging.info("Ensured compound index on ledger_entries (owner_email, bill_number)")
+            
+            # Create index for faster queries by owner_email
+            db.ledger_entries.create_index("owner_email")
+            logging.info("Ensured index on ledger_entries.owner_email")
+            
+            # Create index for invoice_date for financial year queries
+            db.ledger_entries.create_index("invoice_date")
+            logging.info("Ensured index on ledger_entries.invoice_date")
+            
+            # Create index for invoices collection as well
+            db.invoices.create_index([("owner_email", 1), ("bill_number", 1)])
+            logging.info("Ensured compound index on invoices (owner_email, bill_number)")
+            
+            db.invoices.create_index("owner_email")
+            logging.info("Ensured index on invoices.owner_email")
+            
         except Exception as e:
-            logging.error(f"Could not create unique index on users.email: {e}")
+            logging.error(f"Could not create indexes: {e}")
 
 @app.post("/upload/")
 async def upload_invoice(request: Request, file: UploadFile = File(...)):
@@ -88,6 +109,27 @@ async def upload_invoice(request: Request, file: UploadFile = File(...)):
         invoice_doc["owner_email"] = user.get("email")
         invoice_doc["owner_id"] = str(user.get("_id"))
         invoice_doc["image_data"] = bson.Binary(file_content)
+        
+        # Perform validation using OCR (same as /ocr/ endpoint)
+        try:
+            ocr_data = process_ocr(file_content, file.filename)
+            validation_result = ocr_data.get("validation", {})
+            
+            # Check if validation failed due to missing bill number
+            if not validation_result.get("is_valid", True):
+                missing_fields = validation_result.get("missing_fields", [])
+                if "bill number" in missing_fields:
+                    logging.warning(f"Missing bill number detected in upload: {file.filename} for user {user.get('email')}")
+                    return {
+                        "message": "Missing field bill number",
+                        "status": "validation_failed",
+                        "missing_fields": missing_fields
+                    }
+        except Exception as ocr_error:
+            logging.warning(f"OCR failed during upload validation: {ocr_error}")
+            # If OCR fails completely, we can't validate, so allow upload but log the issue
+            # Alternatively, you could reject the upload if OCR is critical
+            pass
         
         # Check for duplicate bill number in ledger entries (same as OCR endpoint)
         # Extract bill number from filename or do basic OCR check
@@ -176,28 +218,37 @@ async def ocr_invoice(request: Request, file: UploadFile = File(...)):
                 "status": "validation_failed"
             }
 
-        # Check for duplicate bill number
-        bill_number = ocr_data.get("vendor")  # Original code used vendor as bill number
+        # Enhanced duplicate bill number check
+        bill_number = ocr_data.get("bill_number")
         if bill_number:
-            existing_entry = db.ledger_entries.find_one({
+            # Check both ledger_entries and invoices collections for duplicates
+            existing_ledger = db.ledger_entries.find_one({
                 "owner_email": user.get("email"),
                 "bill_number": bill_number
             })
             
-            if existing_entry:
+            existing_invoice = db.invoices.find_one({
+                "owner_email": user.get("email"),
+                "bill_number": bill_number
+            })
+            
+            if existing_ledger or existing_invoice:
                 logging.warning(f"Duplicate bill number detected: {bill_number} for user {user.get('email')}")
+                existing_entry = existing_ledger or existing_invoice
                 return {
                     "message": "Duplicate bill number",
                     "bill_number": bill_number,
                     "status": "duplicate_detected",
-                    "existing_entry_id": str(existing_entry["_id"])
+                    "existing_entry_id": str(existing_entry["_id"]),
+                    "existing_filename": existing_entry.get("filename", "Unknown"),
+                    "existing_date": existing_entry.get("invoice_date", existing_entry.get("upload_date", "Unknown"))
                 }
 
         # Only proceed with database storage if validation passed and no duplicate
         ledger = LedgerEntry(
             filename=ocr_data["filename"],
             vendor=ocr_data.get("vendor"),
-            bill_number=ocr_data.get("vendor"),  # Original code used vendor as bill number
+            bill_number=ocr_data.get("bill_number"),  # Use actual bill number from OCR
             invoice_date=ocr_data.get("invoice_date"),
             total_amount=ocr_data.get("total_amount"),
             items=ocr_data.get("items", []),
