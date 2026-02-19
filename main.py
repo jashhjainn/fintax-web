@@ -624,6 +624,258 @@ def get_ledger_by_financial_year(request: Request, fy: str):
     return {"items": items, "financial_year": fy if fy.lower() != "all" else "All Years"}
 
 
+@app.get("/ledger/month/{month}")
+def get_ledger_by_month(request: Request, month: str):
+    """Get ledger entries filtered by month based on invoice_date"""
+    user = _get_auth_user(request)
+    
+    # Handle "all" case
+    if month.lower() == "all":
+        cursor = db.ledger_entries.find(
+            {"owner_email": user.get("email")},
+            sort=[("invoice_date", 1), ("_id", 1)]
+        )
+    else:
+        # Validate month parameter (01-12)
+        try:
+            month_num = int(month)
+            if month_num < 1 or month_num > 12:
+                raise ValueError("Month must be between 01 and 12")
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid month format. Use 'all' or a 2-digit month like '01' for January")
+        
+        # Build list of valid dates for the specified month
+        valid_dates = []
+        
+        # Get all possible dates for the specified month across different years
+        # We'll check a reasonable range of years (current year ± 5 years)
+        current_year = datetime.now().year
+        year_range = range(current_year - 5, current_year + 6)
+        
+        for year in year_range:
+            for day in range(1, 32):  # 1 to 31
+                try:
+                    # Create date and check if it's valid for the specified month
+                    test_date = datetime(year, month_num, day)
+                    date_str = test_date.strftime("%d/%m/%Y")
+                    valid_dates.append(date_str)
+                except ValueError:
+                    # Invalid date (e.g., Feb 30), skip
+                    continue
+        
+        # Query for entries with invoice_date in our valid dates list
+        cursor = db.ledger_entries.find({
+            "owner_email": user.get("email"),
+            "invoice_date": {"$in": valid_dates}
+        }, sort=[("invoice_date", 1), ("_id", 1)])
+    
+    items = []
+    for doc in cursor:
+        doc["id"] = str(doc["_id"])
+        doc.pop("_id", None)
+        doc.pop("image_data", None)
+        items.append(doc)
+    
+    return {"items": items, "month": month if month.lower() != "all" else "All Months"}
+
+
+@app.get("/ledger/financial-year/{fy}/month/{month}")
+def get_ledger_by_financial_year_and_month(request: Request, fy: str, month: str):
+    """Get ledger entries filtered by both financial year and month based on invoice_date"""
+    user = _get_auth_user(request)
+    
+    # Handle "all" cases
+    if fy.lower() == "all" and month.lower() == "all":
+        cursor = db.ledger_entries.find(
+            {"owner_email": user.get("email")},
+            sort=[("invoice_date", 1), ("_id", 1)]
+        )
+    elif fy.lower() == "all":
+        # Filter by month only (reuse month filtering logic)
+        try:
+            month_num = int(month)
+            if month_num < 1 or month_num > 12:
+                raise ValueError("Month must be between 01 and 12")
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid month format. Use 'all' or a 2-digit month like '01' for January")
+        
+        valid_dates = []
+        current_year = datetime.now().year
+        year_range = range(current_year - 5, current_year + 6)
+        
+        for year in year_range:
+            for day in range(1, 32):
+                try:
+                    test_date = datetime(year, month_num, day)
+                    date_str = test_date.strftime("%d/%m/%Y")
+                    valid_dates.append(date_str)
+                except ValueError:
+                    continue
+        
+        cursor = db.ledger_entries.find({
+            "owner_email": user.get("email"),
+            "invoice_date": {"$in": valid_dates}
+        }, sort=[("invoice_date", 1), ("_id", 1)])
+        
+    elif month.lower() == "all":
+        # Filter by financial year only (reuse financial year filtering logic)
+        try:
+            end_year = int(fy)
+            start_year = end_year - 1
+            
+            valid_dates = []
+            
+            # Months from April to December of start_year
+            for month_val in range(4, 13):
+                for day in range(1, 32):
+                    try:
+                        test_date = datetime(start_year, month_val, day)
+                        date_str = test_date.strftime("%d/%m/%Y")
+                        valid_dates.append(date_str)
+                    except ValueError:
+                        continue
+            
+            # Months from January to March of end_year
+            for month_val in range(1, 4):
+                for day in range(1, 32):
+                    try:
+                        test_date = datetime(end_year, month_val, day)
+                        date_str = test_date.strftime("%d/%m/%Y")
+                        valid_dates.append(date_str)
+                    except ValueError:
+                        continue
+            
+            cursor = db.ledger_entries.find({
+                "owner_email": user.get("email"),
+                "invoice_date": {"$in": valid_dates}
+            }, sort=[("invoice_date", 1), ("_id", 1)])
+            
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid financial year format. Use 'all' or a 4-digit year like '2026'")
+    else:
+        # Filter by both financial year and month
+        try:
+            end_year = int(fy)
+            start_year = end_year - 1
+            month_num = int(month)
+            if month_num < 1 or month_num > 12:
+                raise ValueError("Month must be between 01 and 12")
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid format. Use 'all' or valid 4-digit year and 2-digit month")
+        
+        valid_dates = []
+        
+        # For financial year filtering, we need to consider:
+        # - If month is April-December: use start_year
+        # - If month is January-March: use end_year
+        
+        if month_num >= 4:  # April to December: use start_year
+            target_year = start_year
+        else:  # January to March: use end_year
+            target_year = end_year
+        
+        # Generate valid dates for the specific month and year
+        for day in range(1, 32):
+            try:
+                test_date = datetime(target_year, month_num, day)
+                date_str = test_date.strftime("%d/%m/%Y")
+                valid_dates.append(date_str)
+            except ValueError:
+                continue
+        
+        cursor = db.ledger_entries.find({
+            "owner_email": user.get("email"),
+            "invoice_date": {"$in": valid_dates}
+        }, sort=[("invoice_date", 1), ("_id", 1)])
+    
+    items = []
+    for doc in cursor:
+        doc["id"] = str(doc["_id"])
+        doc.pop("_id", None)
+        doc.pop("image_data", None)
+        items.append(doc)
+    
+    return {
+        "items": items, 
+        "financial_year": fy if fy.lower() != "all" else "All Years",
+        "month": month if month.lower() != "all" else "All Months"
+    }
+
+
+@app.get("/ledger/available-months")
+def get_available_months(request: Request):
+    """Get list of months that have actual ledger entries"""
+    user = _get_auth_user(request)
+    
+    # Get all ledger entries for the user
+    cursor = db.ledger_entries.find(
+        {"owner_email": user.get("email")},
+        {"invoice_date": 1}
+    )
+    
+    # Extract unique months from invoice dates
+    months = set()
+    
+    for doc in cursor:
+        invoice_date = doc.get("invoice_date")
+        if not invoice_date:
+            continue
+            
+        try:
+            # Try to parse the date - handle various formats
+            parsed_date = None
+            date_str = str(invoice_date).strip()
+            
+            # Common date formats
+            date_formats = [
+                "%Y-%m-%d", "%d-%m-%Y", "%m-%d-%Y", "%Y/%m/%d", "%d/%m/%Y", "%m/%d/%Y",
+                "%d %b %Y", "%d %B %Y", "%b %d %Y", "%B %d %Y",
+                "%Y-%m-%d %H:%M:%S", "%d-%m-%Y %H:%M:%S"
+            ]
+            
+            for fmt in date_formats:
+                try:
+                    parsed_date = datetime.strptime(date_str, fmt)
+                    break
+                except ValueError:
+                    continue
+            
+            if not parsed_date:
+                # Try to extract month from string patterns
+                month_match = re.search(r'(\d{1,2})[-/]', date_str)
+                if month_match:
+                    month = int(month_match.group(1))
+                    if 1 <= month <= 12:
+                        parsed_date = datetime(2000, month, 1)  # Use dummy year
+                else:
+                    continue
+            
+            months.add(parsed_date.month)
+            
+        except Exception as e:
+            logging.warning(f"Failed to parse date '{invoice_date}' for month calculation: {e}")
+            continue
+    
+    # Convert to sorted list (January first)
+    available_months = sorted(list(months))
+    
+    # Format for display
+    month_names = ['January', 'February', 'March', 'April', 'May', 'June', 
+                   'July', 'August', 'September', 'October', 'November', 'December']
+    
+    formatted_months = []
+    for month in available_months:
+        formatted_months.append({
+            "value": f"{month:02d}",
+            "label": month_names[month - 1]
+        })
+    
+    return {
+        "available_months": formatted_months,
+        "total_months": len(formatted_months)
+    }
+
+
 @app.get("/ledger/available-financial-years")
 def get_available_financial_years(request: Request):
     """Get list of financial years that have actual ledger entries"""
@@ -704,13 +956,87 @@ def get_available_financial_years(request: Request):
 
 
 @app.get("/ledger/list/pdf")
-def ledger_list_pdf(request: Request, limit: int = 200):
+def ledger_list_pdf(request: Request, limit: int = 200, financial_year: str = "all", month: str = "all"):
     user = _get_auth_user(request)
     limit = max(1, min(limit, 500))
-    cursor = db.ledger_entries.find(
-        {"owner_email": user.get("email")},
-        sort=[("_id", -1)],
-    ).limit(limit)
+    
+    # Build query based on filters
+    query = {"owner_email": user.get("email")}
+    
+    # Apply financial year filter if specified
+    if financial_year != "all":
+        try:
+            end_year = int(financial_year)
+            start_year = end_year - 1
+            
+            # Build list of valid dates for the financial year
+            valid_dates = []
+            
+            # Months from April to December of start_year
+            for month_val in range(4, 13):  # April (4) to December (12)
+                for day in range(1, 32):  # 1 to 31
+                    try:
+                        # Create date and check if it's valid
+                        test_date = datetime(start_year, month_val, day)
+                        date_str = test_date.strftime("%d/%m/%Y")
+                        valid_dates.append(date_str)
+                    except ValueError:
+                        # Invalid date (e.g., Feb 30), skip
+                        continue
+            
+            # Months from January to March of end_year
+            for month_val in range(1, 4):  # January (1) to March (3)
+                for day in range(1, 32):  # 1 to 31
+                    try:
+                        # Create date and check if it's valid
+                        test_date = datetime(end_year, month_val, day)
+                        date_str = test_date.strftime("%d/%m/%Y")
+                        valid_dates.append(date_str)
+                    except ValueError:
+                        # Invalid date, skip
+                        continue
+            
+            query["invoice_date"] = {"$in": valid_dates}
+            
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid financial year format. Use 'all' or a 4-digit year like '2026'")
+    
+    # Apply month filter if specified
+    if month != "all":
+        try:
+            month_num = int(month)
+            if month_num < 1 or month_num > 12:
+                raise ValueError("Month must be between 01 and 12")
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid month format. Use 'all' or a 2-digit month like '01' for January")
+        
+        # Build list of valid dates for the specified month
+        valid_dates = []
+        
+        # Get all possible dates for the specified month across different years
+        # We'll check a reasonable range of years (current year ± 5 years)
+        current_year = datetime.now().year
+        year_range = range(current_year - 5, current_year + 6)
+        
+        for year in year_range:
+            for day in range(1, 32):  # 1 to 31
+                try:
+                    # Create date and check if it's valid for the specified month
+                    test_date = datetime(year, month_num, day)
+                    date_str = test_date.strftime("%d/%m/%Y")
+                    valid_dates.append(date_str)
+                except ValueError:
+                    # Invalid date (e.g., Feb 30), skip
+                    continue
+        
+        # If financial year filter is also applied, intersect the date lists
+        if "invoice_date" in query:
+            existing_dates = query["invoice_date"]["$in"]
+            query["invoice_date"]["$in"] = list(set(existing_dates) & set(valid_dates))
+        else:
+            query["invoice_date"] = {"$in": valid_dates}
+    
+    cursor = db.ledger_entries.find(query, sort=[("_id", -1)]).limit(limit)
     def extract_bill_no(lines, text_blob):
         lines = lines or []
         for ln in lines:
@@ -758,12 +1084,39 @@ def ledger_list_pdf(request: Request, limit: int = 200):
     pdf.add_page()
     pdf.set_font("Helvetica", "B", 16)
     pdf.cell(0, 10, "FINTAX Ledger Report", ln=1)
+    
+    # Add filter information to the PDF
     pdf.set_font("Helvetica", "", 10)
+    filter_text = "Filters: "
+    if financial_year != "all" and month != "all":
+        # Both filters applied
+        end_year = int(financial_year)
+        start_year = end_year - 1
+        month_names = ['January', 'February', 'March', 'April', 'May', 'June', 
+                       'July', 'August', 'September', 'October', 'November', 'December']
+        month_name = month_names[int(month) - 1]
+        filter_text += f"{month_name} {start_year}-{end_year}"
+    elif financial_year != "all":
+        # Only financial year filter
+        end_year = int(financial_year)
+        start_year = end_year - 1
+        filter_text += f"Financial Year {start_year}-{end_year}"
+    elif month != "all":
+        # Only month filter
+        month_names = ['January', 'February', 'March', 'April', 'May', 'June', 
+                       'July', 'August', 'September', 'October', 'November', 'December']
+        month_name = month_names[int(month) - 1]
+        filter_text += f"Month: {month_name}"
+    else:
+        # No filters
+        filter_text += "All entries"
+    
+    pdf.cell(0, 6, filter_text, ln=1)
     pdf.cell(0, 6, f"Generated: {get_ist_time().strftime('%d-%b-%Y %H:%M')}", ln=1)
     pdf.ln(2)
 
-    col_widths = [12, 45, 70, 32, 35, 35]
-    headers = ["Sr", "Bill No", "Vendor", "Invoice Date", "GST Payable", "Total Amount"]
+    col_widths = [12, 45, 32, 70, 35, 35]
+    headers = ["Sr", "Bill No", "Invoice Date", "Vendor", "GST Payable", "Total Amount"]
 
     pdf.set_font("Helvetica", "B", 10)
     for i, title in enumerate(headers):
@@ -804,8 +1157,8 @@ def ledger_list_pdf(request: Request, limit: int = 200):
     for idx, row in enumerate(rows, start=1):
         pdf.cell(col_widths[0], 7, str(idx), border=1)
         pdf.cell(col_widths[1], 7, truncate(row["bill_no"], 20), border=1)
-        pdf.cell(col_widths[2], 7, truncate(row["vendor"], 40), border=1)
-        pdf.cell(col_widths[3], 7, truncate(row["invoice_date"], 12), border=1)
+        pdf.cell(col_widths[2], 7, truncate(row["invoice_date"], 12), border=1)
+        pdf.cell(col_widths[3], 7, truncate(row["vendor"], 40), border=1)
         pdf.cell(col_widths[4], 7, fmt_money(row["gst_payable"]), border=1)
         pdf.cell(col_widths[5], 7, truncate(row["total_amount"], 14), border=1)
         pdf.ln()
@@ -823,10 +1176,19 @@ def ledger_list_pdf(request: Request, limit: int = 200):
     return Response(content=pdf_bytes, media_type="application/pdf", headers=headers)
 
 
+class LedgerPdfRequest(BaseModel):
+    items: list
+    selected_fy: str = "all"
+    selected_month: str = "all"
+
 @app.post("/ledger/pdf")
-def ledger_pdf_from_items(request: Request, items: list):
+def ledger_pdf_from_items(request: Request, pdf_request: LedgerPdfRequest):
     """Generate PDF from specific ledger items (for current filtered view)"""
     user = _get_auth_user(request)
+    
+    # Get filter parameters from request body
+    selected_fy = pdf_request.selected_fy
+    selected_month = pdf_request.selected_month
     
     def extract_bill_no(lines, text_blob):
         lines = lines or []
@@ -852,7 +1214,7 @@ def ledger_pdf_from_items(request: Request, items: list):
         return m.group(1).strip() if m and m.group(1) else ""
 
     rows = []
-    for doc in items:
+    for doc in pdf_request.items:
         # Validate that the item belongs to the current user
         if doc.get("owner_email") != user.get("email"):
             continue
@@ -879,12 +1241,39 @@ def ledger_pdf_from_items(request: Request, items: list):
     pdf.add_page()
     pdf.set_font("Helvetica", "B", 16)
     pdf.cell(0, 10, "FINTAX Ledger Report", ln=1)
+    
+    # Add filter information to the PDF
     pdf.set_font("Helvetica", "", 10)
+    filter_text = "Filters: "
+    if selected_fy != "all" and selected_month != "all":
+        # Both filters applied
+        end_year = int(selected_fy)
+        start_year = end_year - 1
+        month_names = ['January', 'February', 'March', 'April', 'May', 'June', 
+                       'July', 'August', 'September', 'October', 'November', 'December']
+        month_name = month_names[int(selected_month) - 1]
+        filter_text += f"{month_name} {start_year}-{end_year}"
+    elif selected_fy != "all":
+        # Only financial year filter
+        end_year = int(selected_fy)
+        start_year = end_year - 1
+        filter_text += f"Financial Year {start_year}-{end_year}"
+    elif selected_month != "all":
+        # Only month filter
+        month_names = ['January', 'February', 'March', 'April', 'May', 'June', 
+                       'July', 'August', 'September', 'October', 'November', 'December']
+        month_name = month_names[int(selected_month) - 1]
+        filter_text += f"Month: {month_name}"
+    else:
+        # No filters
+        filter_text += "All entries"
+    
+    pdf.cell(0, 6, filter_text, ln=1)
     pdf.cell(0, 6, f"Generated: {get_ist_time().strftime('%d-%b-%Y %H:%M')}", ln=1)
     pdf.ln(2)
 
-    col_widths = [12, 45, 70, 32, 35, 35]
-    headers = ["Sr", "Bill No", "Vendor", "Invoice Date", "GST Payable", "Total Amount"]
+    col_widths = [12, 45, 32, 70, 35, 35]
+    headers = ["Sr", "Bill No", "Invoice Date", "Vendor", "GST Payable", "Total Amount"]
 
     pdf.set_font("Helvetica", "B", 10)
     for i, title in enumerate(headers):
@@ -918,8 +1307,8 @@ def ledger_pdf_from_items(request: Request, items: list):
     for idx, row in enumerate(rows, start=1):
         pdf.cell(col_widths[0], 7, str(idx), border=1)
         pdf.cell(col_widths[1], 7, truncate(row["bill_no"], 20), border=1)
-        pdf.cell(col_widths[2], 7, truncate(row["vendor"], 40), border=1)
-        pdf.cell(col_widths[3], 7, truncate(row["invoice_date"], 12), border=1)
+        pdf.cell(col_widths[2], 7, truncate(row["invoice_date"], 12), border=1)
+        pdf.cell(col_widths[3], 7, truncate(row["vendor"], 40), border=1)
         pdf.cell(col_widths[4], 7, fmt_money(row["gst_payable"]), border=1)
         pdf.cell(col_widths[5], 7, truncate(row["total_amount"], 14), border=1)
         pdf.ln()

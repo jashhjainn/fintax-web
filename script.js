@@ -1457,9 +1457,20 @@ async function pageInit(){
               return;
             }
             
-            // Generate PDF from current items using the existing endpoint with limit
-            const limit = currentItems.length;
-            const url = `${apiBase}/ledger/list/pdf?limit=${limit}${token ? `&token=${encodeURIComponent(token)}` : ''}`;
+            // Get current filter selections
+            const financialYearSelect = document.getElementById('financialYear');
+            const monthFilter = document.getElementById('monthFilter');
+            const selectedFY = financialYearSelect ? financialYearSelect.value : 'all';
+            const selectedMonth = monthFilter ? monthFilter.value : 'all';
+            
+            // Build query parameters for filters
+            let queryParams = `limit=${currentItems.length}`;
+            if(token) queryParams += `&token=${encodeURIComponent(token)}`;
+            if(selectedFY !== 'all') queryParams += `&financial_year=${encodeURIComponent(selectedFY)}`;
+            if(selectedMonth !== 'all') queryParams += `&month=${encodeURIComponent(selectedMonth)}`;
+            
+            // Generate PDF from current items using the existing endpoint with filters
+            const url = `${apiBase}/ledger/list/pdf?${queryParams}`;
             const link = document.createElement('a');
             link.href = url;
             link.target = '_blank';
@@ -1477,59 +1488,38 @@ async function pageInit(){
       // Financial year selection functionality
       if(financialYearSelect){
         financialYearSelect.addEventListener('change', async ()=>{
-          try{
-            const selectedFY = financialYearSelect.value;
-            const apiBase = await resolveApiBase();
-            
-            let data = null;
-            let endpoint = '';
-            
-            if(selectedFY === 'all'){
-              endpoint = `${apiBase}/ledger/list?limit=500`;
-            } else {
-              endpoint = `${apiBase}/ledger/financial-year/${selectedFY}`;
-            }
-            
-            const res = await fetch(endpoint, { headers: authHeaders() });
-            if(res.status === 401){ handleAuthError('Session expired. Please login again.'); return; }
-            if(res.ok){
-              const response = await res.json();
-              data = response.items || response;
-              
-              // Update status to show financial year
-              if(selectedFY === 'all'){
-                statusEl.textContent = `Showing all ledger entries (${data.length} total)`;
-              } else {
-                // Convert financial year number to display format
-                const endYear = parseInt(selectedFY);
-                const startYear = endYear - 1;
-                statusEl.textContent = `Showing ledger entries for Financial Year ${startYear}-${endYear} (${data.length} entries)`;
-              }
-              
-              renderLedger(data, apiBase);
-            } else {
-              throw new Error('Failed to fetch data');
-            }
-          }catch(e){
-            console.error('Error fetching financial year data:', e);
-            statusEl.textContent = 'Unable to load financial year data.';
-          }
+          await loadFilteredData();
         });
       }
 
-      // Function to load initial data based on current financial year selection
-      async function loadInitialData() {
+      // Month filter functionality
+      const monthFilter = document.getElementById('monthFilter');
+      if(monthFilter){
+        monthFilter.addEventListener('change', async ()=>{
+          await loadFilteredData();
+        });
+      }
+
+      // Function to load filtered data based on financial year and month
+      async function loadFilteredData() {
         try{
           const selectedFY = financialYearSelect ? financialYearSelect.value : 'all';
+          const selectedMonth = monthFilter ? monthFilter.value : 'all';
           const apiBase = await resolveApiBase();
           
           let data = null;
           let endpoint = '';
           
-          if(selectedFY === 'all'){
+          // Build endpoint based on filters
+          if(selectedFY === 'all' && selectedMonth === 'all'){
             endpoint = `${apiBase}/ledger/list?limit=500`;
-          } else {
+          } else if(selectedFY !== 'all' && selectedMonth === 'all'){
             endpoint = `${apiBase}/ledger/financial-year/${selectedFY}`;
+          } else if(selectedFY === 'all' && selectedMonth !== 'all'){
+            endpoint = `${apiBase}/ledger/month/${selectedMonth}`;
+          } else {
+            // Both filters applied
+            endpoint = `${apiBase}/ledger/financial-year/${selectedFY}/month/${selectedMonth}`;
           }
           
           const res = await fetch(endpoint, { headers: authHeaders() });
@@ -1538,24 +1528,40 @@ async function pageInit(){
             const response = await res.json();
             data = response.items || response;
             
-            // Update status to show financial year
-            if(selectedFY === 'all'){
-              statusEl.textContent = `Showing all ledger entries (${data.length} total)`;
-            } else {
-              // Convert financial year number to display format
+            // Update status to show current filters
+            let statusText = '';
+            if(selectedFY === 'all' && selectedMonth === 'all'){
+              statusText = `Showing all ledger entries (${data.length} total)`;
+            } else if(selectedFY !== 'all' && selectedMonth === 'all'){
               const endYear = parseInt(selectedFY);
               const startYear = endYear - 1;
-              statusEl.textContent = `Showing ledger entries for Financial Year ${startYear}-${endYear} (${data.length} entries)`;
+              statusText = `Showing ledger entries for Financial Year ${startYear}-${endYear} (${data.length} entries)`;
+            } else if(selectedFY === 'all' && selectedMonth !== 'all'){
+              const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+              const monthName = monthNames[parseInt(selectedMonth) - 1];
+              statusText = `Showing ledger entries for ${monthName} (${data.length} entries)`;
+            } else {
+              const endYear = parseInt(selectedFY);
+              const startYear = endYear - 1;
+              const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+              const monthName = monthNames[parseInt(selectedMonth) - 1];
+              statusText = `Showing ledger entries for ${monthName} ${startYear}-${endYear} (${data.length} entries)`;
             }
             
+            statusEl.textContent = statusText;
             renderLedger(data, apiBase);
           } else {
-            throw new Error('Failed to fetch initial data');
+            throw new Error('Failed to fetch filtered data');
           }
         }catch(e){
-          console.error('Error loading initial data:', e);
-          if(statusEl) statusEl.textContent = 'Unable to load ledger data.';
+          console.error('Error loading filtered data:', e);
+          if(statusEl) statusEl.textContent = 'Unable to load filtered ledger data.';
         }
+      }
+
+      // Function to load initial data based on current financial year and month selections
+      async function loadInitialData() {
+        await loadFilteredData();
       }
 
       // Load initial data when page loads
