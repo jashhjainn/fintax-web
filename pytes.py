@@ -139,6 +139,7 @@ def _extract_bill_number(lines: list[str], text_blob: str) -> str | None:
 
 _HSN_RATE_MAP = {
     # Common GST slabs keyed by HSN. Extend as needed.
+    "56031200": 5.0,
     "0405": 5.0,
     "1905": 5.0,
     "3401": 5.0,

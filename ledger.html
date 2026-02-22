@@ -52,6 +52,20 @@
             Download PDF
           </button>
         </div>
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 12px;">
+          <label for="sortBy" style="font-weight: 600; color: var(--text);">Sort By:</label>
+          <select id="sortBy" class="btn outline" style="padding: 8px 12px; border-radius: 6px; background: var(--bg); color: var(--text); border: 1px solid var(--muted);">
+            <option value="bill_no">Bill No</option>
+            <option value="gst_payable">GST Payable</option>
+            <option value="invoice_date">Invoice Date</option>
+            <option value="total_amt">Total Amt</option>
+          </select>
+          <label for="sortOrder" style="font-weight: 600; color: var(--text);">Order:</label>
+          <select id="sortOrder" class="btn outline" style="padding: 8px 12px; border-radius: 6px; background: var(--bg); color: var(--text); border: 1px solid var(--muted);">
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+          </select>
+        </div>
       </div>
     </section>
 
@@ -86,5 +100,6 @@
   <div id="siteNav" data-include="partials/nav.html"></div>
 
   <script src="script.js" defer></script>
+  <script src="ledger-sort.js" defer></script>
 </body>
 </html>

@@ -2611,3 +2611,244 @@ bill_number
 2026-02-19 19:02:15,945 - INFO - Ledger entry deleted successfully: 6997014ac6caa8c546cf13ea for user q@gmail.com
 2026-02-19 19:02:19,112 - INFO - Ledger entry deleted successfully: 6996fe5edb649ba4b00df83d for user q@gmail.com
 2026-02-19 19:02:29,457 - INFO - OCR stored with id: 699710ede6270871a17c6706
+2026-02-21 17:10:29,956 - INFO - Successfully connected to MongoDB!
+2026-02-21 17:10:30,620 - INFO - Database connection available.
+2026-02-21 17:10:30,708 - INFO - Ensured unique index on users.email
+2026-02-21 17:10:30,811 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-21 17:10:30,899 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-21 17:10:30,943 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-21 17:10:31,013 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-21 17:10:31,069 - INFO - Ensured index on invoices.owner_email
+2026-02-21 17:19:12,525 - INFO - Successfully connected to MongoDB!
+2026-02-21 17:19:12,802 - INFO - Database connection available.
+2026-02-21 17:19:12,843 - INFO - Ensured unique index on users.email
+2026-02-21 17:19:12,868 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-21 17:19:12,944 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-21 17:19:13,031 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-21 17:19:13,150 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-21 17:19:13,253 - INFO - Ensured index on invoices.owner_email
+2026-02-21 17:24:09,594 - INFO - Successfully connected to MongoDB!
+2026-02-21 17:24:09,887 - INFO - Database connection available.
+2026-02-21 17:24:09,915 - INFO - Ensured unique index on users.email
+2026-02-21 17:24:09,948 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-21 17:24:09,979 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-21 17:24:10,002 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-21 17:24:10,028 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-21 17:24:10,064 - INFO - Ensured index on invoices.owner_email
+2026-02-21 17:25:49,384 - INFO - Successfully connected to MongoDB!
+2026-02-21 17:25:49,659 - INFO - Database connection available.
+2026-02-21 17:25:49,745 - INFO - Ensured unique index on users.email
+2026-02-21 17:25:49,865 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-21 17:25:49,897 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-21 17:25:49,960 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-21 17:25:50,055 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-21 17:25:50,154 - INFO - Ensured index on invoices.owner_email
+2026-02-21 17:28:05,016 - INFO - Successfully connected to MongoDB!
+2026-02-21 17:28:05,289 - INFO - Database connection available.
+2026-02-21 17:28:05,324 - INFO - Ensured unique index on users.email
+2026-02-21 17:28:05,355 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-21 17:28:05,388 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-21 17:28:05,410 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-21 17:28:05,440 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-21 17:28:05,465 - INFO - Ensured index on invoices.owner_email
+2026-02-21 17:32:33,012 - INFO - Successfully connected to MongoDB!
+2026-02-21 17:32:33,285 - INFO - Database connection available.
+2026-02-21 17:32:33,379 - INFO - Ensured unique index on users.email
+2026-02-21 17:32:33,415 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-21 17:32:33,510 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-21 17:32:33,549 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-21 17:32:33,593 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-21 17:32:33,714 - INFO - Ensured index on invoices.owner_email
+2026-02-21 17:48:54,479 - WARNING - Duplicate bill number detected: 100 for user z@gmail.com
+2026-02-21 17:49:05,950 - WARNING - Validation failed for file ocr_test.png: ['bill number', 'invoice date', 'hsn code']
+2026-02-21 17:53:44,811 - INFO - OCR stored with id: 6999a3d0aa3b35c10de933ee
+2026-02-21 20:48:10,838 - INFO - Successfully connected to MongoDB!
+2026-02-21 20:48:11,998 - INFO - Database connection available.
+2026-02-21 20:48:12,024 - INFO - Ensured unique index on users.email
+2026-02-21 20:48:12,062 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-21 20:48:12,145 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-21 20:48:12,250 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-21 20:48:12,403 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-21 20:48:12,473 - INFO - Ensured index on invoices.owner_email
+2026-02-21 20:52:41,269 - INFO - Successfully connected to MongoDB!
+2026-02-21 20:52:42,475 - INFO - Database connection available.
+2026-02-21 20:52:42,593 - INFO - Ensured unique index on users.email
+2026-02-21 20:52:42,618 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-21 20:52:42,648 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-21 20:52:42,676 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-21 20:52:42,704 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-21 20:52:42,733 - INFO - Ensured index on invoices.owner_email
+2026-02-21 20:53:03,305 - INFO - Successfully connected to MongoDB!
+2026-02-21 20:53:03,944 - INFO - Database connection available.
+2026-02-21 20:53:03,973 - INFO - Ensured unique index on users.email
+2026-02-21 20:53:04,004 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-21 20:53:04,028 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-21 20:53:04,049 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-21 20:53:04,209 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-21 20:53:04,237 - INFO - Ensured index on invoices.owner_email
+2026-02-21 20:53:51,306 - INFO - Successfully connected to MongoDB!
+2026-02-21 20:53:52,698 - INFO - Database connection available.
+2026-02-21 20:53:52,731 - INFO - Ensured unique index on users.email
+2026-02-21 20:53:52,831 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-21 20:53:52,870 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-21 20:53:52,945 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-21 20:53:53,035 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-21 20:53:53,139 - INFO - Ensured index on invoices.owner_email
+2026-02-21 21:02:48,596 - INFO - Successfully connected to MongoDB!
+2026-02-21 21:02:50,153 - INFO - Database connection available.
+2026-02-21 21:02:50,181 - INFO - Ensured unique index on users.email
+2026-02-21 21:02:50,206 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-21 21:02:50,229 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-21 21:02:50,255 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-21 21:02:50,278 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-21 21:02:50,307 - INFO - Ensured index on invoices.owner_email
+2026-02-21 21:03:19,213 - INFO - Successfully connected to MongoDB!
+2026-02-21 21:03:19,933 - INFO - Database connection available.
+2026-02-21 21:03:19,959 - INFO - Ensured unique index on users.email
+2026-02-21 21:03:19,984 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-21 21:03:20,007 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-21 21:03:20,039 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-21 21:03:20,067 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-21 21:03:20,092 - INFO - Ensured index on invoices.owner_email
+2026-02-21 21:12:14,088 - INFO - Successfully connected to MongoDB!
+2026-02-21 21:12:14,458 - INFO - Database connection available.
+2026-02-21 21:12:14,499 - INFO - Ensured unique index on users.email
+2026-02-21 21:12:14,525 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-21 21:12:14,555 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-21 21:12:14,578 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-21 21:12:14,607 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-21 21:12:14,633 - INFO - Ensured index on invoices.owner_email
+2026-02-21 21:12:28,997 - INFO - Successfully connected to MongoDB!
+2026-02-21 21:12:29,372 - INFO - Database connection available.
+2026-02-21 21:12:29,400 - INFO - Ensured unique index on users.email
+2026-02-21 21:12:29,423 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-21 21:12:29,446 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-21 21:12:29,476 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-21 21:12:29,501 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-21 21:12:29,528 - INFO - Ensured index on invoices.owner_email
+2026-02-21 21:12:33,209 - INFO - Successfully connected to MongoDB!
+2026-02-21 21:12:33,706 - INFO - Database connection available.
+2026-02-21 21:12:33,732 - INFO - Ensured unique index on users.email
+2026-02-21 21:12:33,762 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-21 21:12:33,790 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-21 21:12:33,818 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-21 21:12:33,854 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-21 21:12:33,887 - INFO - Ensured index on invoices.owner_email
+2026-02-21 21:12:36,920 - INFO - Successfully connected to MongoDB!
+2026-02-21 21:12:37,376 - INFO - Database connection available.
+2026-02-21 21:12:37,401 - INFO - Ensured unique index on users.email
+2026-02-21 21:12:37,426 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-21 21:12:37,449 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-21 21:12:37,478 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-21 21:12:37,506 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-21 21:12:37,536 - INFO - Ensured index on invoices.owner_email
+2026-02-21 21:12:39,692 - INFO - Successfully connected to MongoDB!
+2026-02-21 21:12:40,011 - INFO - Database connection available.
+2026-02-21 21:12:40,042 - INFO - Ensured unique index on users.email
+2026-02-21 21:12:40,073 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-21 21:12:40,119 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-21 21:12:40,143 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-21 21:12:40,166 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-21 21:12:40,186 - INFO - Ensured index on invoices.owner_email
+2026-02-21 21:13:46,997 - INFO - Successfully connected to MongoDB!
+2026-02-21 21:13:47,476 - INFO - Database connection available.
+2026-02-21 21:13:47,503 - INFO - Ensured unique index on users.email
+2026-02-21 21:13:47,533 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-21 21:13:47,560 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-21 21:13:47,585 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-21 21:13:47,610 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-21 21:13:47,636 - INFO - Ensured index on invoices.owner_email
+2026-02-22 10:04:43,998 - INFO - Successfully connected to MongoDB!
+2026-02-22 10:04:45,056 - INFO - Database connection available.
+2026-02-22 10:04:45,083 - INFO - Ensured unique index on users.email
+2026-02-22 10:04:45,160 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-22 10:04:45,225 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-22 10:04:45,342 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-22 10:04:45,419 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-22 10:04:45,510 - INFO - Ensured index on invoices.owner_email
+2026-02-22 10:06:17,535 - INFO - Ledger entry deleted successfully: 699945f204712a356d75f6ef for user z@gmail.com
+2026-02-22 10:06:21,430 - INFO - Ledger entry deleted successfully: 69999180f13c1f22339ae347 for user z@gmail.com
+2026-02-22 10:06:28,101 - INFO - Ledger entry deleted successfully: 6999a3d0aa3b35c10de933ee for user z@gmail.com
+2026-02-22 10:06:32,159 - INFO - Ledger entry deleted successfully: 699945e204712a356d75f6ee for user z@gmail.com
+2026-02-22 11:21:19,248 - WARNING - Validation failed for file gstin1.png: ['invoice date', 'hsn code']
+2026-02-22 11:21:26,143 - WARNING - Validation failed for file gstin1.png: ['invoice date', 'hsn code']
+2026-02-22 11:28:30,323 - ERROR - An error occurred during OCR: no such group
+2026-02-22 11:28:48,108 - INFO - Successfully connected to MongoDB!
+2026-02-22 11:28:48,805 - INFO - Database connection available.
+2026-02-22 11:28:48,835 - INFO - Ensured unique index on users.email
+2026-02-22 11:28:48,890 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-22 11:28:48,971 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-22 11:28:48,992 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-22 11:28:49,095 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-22 11:28:49,159 - INFO - Ensured index on invoices.owner_email
+2026-02-22 11:29:02,854 - ERROR - An error occurred during OCR: no such group
+2026-02-22 11:30:09,403 - ERROR - An error occurred during OCR: no such group
+2026-02-22 11:32:38,560 - INFO - Successfully connected to MongoDB!
+2026-02-22 11:32:39,551 - INFO - Database connection available.
+2026-02-22 11:32:39,579 - INFO - Ensured unique index on users.email
+2026-02-22 11:32:39,598 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-22 11:32:39,618 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-22 11:32:39,637 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-22 11:32:39,704 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-22 11:32:39,802 - INFO - Ensured index on invoices.owner_email
+2026-02-22 11:33:24,403 - ERROR - An error occurred during OCR: no such group
+2026-02-22 11:33:32,173 - INFO - OCR stored with id: 699a9c34b750e860578122d2
+2026-02-22 11:33:43,558 - WARNING - Duplicate bill number detected: 100 for user z@gmail.com
+2026-02-22 11:36:18,350 - WARNING - Validation failed for file gstin_img.jpeg: ['hsn code']
+2026-02-22 11:36:29,688 - WARNING - Validation failed for file b.jpeg: ['hsn code']
+2026-02-22 11:36:51,741 - INFO - Successfully connected to MongoDB!
+2026-02-22 11:36:52,260 - INFO - Database connection available.
+2026-02-22 11:36:52,281 - INFO - Ensured unique index on users.email
+2026-02-22 11:36:52,319 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-22 11:36:52,343 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-22 11:36:52,373 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-22 11:36:52,424 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-22 11:36:52,447 - INFO - Ensured index on invoices.owner_email
+2026-02-22 11:36:56,256 - INFO - Successfully connected to MongoDB!
+2026-02-22 11:36:56,655 - INFO - Database connection available.
+2026-02-22 11:36:56,682 - INFO - Ensured unique index on users.email
+2026-02-22 11:36:56,732 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-22 11:36:56,827 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-22 11:36:56,851 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-22 11:36:56,934 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-22 11:36:56,987 - INFO - Ensured index on invoices.owner_email
+2026-02-22 11:36:59,728 - INFO - Successfully connected to MongoDB!
+2026-02-22 11:37:00,256 - INFO - Database connection available.
+2026-02-22 11:37:00,309 - INFO - Ensured unique index on users.email
+2026-02-22 11:37:00,413 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-22 11:37:00,466 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-22 11:37:00,617 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-22 11:37:00,650 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-22 11:37:00,671 - INFO - Ensured index on invoices.owner_email
+2026-02-22 11:37:03,417 - INFO - Successfully connected to MongoDB!
+2026-02-22 11:37:03,920 - INFO - Database connection available.
+2026-02-22 11:37:03,995 - INFO - Ensured unique index on users.email
+2026-02-22 11:37:04,103 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-22 11:37:04,200 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-22 11:37:04,243 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-22 11:37:04,310 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-22 11:37:04,365 - INFO - Ensured index on invoices.owner_email
+2026-02-22 11:37:17,399 - WARNING - Validation failed for file b.jpeg: ['hsn code']
+2026-02-22 11:37:33,385 - INFO - Successfully connected to MongoDB!
+2026-02-22 11:37:35,785 - INFO - Successfully connected to MongoDB!
+2026-02-22 11:37:36,268 - INFO - Database connection available.
+2026-02-22 11:37:36,354 - INFO - Ensured unique index on users.email
+2026-02-22 11:37:36,417 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-22 11:37:36,456 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-22 11:37:36,563 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-22 11:37:36,583 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-22 11:37:36,604 - INFO - Ensured index on invoices.owner_email
+2026-02-22 11:37:47,674 - INFO - OCR stored with id: 699a9d333b866e23303f7afa
+2026-02-22 11:44:50,012 - WARNING - Validation failed for file b2.png: ['invoice date', 'hsn code']
+2026-02-22 11:45:02,150 - INFO - Ledger entry deleted successfully: 699a9d333b866e23303f7afa for user z@gmail.com
+2026-02-22 11:45:10,972 - WARNING - Validation failed for file b2.png: ['invoice date', 'hsn code']
+2026-02-22 11:45:35,506 - WARNING - Validation failed for file b2.png: ['invoice date', 'hsn code']
+2026-02-22 11:45:49,832 - INFO - Successfully connected to MongoDB!
+2026-02-22 11:45:50,193 - INFO - Database connection available.
+2026-02-22 11:45:50,220 - INFO - Ensured unique index on users.email
+2026-02-22 11:45:50,342 - INFO - Ensured compound index on ledger_entries (owner_email, bill_number)
+2026-02-22 11:45:50,449 - INFO - Ensured index on ledger_entries.owner_email
+2026-02-22 11:45:50,540 - INFO - Ensured index on ledger_entries.invoice_date
+2026-02-22 11:45:50,748 - INFO - Ensured compound index on invoices (owner_email, bill_number)
+2026-02-22 11:45:50,848 - INFO - Ensured index on invoices.owner_email
+2026-02-22 11:46:51,842 - WARNING - Validation failed for file b2.png: ['invoice date', 'hsn code']

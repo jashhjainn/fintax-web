@@ -1140,6 +1140,38 @@ def ledger_list_pdf(request: Request, limit: int = 200, financial_year: str = "a
             # If conversion fails, return the original value as string
             return str(value)
 
+    def calculate_totals(rows):
+        """Calculate overall totals for GST payable and total amount"""
+        total_gst_payable = 0.0
+        total_amount = 0.0
+        
+        for row in rows:
+            # Calculate GST payable total
+            gst_value = row.get("gst_payable")
+            if gst_value is not None:
+                try:
+                    if isinstance(gst_value, str):
+                        clean_value = str(gst_value).replace('₹', '').replace('Rs', '').replace(',', '').replace('$', '').strip()
+                        total_gst_payable += float(clean_value)
+                    else:
+                        total_gst_payable += float(gst_value)
+                except (ValueError, TypeError):
+                    pass
+            
+            # Calculate total amount
+            amount_value = row.get("total_amount")
+            if amount_value is not None:
+                try:
+                    if isinstance(amount_value, str):
+                        clean_value = str(amount_value).replace('₹', '').replace('Rs', '').replace(',', '').replace('$', '').strip()
+                        total_amount += float(clean_value)
+                    else:
+                        total_amount += float(amount_value)
+                except (ValueError, TypeError):
+                    pass
+        
+        return total_gst_payable, total_amount
+
     def safe_text(value):
         text = str(value or "")
         # Replace rupee symbol with 'Rs' for PDF compatibility
@@ -1153,6 +1185,9 @@ def ledger_list_pdf(request: Request, limit: int = 200, financial_year: str = "a
             return text
         return text[: max(0, length - 3)] + "..."
 
+    # Calculate overall totals
+    total_gst_payable, total_amount = calculate_totals(rows)
+    
     pdf.set_font("Helvetica", "", 9)
     for idx, row in enumerate(rows, start=1):
         pdf.cell(col_widths[0], 7, str(idx), border=1)
@@ -1162,6 +1197,16 @@ def ledger_list_pdf(request: Request, limit: int = 200, financial_year: str = "a
         pdf.cell(col_widths[4], 7, fmt_money(row["gst_payable"]), border=1)
         pdf.cell(col_widths[5], 7, truncate(row["total_amount"], 14), border=1)
         pdf.ln()
+
+    # Add overall totals row
+    pdf.set_font("Helvetica", "B", 10)
+    pdf.cell(col_widths[0], 7, "", border=1)  # Empty cell for Sr No
+    pdf.cell(col_widths[1], 7, "", border=1)  # Empty cell for Bill No
+    pdf.cell(col_widths[2], 7, "", border=1)  # Empty cell for Invoice Date
+    pdf.cell(col_widths[3], 7, "TOTAL", border=1)
+    pdf.cell(col_widths[4], 7, fmt_money(total_gst_payable), border=1)
+    pdf.cell(col_widths[5], 7, fmt_money(total_amount), border=1)
+    pdf.ln()
 
     output = pdf.output(dest="S")
     if isinstance(output, (bytes, bytearray)):
@@ -1297,12 +1342,47 @@ def ledger_pdf_from_items(request: Request, pdf_request: LedgerPdfRequest):
             # If conversion fails, return the original value as string
             return str(value)
 
+    def calculate_totals(rows):
+        """Calculate overall totals for GST payable and total amount"""
+        total_gst_payable = 0.0
+        total_amount = 0.0
+        
+        for row in rows:
+            # Calculate GST payable total
+            gst_value = row.get("gst_payable")
+            if gst_value is not None:
+                try:
+                    if isinstance(gst_value, str):
+                        clean_value = str(gst_value).replace('₹', '').replace('Rs', '').replace(',', '').replace('$', '').strip()
+                        total_gst_payable += float(clean_value)
+                    else:
+                        total_gst_payable += float(gst_value)
+                except (ValueError, TypeError):
+                    pass
+            
+            # Calculate total amount
+            amount_value = row.get("total_amount")
+            if amount_value is not None:
+                try:
+                    if isinstance(amount_value, str):
+                        clean_value = str(amount_value).replace('₹', '').replace('Rs', '').replace(',', '').replace('$', '').strip()
+                        total_amount += float(clean_value)
+                    else:
+                        total_amount += float(amount_value)
+                except (ValueError, TypeError):
+                    pass
+        
+        return total_gst_payable, total_amount
+
     def truncate(value, length):
         text = safe_text(value)
         if len(text) <= length:
             return text
         return text[: max(0, length - 3)] + "..."
 
+    # Calculate overall totals
+    total_gst_payable, total_amount = calculate_totals(rows)
+    
     pdf.set_font("Helvetica", "", 9)
     for idx, row in enumerate(rows, start=1):
         pdf.cell(col_widths[0], 7, str(idx), border=1)
@@ -1312,6 +1392,16 @@ def ledger_pdf_from_items(request: Request, pdf_request: LedgerPdfRequest):
         pdf.cell(col_widths[4], 7, fmt_money(row["gst_payable"]), border=1)
         pdf.cell(col_widths[5], 7, truncate(row["total_amount"], 14), border=1)
         pdf.ln()
+
+    # Add overall totals row
+    pdf.set_font("Helvetica", "B", 10)
+    pdf.cell(col_widths[0], 7, "", border=1)  # Empty cell for Sr No
+    pdf.cell(col_widths[1], 7, "", border=1)  # Empty cell for Bill No
+    pdf.cell(col_widths[2], 7, "", border=1)  # Empty cell for Invoice Date
+    pdf.cell(col_widths[3], 7, "TOTAL", border=1)
+    pdf.cell(col_widths[4], 7, fmt_money(total_gst_payable), border=1)
+    pdf.cell(col_widths[5], 7, fmt_money(total_amount), border=1)
+    pdf.ln()
 
     output = pdf.output(dest="S")
     if isinstance(output, (bytes, bytearray)):

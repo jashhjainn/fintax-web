@@ -1380,6 +1380,11 @@ async function pageInit(){
             </tr>
           `).join('');
         }
+        
+        // Update sorting after ledger data is rendered
+        if (typeof window.updateLedgerSorting === 'function') {
+          window.updateLedgerSorting();
+        }
       }
 
       function openLedgerPreview(src){
@@ -1460,16 +1465,25 @@ async function pageInit(){
             // Get current filter selections
             const financialYearSelect = document.getElementById('financialYear');
             const monthFilter = document.getElementById('monthFilter');
+            const sortBySelect = document.getElementById('sortBy');
+            const sortOrderSelect = document.getElementById('sortOrder');
+            
             const selectedFY = financialYearSelect ? financialYearSelect.value : 'all';
             const selectedMonth = monthFilter ? monthFilter.value : 'all';
+            const selectedSortBy = sortBySelect ? sortBySelect.value : 'bill_no';
+            const selectedSortOrder = sortOrderSelect ? sortOrderSelect.value : 'asc';
             
-            // Build query parameters for filters
+            // Build query parameters for filters and sorting
             let queryParams = `limit=${currentItems.length}`;
             if(token) queryParams += `&token=${encodeURIComponent(token)}`;
             if(selectedFY !== 'all') queryParams += `&financial_year=${encodeURIComponent(selectedFY)}`;
             if(selectedMonth !== 'all') queryParams += `&month=${encodeURIComponent(selectedMonth)}`;
             
-            // Generate PDF from current items using the existing endpoint with filters
+            // Add sorting parameters
+            queryParams += `&sort_by=${encodeURIComponent(selectedSortBy)}`;
+            queryParams += `&sort_order=${encodeURIComponent(selectedSortOrder)}`;
+            
+            // Generate PDF from current items using the existing endpoint with filters and sorting
             const url = `${apiBase}/ledger/list/pdf?${queryParams}`;
             const link = document.createElement('a');
             link.href = url;
@@ -1480,7 +1494,7 @@ async function pageInit(){
             link.remove();
           }catch(e){
             console.error('PDF download error:', e);
-            alert('Unable to download PDF. Make sure the backend is running on port 8000.');
+            alert('Unable to download PDF. Make sure the backend server is running on port 8000.');
           }
         });
       }

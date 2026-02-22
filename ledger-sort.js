@@ -120,8 +120,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // Clear current table body
         ledgerBody.innerHTML = '';
         
-        // Append sorted rows
-        currentRows.forEach(row => {
+        // Append sorted rows and update Sr No. to be sequential
+        currentRows.forEach((row, index) => {
+            // Find the Sr No. cell (column 1) and update it
+            const srNoCell = row.querySelector('td:nth-child(2)');
+            if (srNoCell) {
+                srNoCell.textContent = index + 1;
+            }
             ledgerBody.appendChild(row);
         });
     }
