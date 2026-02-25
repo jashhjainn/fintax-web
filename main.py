@@ -251,6 +251,7 @@ async def ocr_invoice(request: Request, file: UploadFile = File(...)):
             bill_number=ocr_data.get("bill_number"),  # Use actual bill number from OCR
             invoice_date=ocr_data.get("invoice_date"),
             total_amount=ocr_data.get("total_amount"),
+            gstin=ocr_data.get("gstin"),
             items=ocr_data.get("items", []),
             hsn_codes=ocr_data.get("hsn_codes", []),
             gst_payable=ocr_data.get("gst_payable"),

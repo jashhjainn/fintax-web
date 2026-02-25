@@ -76,7 +76,12 @@ body{
 .subtitle{margin:6px 0 12px;color:var(--muted)}
 
 .app-header{
+  position: sticky;
+  top: 0;
+  z-index: 1000;
   display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.04);
+  background: var(--panel);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 .brand{font-weight:800;font-size:1.6rem;letter-spacing:1px}
 .brand-link {

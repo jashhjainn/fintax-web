@@ -1298,7 +1298,12 @@ async function pageInit(){
         })();
 
         let gstAmtVal = null;
-        if(totalAmtVal != null && subtotalAmt != null && totalAmtVal >= subtotalAmt){
+        if(data && data.gst_payable != null){
+          gstAmtVal = Number(data.gst_payable);
+        } else if(data && Array.isArray(data.items) && data.items.length){
+          const fromItems = data.items.reduce((sum, it)=> sum + Number(it && it.gst_amount ? it.gst_amount : 0), 0);
+          gstAmtVal = Number.isFinite(fromItems) ? Number(fromItems.toFixed(2)) : null;
+        } else if(totalAmtVal != null && subtotalAmt != null && totalAmtVal >= subtotalAmt){
           gstAmtVal = Number((totalAmtVal - subtotalAmt).toFixed(2));
         } else if(totalAmtVal != null){
           // If total includes GST and subtotal is missing, derive GST from total (18% default)
@@ -1313,6 +1318,8 @@ async function pageInit(){
         const totalAmt = totalAmtVal != null ? formatAmount(totalAmtVal) : (data && data.total_amount ? data.total_amount : 'Not detected');
 
         function findParticulars(){
+          const vendor = data && data.vendor ? data.vendor.toString().replace(/\s+/g, ' ').trim() : null;
+          if(vendor) return vendor;
           for(const ln of lines){
             const clean = ln.replace(/\s+/g, ' ').trim();
             if(clean.length < 3) continue;
@@ -1320,8 +1327,6 @@ async function pageInit(){
             if(/\bclient\b/i.test(clean)) continue;
             if(/[A-Za-z]/.test(clean)) return clean;
           }
-          const vendor = data && data.vendor ? data.vendor : null;
-          if(vendor) return vendor.toString().replace(/\s+/g, ' ').trim();
           return 'Unknown';
         }
         let particulars = findParticulars();
@@ -1333,7 +1338,7 @@ async function pageInit(){
           id: data && (data.id || data._id) ? (data.id || data._id) : '',
           billNo,
           particulars,
-          gstPayable: (data && data.gst_payable != null) ? formatAmount(data.gst_payable) : gstAmt,
+          gstPayable: gstAmt,
           totalAmt
         };
       }
