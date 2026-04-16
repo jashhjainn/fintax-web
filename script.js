@@ -14,9 +14,9 @@ async function loadIncludes(){
       console.warn('include error', err); 
       const id = el.getAttribute('id') || '';
       if(id === 'siteNav'){
-        el.innerHTML = '<nav class="bottom-nav" role="navigation" aria-label="Primary"><a class="nav-item" href="index.html"><i class="fa-solid fa-house" aria-hidden="true"></i><span>Home</span></a><a class="nav-item" href="upload.html"><i class="fa-solid fa-file-arrow-up" aria-hidden="true"></i><span>Upload</span></a><a class="nav-item" href="ledger.html"><i class="fa-solid fa-receipt" aria-hidden="true"></i><span>Ledger</span></a><a class="nav-item" href="profile.html"><i class="fa-solid fa-user" aria-hidden="true"></i><span>Profile</span></a></nav>';
+        el.innerHTML = '<nav class="bottom-nav" role="navigation" aria-label="Primary"><a class="nav-item" href="home.html"><i class="fa-solid fa-house" aria-hidden="true"></i><span>Home</span></a><a class="nav-item" href="upload.html"><i class="fa-solid fa-file-arrow-up" aria-hidden="true"></i><span>Upload</span></a><a class="nav-item" href="ledger.html"><i class="fa-solid fa-receipt" aria-hidden="true"></i><span>Ledger</span></a><a class="nav-item" href="profile.html"><i class="fa-solid fa-user" aria-hidden="true"></i><span>Profile</span></a></nav>';
       } else if(id === 'siteHeader'){
-        el.innerHTML = '<header class="app-header" role="banner"><div class="brand"><a href="index.html" class="brand-link">FINTAX</a></div><div class="header-actions"><button type="button" id="themeToggle" aria-pressed="false" aria-label="Toggle theme" title="Toggle theme"><i class="fa-solid fa-moon" aria-hidden="true"></i></button></div><div id="globalStatus" class="visually-hidden" aria-live="polite" aria-atomic="true"></div></header>';
+        el.innerHTML = '<header class="app-header" role="banner"><div class="brand"><a href="home.html" class="brand-link">FINTAX</a></div><div class="header-actions"><button type="button" id="themeToggle" aria-pressed="false" aria-label="Toggle theme" title="Toggle theme"><i class="fa-solid fa-moon" aria-hidden="true"></i></button></div><div id="globalStatus" class="visually-hidden" aria-live="polite" aria-atomic="true"></div></header>';
       }
     }
   }));
@@ -29,7 +29,7 @@ let capturedFile = null; // Holds the file object from a camera capture
 const DEFAULT_API_BASES = [
   'http://127.0.0.1:8000',
   'http://localhost:8000',
-  (location && location.hostname) ? `http://${location.hostname}:8000` : null
+  (location && location.hostname) ? `http://${location.hostname}:``8000``` : null
 ].filter(Boolean);
 
 let cachedApiBase = null;
@@ -163,19 +163,19 @@ function captureToCanvas(videoEl, canvasEl){ if(!videoEl || videoEl.readyState =
 
 // Initialize header (theme toggle) and nav active state
 function initHeaderNav(){
-  const currentPage = (location.pathname || '').split('/').pop() || 'index.html';
+  const currentPage = (location.pathname || '').split('/').pop() || 'home.html';
 
   // Show About FinTax in header only on auth page
   const aboutUsBtn = document.getElementById('aboutUsBtn');
   if(aboutUsBtn){
-    const isAuthPage = currentPage === 'auth.html';
+    const isAuthPage = currentPage === 'index.html';
     aboutUsBtn.hidden = !isAuthPage;
     aboutUsBtn.setAttribute('aria-hidden', String(!isAuthPage));
   }
 
   const logoutBtn = document.getElementById('logoutBtn');
   if(logoutBtn){
-    const isAuthPage = currentPage === 'auth.html';
+    const isAuthPage = currentPage === 'index.html';
     logoutBtn.hidden = isAuthPage;
     logoutBtn.setAttribute('aria-hidden', String(isAuthPage));
   }
@@ -272,7 +272,7 @@ function initHeaderNav(){
     confirmLogoutBtn.addEventListener('click', () => {
       hideLogoutModal();
       clearAuth();
-      window.location.href = 'auth.html';
+      window.location.href = 'index.html';
     });
   }
   
@@ -351,7 +351,7 @@ function setupAboutModal(){
 }
 // Page init: attach listeners only for present elements
 async function pageInit(){
-  const currentPage = (location.pathname || '').split('/').pop() || 'index.html';
+  const currentPage = (location.pathname || '').split('/').pop() || 'home.html';
   const authRequiredPages = ['upload.html', 'ledger.html', 'profile.html'];
   if(authRequiredPages.includes(currentPage) && !getAuthToken()){
     window.location.href = 'login.html';
@@ -982,7 +982,7 @@ async function pageInit(){
             }
             
         // Check for duplicate bill number
-        if (result.status === 'duplicate_detected') {
+        if (result.status === 'duplicate_detected' || result.message === 'Duplicate bill number') {
           // Show duplicate detection modal
           showDuplicateModal(result);
           if(progressOverlay) progressOverlay.hidden = true;
@@ -1315,7 +1315,6 @@ async function pageInit(){
         }
 
         const gstAmt = formatAmount(gstAmtVal);
-        const totalAmt = totalAmtVal != null ? formatAmount(totalAmtVal) : (data && data.total_amount ? data.total_amount : 'Not detected');
 
         function findParticulars(){
           const vendor = data && data.vendor ? data.vendor.toString().replace(/\s+/g, ' ').trim() : null;
@@ -1332,6 +1331,25 @@ async function pageInit(){
         let particulars = findParticulars();
         if(clientName && !particulars.toLowerCase().includes(clientName.toLowerCase())){
           particulars = `${particulars} (Client: ${clientName})`;
+        }
+
+        // Use total_amount from database if available, otherwise calculate
+        let totalAmt = 'Not detected';
+        if(data && data.total_amount) {
+          // Format the total_amount from database
+          const totalValue = typeof data.total_amount === 'string' 
+            ? parseFloat(data.total_amount.replace(/[^\d.]/g, ''))
+            : data.total_amount;
+          
+          if(totalValue != null && !isNaN(totalValue)) {
+            totalAmt = `₹ ${totalValue.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+          }
+        } else if(totalAmtVal != null) {
+          // Fallback to calculated total
+          totalAmt = formatAmount(totalAmtVal);
+        } else if(data && data.total_amount) {
+          // Final fallback to raw total_amount from database
+          totalAmt = data.total_amount;
         }
 
         return {
@@ -1699,7 +1717,7 @@ async function pageInit(){
           if(data.name) localStorage.setItem('authName', data.name);
         }catch(e){}
         showToast('✅ Login successful!', 'success', 2000);
-        setTimeout(()=> { window.location.href = 'index.html'; }, 1500);
+        setTimeout(()=> { window.location.href = 'home.html'; }, 1500);
       }catch(err){
         alert('❌ ' + err.message);
       }

@@ -1,66 +1,120 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>FINTAX • Dashboard</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FINTAX | Get Started</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script defer src="script.js"></script>
 </head>
-<body>
+<body class="auth-page">
+  <a href="#main" class="skip-link">Skip to content</a>
   <div id="siteHeader" data-include="partials/header.html"></div>
 
-  <main class="main" id="main" role="main">
-    <section class="card">
-      <h1 class="title">Dashboard</h1>
-      <p class="subtitle">Overview of your finances and GST distribution.</p>
-
-      <div class="stats">
-        <div class="stat-card stat-card--sales">
-          <div class="stat-label">Total Sales</div>
-          <div class="stat-value"></div>
-        </div>
-        <div class="stat-card stat-card--gst">
-          <div class="stat-label">Gst Payable</div>
-          <div class="stat-value"></div>
-        </div>
-        <div class="stat-card stat-card--taxable">
-          <div class="stat-label">Taxable Amount</div>
-          <div class="stat-value"></div>
-        </div>
+  <main id="main" class="main auth-shell">
+    <section class="card auth-hero" aria-labelledby="auth-title">
+      <div class="auth-badge">FINTAX</div>
+      <h1 id="auth-title" class="auth-title">Let's get you set up.</h1>
+      <p class="subtitle auth-subtitle">Choose how you want to continue.</p>
+      <div class="auth-actions">
+        <a class="btn btn-large primary" href="login.html">Login</a>
+        <a class="btn btn-large secondary" href="signup.html">Sign Up</a>
       </div>
-
-      <div class="charts">
-        <div class="chart card">
-          <h3 class="chart-title"></h3>
-          <div class="chart-bars" aria-hidden="true">
-            <div class="bar blue" style="height:100px"></div>
-            <div class="bar green" style="height:50px"></div>
-            <div class="bar blue" style="height:60px"></div>
-            <div class="bar green" style="height:45px"></div>
-            <div class="bar blue" style="height:80px"></div>
-            <div class="bar green" style="height:65px"></div>
-            <div class="bar blue" style="height:90px"></div>
-            <div class="bar green" style="height:70px"></div>
-            <div class="bar blue" style="height:75px"></div>
-            
-          </div>
-        </div>
-        
-      </div>
-
-      <div class="home-actions">
-        <a class="btn primary" href="upload.html"><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i> Upload Invoice</a>
-        <a class="btn beige" href="ledger.html"><i class="fa-solid fa-clipboard-list" aria-hidden="true"></i> View Ledgers</a>
-        <!-- <a class="btn cta" href="#"><i class="fa-solid fa-chart-column" aria-hidden="true"></i> Generate Reports</a> -->
-      </div>
+      <p class="auth-footnote muted-contrast"></p>
     </section>
   </main>
 
-  <div id="siteNav" data-include="partials/nav.html"></div>
-  <!-- <div id="siteFooter" data-include="partials/footer.html"></div> -->
+  <div id="siteFooter" data-include="partials/footer.html"></div>
+  <!-- <div id="siteNav" data-include="partials/nav.html"></div>  -->
 
-  <script src="script.js" defer></script>
+  <!-- About Fintax Modal -->
+  <div id="aboutModal" class="modal" aria-hidden="true" role="dialog" aria-labelledby="aboutTitle" aria-describedby="aboutDescription">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="aboutTitle" class="modal-title">About Us</h2>
+        <button id="closeAboutBtn" class="modal-close" aria-label="Close modal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="about-content">
+          <div class="about-intro">
+            <h3>What is FinTax?</h3>
+            <p id="aboutDescription">Fintax is an intelligent financial management platform designed to simplify GST compliance and financial tracking for businesses. Our platform provides advanced OCR technology to automate invoice processing.</p>
+          </div>
+          
+          <div class="flow-section">
+            <h3>How Fintax Works</h3>
+            <div class="flow-container">
+              <div class="flow-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                  <h4>Upload Invoice</h4>
+                  <p>Upload your GST invoices through our web interface or mobile camera. Fintax supports multiple formats including PDF, images, and scanned documents.</p>
+                </div>
+              </div>
+              
+              <div class="flow-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                  <h4>Smart Processing</h4>
+                  <p>Our advanced OCR technology extracts key information including GSTIN, invoice numbers, amounts, and tax details with high accuracy.</p>
+                </div>
+              </div>
+              
+              <div class="flow-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                  <h4>Data Validation</h4>
+                  <p>Intelligent validation checks ensure data accuracy and compliance with GST regulations, flagging any discrepancies for review.</p>
+                </div>
+              </div>
+              
+              <div class="flow-step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                  <h4>Dashboard Analytics</h4>
+                  <p>View comprehensive financial insights including total sales, gst payable and reports.</p>
+                </div>
+              </div>
+              
+              <div class="flow-step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                  <h4>Export & Compliance</h4>
+                  <p>Generate GST-compliant reports and export data in various formats for filing and auditing purposes.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="features-grid">
+            <div class="feature-card">
+              <i class="fas fa-camera"></i>
+              <h4>Smart OCR</h4>
+              <p>Advanced optical character recognition for accurate data extraction</p>
+            </div>
+            <!-- <div class="feature-card">
+              <i class="fas fa-chart-pie"></i>
+              <h4>Real-time Analytics</h4>
+              <p>Live dashboards showing GST distribution and financial insights</p>
+            </div> -->
+            <div class="feature-card">
+              <i class="fas fa-shield-alt"></i>
+              <h4>GST Compliance</h4>
+              <p>Automated compliance checks and GST-ready reports</p>
+            </div>
+            <!-- <div class="feature-card">
+              <i class="fas fa-mobile-alt"></i>
+              <h4>Mobile Ready</h4>
+              <p>Responsive design works seamlessly on all devices</p>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
 

@@ -91,7 +91,6 @@ def _extract_vendor(lines: list[str]) -> str | None:
         r"\b(vendor|seller|supplier|shop|store|mart|supermarket|grocery)\s*[:\-]\s*([A-Za-z0-9\s&.,-]{3,})",
         r"\b(bill\s*to|to\s*[:\-])\s*([A-Za-z0-9\s&.,-]{3,})",
         r"\b(from\s*[:\-]|received\s*from)\s*([A-Za-z0-9\s&.,-]{3,})",
-        r"\b([A-Za-z0-9\s&.,-]{3,})\s+(?:bill|invoice|receipt)",
         r"\b([A-Za-z0-9\s&.,-]{3,})\s+(?:pvt\.?\s*limited|private\s*limited|ltd\.?|limited)\b",
         r"\b([A-Za-z0-9\s&.,-]{3,})\s+(?:store|shop|mart|supermarket|grocery)\b",
     ]
@@ -106,6 +105,10 @@ def _extract_vendor(lines: list[str]) -> str | None:
         if re.search(r'\b(total|amount|gst|tax|payment|balance|due|payable)\b', line_lower):
             continue
             
+        # Skip lines that contain bill/invoice keywords (these are not vendor names)
+        if re.search(r'\b(bill|invoice|receipt|number|no\.?|date|total|amount)\b', line_lower):
+            continue
+            
         # Try vendor patterns
         for pattern in vendor_patterns:
             match = re.search(pattern, line, re.IGNORECASE)
@@ -118,8 +121,21 @@ def _extract_vendor(lines: list[str]) -> str | None:
                     if len(vendor_name) >= 3:
                         return vendor_name[:80]
     
-    # Fallback to first line if no patterns matched
-    return lines[0][:80]
+    # Fallback to first line if no patterns matched, but skip bill/invoice lines
+    for line in lines:
+        line_lower = line.lower().strip()
+        if not line_lower:
+            continue
+            
+        # Skip lines that contain bill/invoice keywords
+        if re.search(r'\b(bill|invoice|receipt|number|no\.?|date|total|amount)\b', line_lower):
+            continue
+            
+        # Return the first non-bill line as vendor
+        return line[:80]
+    
+    # If all lines contain bill keywords, return None
+    return None
 
 
 def _extract_gstin(lines: list[str], text_blob: str) -> str | None:
@@ -131,29 +147,29 @@ def _extract_gstin(lines: list[str], text_blob: str) -> str | None:
     if not lines and not text_blob:
         return None
     
-    # GSTIN patterns - updated to handle your specific format with 'O' in PAN middle and lowercase last char
+    # GSTIN patterns - updated to handle both uppercase and lowercase formats
     gstin_patterns = [
-        # Standard GSTIN format: 2 digits + state code + PAN + 'Z' + check digit (allowing 'O' and lowercase in last position)
+        # Standard GSTIN format: 2 digits + state code + PAN + 'Z' + check digit (allowing both cases in last position)
         r"\b(\d{2}[A-Z]{5}\d{3}[A-Z]\d{1}[A-Z]\d[Z0-9][A-Za-z0-9])\b",
         
         # Alternative pattern for your format: 2 digits + 5 letters + 3 digits + letter + 1 digit + letter + 1 digit + check chars
         r"\b(\d{2}[A-Z]{5}\d{3}[A-Z]\d[A-Z]\d[Z0-9][A-Za-z0-9])\b",
         
-        # Pattern allowing 'O' in the PAN middle part and lowercase in last position
+        # Pattern allowing 'O' in the PAN middle part and both cases in last position
         r"\b(\d{2}[A-Z]{5}[O0-9]{3}[A-Z]\d[A-Z]\d[Z0-9][A-Za-z0-9])\b",
         
         # Alternative patterns with spaces, dashes, or other separators
         r"\b(\d{2}[A-Z]{5}\d{3}[A-Z]\d[A-Z]\d[-\s]*[Z0-9][A-Za-z0-9])\b",
         r"\b(\d{2}[-\s]*[A-Z]{5}[-\s]*\d{3}[-\s]*[A-Z][-\s]*\d[-\s]*[A-Z][-\s]*\d[-\s]*[Z0-9][-\s]*[A-Za-z0-9])\b",
         
-        # Common labels for GSTIN
+        # Common labels for GSTIN (both uppercase and lowercase)
         r"(?:gstin|gst\s*id|tax\s*id|registration\s*no)\s*[:\-]\s*(\d{2}[A-Z]{5}\d{3}[A-Z]\d[A-Z]\d[Z0-9][A-Za-z0-9])",
         r"(?:gstin|gst\s*id|tax\s*id|registration\s*no)\s*[:\-]\s*(\d{2}[-\s]*[A-Z]{5}[-\s]*\d{3}[-\s]*[A-Z][-\s]*\d[-\s]*[A-Z][-\s]*\d[-\s]*[Z0-9][-\s]*[A-Za-z0-9])",
         
-        # GSTIN with "GSTIN No:" or similar labels
+        # GSTIN with "GSTIN No:" or similar labels (both cases)
         r"(?:gstin\s*(?:no\.?|number)?|gst\s*registration)\s*[:\-]\s*(\d{2}[A-Z]{5}\d{3}[A-Z]\d[A-Z]\d[Z0-9][A-Za-z0-9])",
         
-        # Look for GSTIN in various contexts
+        # Look for GSTIN in various contexts (both cases)
         r"\b(27[A-Z]{13}[Z0-9][A-Za-z0-9])\b",  # More specific pattern for your 15-character GSTIN
         r"\b(2[0-9][A-Z]{5}\d{3}[A-Z]\d[A-Z]\d[Z0-9][A-Za-z0-9])\b",  # Any state code (20-29)
         
@@ -163,8 +179,13 @@ def _extract_gstin(lines: list[str], text_blob: str) -> str | None:
         # Pattern for GSTIN labels with case insensitive matching
         r"(?i)(?:gstin|gst\s*id|tax\s*id|registration\s*no)\s*[:\-]\s*(\d{2}[A-Z]{5}\d{3}[A-Z]\d[A-Z]\d[Z0-9][A-Za-z0-9])",
         
-        # General pattern that should catch your format
+        # General pattern that should catch your format (both cases)
         r"\b(\d{2}[A-Z]{5}[A-Z0-9]{4}[A-Z]\d[Z0-9][A-Za-z0-9])\b",
+        
+        # Specific patterns for both uppercase and lowercase endings
+        r"\b(\d{2}[A-Z]{5}\d{3}[A-Z]\d[A-Z]\d[Z0-9][A-Z])\b",  # Uppercase ending
+        r"\b(\d{2}[A-Z]{5}\d{3}[A-Z]\d[A-Z]\d[Z0-9][a-z])\b",  # Lowercase ending
+        r"\b(\d{2}[A-Z]{5}\d{3}[A-Z]\d[A-Z]\d[Z0-9][A-Za-z])\b",  # Any case ending
     ]
     
     # Search in lines first (more targeted)
@@ -284,9 +305,9 @@ def _extract_bill_number(lines: list[str], text_blob: str) -> str | None:
             match = re.search(pattern, line, re.IGNORECASE)
             if match:
                 bill_no = match.group(1).strip()
-                # Validate that it looks like a bill number
+                # Validate that it looks like a bill no.
                 if len(bill_no) >= 2 and re.search(r'[A-Z0-9]', bill_no):
-                    # Additional validation: ensure it's not just random text
+                    # Additional validation: ensure its not just random text
                     if re.match(r'^[A-Z0-9-]+$', bill_no) and not re.match(r'^[A-Z]{2,}$', bill_no):
                         return bill_no
     
@@ -502,7 +523,7 @@ def _extract_rightmost_amount(line: str) -> float | None:
     return _parse_amount_token(rightmost_match.group(1))
 
 
-def _validate_invoice_fields(vendor, invoice_date, total_amount, hsn_codes, bill_number) -> dict:
+def _validate_invoice_fields(vendor, invoice_date, total_amount, hsn_codes, bill_number,) -> dict:
     """
     Validate that all required invoice fields are present.
     Returns a validation result with missing fields.
@@ -522,8 +543,8 @@ def _validate_invoice_fields(vendor, invoice_date, total_amount, hsn_codes, bill
         missing_fields.append("total amount")
     
     # Check HSN code - COMMENTED OUT TO FIX VALIDATION ERROR
-    # if not hsn_codes or len(hsn_codes) == 0:
-    #     missing_fields.append("hsn code")
+    if not hsn_codes or len(hsn_codes) == 0:
+        missing_fields.append("hsn code")
     
     is_valid = len(missing_fields) == 0
     
