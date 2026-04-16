@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>FINTAX • Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div id="siteHeader" data-include="partials/header.html"></div>
+
+  <main class="main" id="main" role="main">
+    <section class="card">
+      <h1 class="title">Dashboard</h1>
+      <p class="subtitle">Overview of your finances and GST distribution.</p>
+
+      <div class="stats">
+        <div class="stat-card stat-card--sales">
+          <div class="stat-label">Total Sales</div>
+          <div class="stat-value"></div>
+        </div>
+        <div class="stat-card stat-card--gst">
+          <div class="stat-label">Gst Payable</div>
+          <div class="stat-value"></div>
+        </div>
+        <div class="stat-card stat-card--taxable">
+          <div class="stat-label">Taxable Amount</div>
+          <div class="stat-value"></div>
+        </div>
+      </div>
+
+      <div class="charts">
+        <div class="chart card">
+          <h3 class="chart-title"></h3>
+          <div class="chart-bars" aria-hidden="true">
+            <div class="bar blue" style="height:100px"></div>
+            <div class="bar green" style="height:50px"></div>
+            <div class="bar blue" style="height:60px"></div>
+            <div class="bar green" style="height:45px"></div>
+            <div class="bar blue" style="height:80px"></div>
+            <div class="bar green" style="height:65px"></div>
+            <div class="bar blue" style="height:90px"></div>
+            <div class="bar green" style="height:70px"></div>
+            <div class="bar blue" style="height:75px"></div>
+            
+          </div>
+        </div>
+        
+      </div>
+
+      <div class="home-actions">
+        <a class="btn primary" href="upload.html"><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i> Upload Invoice</a>
+        <a class="btn beige" href="ledger.html"><i class="fa-solid fa-clipboard-list" aria-hidden="true"></i> View Ledgers</a>
+        <!-- <a class="btn cta" href="#"><i class="fa-solid fa-chart-column" aria-hidden="true"></i> Generate Reports</a> -->
+      </div>
+    </section>
+  </main>
+
+  <div id="siteNav" data-include="partials/nav.html"></div>
+  <!-- <div id="siteFooter" data-include="partials/footer.html"></div> -->
+
+  <script src="script.js" defer></script>
+</body>
+</html>
+
